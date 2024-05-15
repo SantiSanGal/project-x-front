@@ -15,3 +15,27 @@
 canvas {
     box-shadow: 0px 7px 15px 0px rgba(0, 0, 0, 0.2);
 }
+
+table {
+    margin: 0 auto;
+}
+
+table,
+tr,
+td {
+    border: 1px solid black;
+}
+
+table tr {
+    width: 40px;
+    height: 40px;
+}
+
+table tr td {
+    width: 40px;
+    height: 40px;
+}
+
+table tr td:hover {
+    cursor: pointer;
+}

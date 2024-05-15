@@ -1,13 +1,9 @@
+import style from './styles/pageMain.module.css'
 import { useEffect, useRef, useState } from "react"
-import './styles/pageMain.css'
 import { validarToken } from "../api/millionApi";
 import { useNavigate } from 'react-router-dom'
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-
-function encontrarMultiploMenorDe5(numero: number) {
-  return Math.floor(numero / 5) * 5;
-}
+import { encontrarMultiploMenorDeCinco } from "../utils/funcionesUtiles";
+import { GestionCompra } from '../components/PageMain/GestionCompra';
 
 export const PageMain = () => {
   const canvasRef = useRef(null);
@@ -32,13 +28,6 @@ export const PageMain = () => {
     const squareHeight = canvas.height / 200; // -> 1080
     console.log('canvas.height', canvas.height);
 
-    // for (let i = 0; i < 200; i++) { pinta de un color ramdom
-    //   for (let j = 0; j < 200; j++) {
-    //     context.fillStyle = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
-    //     context.fillRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight);
-    //   }
-    // }
-
     // for (let i = 0; i < 216; i++) { //-> 1080
     for (let i = 0; i < 200; i++) {
       // for (let j = 0; j < 384; j++) { //1920
@@ -54,12 +43,6 @@ export const PageMain = () => {
     contextRef.current = context;
   }, [])
 
-  const handleClose = () => setShow(false);
-
-  const handlePurchase = () => {
-    console.log('coordenadas del click desde el purchase -> ', coors);
-  }
-
   const handleShow = () => setShow(true);
 
   const handleClick = async (event: any) => {
@@ -70,13 +53,13 @@ export const PageMain = () => {
     const offsetX = Math.floor(event.clientX - rect.left);
     const offsetY = Math.floor(event.clientY - rect.top);
 
-    setCoors({ x: offsetX, y: offsetY })
-
     const x = offsetX
     const y = offsetY
 
-    const xCinco = encontrarMultiploMenorDe5(x)
-    const yCinco = encontrarMultiploMenorDe5(y)
+    const xCinco = encontrarMultiploMenorDeCinco(x)
+    const yCinco = encontrarMultiploMenorDeCinco(y)
+
+    setCoors({ x: xCinco, y: yCinco })
 
     const context = canvas.getContext("2d");
     if (!context) return;
@@ -97,23 +80,16 @@ export const PageMain = () => {
   };
 
   return (
-    <div className="pageMain">
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Comprar Pixel</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Has seleccionado este rango, ¿Te parece correcto para pintar?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="success" onClick={handlePurchase}>
-            Buy
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <div className={style.pageMain}>
+      <GestionCompra
+        coors={coors}
+        show={show}
+        setShow={setShow}
+      />
 
-      <div className="contenidoPageMain">
+
+
+      <div className={style.contenidoPageMain}>
         <canvas
           ref={canvasRef}
           style={{
