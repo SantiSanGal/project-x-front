@@ -3,10 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useState } from "react"
 
 let arrayCinco = new Array(5).fill(null);
-const pintarTable = (i: number, j: number) => {
-    console.log('pintarTable', i, j);
-
-}
+let arrayObjCompra = new Array()
 
 interface Coors {
     x: number;
@@ -28,6 +25,14 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
         console.log('coordenadas del click desde el purchase -> ', coors);
         //TODO: Hacer pasarela
         setShowModalSeleccionarColores(true)
+    }
+
+    const pintarTabla = (x: number, y: number) => {
+        console.log('pintarTable', x, y);
+        console.log(coors);
+        arrayObjCompra.push({ x: coors.x + x, y: coors.y + y, color: '#0000' }) //TODO:Verificar si ya existen las coordenadas en el objeto y que solo sean 25
+        console.log('arrayObjCompra', arrayObjCompra);
+
     }
 
     return (
@@ -53,17 +58,23 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
                 </Modal.Header>
                 <Modal.Body>
                     <table >
-                        {
-                            arrayCinco.map((fila, i) => (
-                                <tr>
-                                    {
-                                        arrayCinco.map((columna, j) => (
-                                            <td onClick={() => pintarTable(i, j)}></td>
-                                        ))
-                                    }
-                                </tr>
-                            ))
-                        }
+                        <tbody>
+                            {
+                                arrayCinco.map((fila, i) => (
+                                    <tr
+                                        key={i}
+                                    >
+                                        {
+                                            arrayCinco.map((columna, j) => (
+                                                <td
+                                                    key={j}
+                                                    onClick={() => pintarTabla(i, j)}></td>
+                                            ))
+                                        }
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
                     </table>
                 </Modal.Body>
                 <Modal.Footer>

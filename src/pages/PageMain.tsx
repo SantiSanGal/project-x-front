@@ -16,13 +16,13 @@ export const PageMain = () => {
     const canvas: any = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    canvas.width = 1000;
+    canvas.width = 2000;
     canvas.height = 1000;
-    canvas.style.width = `1000px`;
+    canvas.style.width = `2000px`;
     canvas.style.height = `1000px`;
 
     // const squareWidth = canvas.width / 384; // -> 1920
-    const squareWidth = canvas.width / 200;
+    const squareWidth = canvas.width / 400;
     console.log('canvas.width', canvas.width);
     // const squareHeight = canvas.height / 216; // -> 1080
     const squareHeight = canvas.height / 200; // -> 1080
@@ -31,12 +31,26 @@ export const PageMain = () => {
     // for (let i = 0; i < 216; i++) { //-> 1080
     for (let i = 0; i < 200; i++) {
       // for (let j = 0; j < 384; j++) { //1920
-      for (let j = 0; j < 200; j++) {
+      for (let j = 0; j < 400; j++) {
         context.strokeStyle = "black"; // Color de borde negro
         context.lineWidth = 1; // Grosor del borde
         context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight); // Dibujar el borde
       }
     }
+
+    context.beginPath();
+    context.strokeStyle = "red";
+    context.moveTo(canvas.width / 2, 0); // Mover el lápiz al centro arriba
+    context.lineTo(canvas.width / 2, canvas.height); // Trazar la línea verticalmente al centro abajo
+    context.stroke();
+    context.closePath();
+
+    context.beginPath();
+    context.strokeStyle = "red";
+    context.moveTo(0, canvas.height / 2); // Mover el lápiz al centro izquierda
+    context.lineTo(canvas.width, canvas.height / 2); // Trazar la línea horizontalmente al centro derecha
+    context.stroke();
+    context.closePath();
 
 
     context.scale(1, 1);
