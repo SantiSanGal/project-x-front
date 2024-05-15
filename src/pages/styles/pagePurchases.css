@@ -1,0 +1,66 @@
+.pagePuchases {
+    width: 100vw;
+    height: 93vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: blue;
+}
+
+.purchasesContainer {
+    width: 98%;
+    height: 98%;
+    padding: 5px;
+    border-radius: 5px;
+
+    overflow-y: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 0.5rem;
+
+    background-color: blueviolet;
+}
+
+.purchase {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    border-radius: 5px;
+
+    background-color: aqua;
+    width: 99%;
+    height: 150px;
+}
+
+.purchaseData {
+    background-color: lightblue;
+    width: 50%;
+    height: 100%;
+    padding: 10px;
+}
+
+.previewImg {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: antiquewhite;
+}
+
+.imgContainer {
+    width: 95%;
+    height: 95%;
+    background-color: aquamarine;
+    overflow: hidden;
+}
+
+.imgContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

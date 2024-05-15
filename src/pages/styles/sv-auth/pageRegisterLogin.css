@@ -1,0 +1,47 @@
+.pageRegister,
+.pageLogin {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: gray;
+}
+
+.formContainer {
+    padding: 1rem;
+    box-shadow: 0px 7px 15px 0px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    border-radius: 5px;
+}
+
+.formRegister,
+.formLogin {
+    width: 40vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.formLogin {
+    height: 40vh;
+}
+
+.formLogin h2,
+.formRegister h2 {
+    display: flex;
+    justify-content: center;
+}
+
+.btnSubmit {
+    margin-top: 0.5rem;
+    padding: 0.3rem;
+    box-shadow: 0px 7px 15px 0px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 5px;
+    transition: transform 0.5s ease;
+}
+
+.btnSubmit:hover {
+    transform: scale(1.04);
+}

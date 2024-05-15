@@ -1,0 +1,14 @@
+@root {
+    --verde: #294B29;
+    --verde-oscuro: #1A4D2E;
+    --verde-limon: #4F6F52;
+    --verde-camisa: #50623A;
+    --verde-dx: #789461;
+    --verde-opaco: #627254;
+    --verde-xd: #76885B;
+    --verde-claro: #B5C18E;
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
