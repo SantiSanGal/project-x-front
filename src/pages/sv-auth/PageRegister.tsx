@@ -7,8 +7,15 @@ export const PageRegister = () => {
   const { register, handleSubmit } = useForm()
 
   const submit = (data: any) => {
-    console.log('data', data);
-    millionApi.post('/auth/api/v1/register')
+    millionApi.post('/auth/register',
+      {
+        username: data.username,
+        password: data.password,
+        name: data.name,
+        last_name: data.last_name,
+        email: data.email
+      }
+    )
       .then(res => console.log(res))
       .catch(err => console.log(err))
   }
@@ -24,11 +31,11 @@ export const PageRegister = () => {
             type="text"
             name="name"
           />
-          <label>Surname</label>
+          <label>Last Name</label>
           <input
-            {...register('surname')}
+            {...register('last_name')}
             type="text"
-            name="surname"
+            name="last_name"
           />
           <label>Email</label>
           <input
@@ -38,9 +45,9 @@ export const PageRegister = () => {
           />
           <label>Username</label>
           <input
-            {...register('nickname')}
+            {...register('username')}
             type="text"
-            name="nickname"
+            name="username"
           />
           <label>Password</label>
           <input
@@ -50,27 +57,9 @@ export const PageRegister = () => {
           />
           <label>Confirm Password</label>
           <input
-            {...register('password')}
+            {...register('confirm_password')}
             type="password"
-            name="password"
-          />
-          <label>Country</label>
-          <input
-            {...register('confirmation')}
-            type="confirmation"
-            name="confirmation"
-          />
-          <label>City</label>
-          <input
-            {...register('city')}
-            type="text"
-            name="city"
-          />
-          <label>Phone</label>
-          <input
-            {...register('phone')}
-            type="text"
-            name="phone"
+            name="confirm_password"
           />
           <button type='submit' className="btnSubmit">Register</button>
         </form>
