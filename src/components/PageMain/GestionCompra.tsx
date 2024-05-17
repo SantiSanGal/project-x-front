@@ -32,7 +32,8 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
         console.log(coors);
         arrayObjCompra.push({ x: coors.x + x, y: coors.y + y, color: '#0000' }) //TODO:Verificar si ya existen las coordenadas en el objeto y que solo sean 25
         console.log('arrayObjCompra', arrayObjCompra);
-
+        let seleccion = document.getElementById(`td-${x}-${y}`)
+        // seleccion?.style.backgroundColor = 'red';
     }
 
     return (
@@ -68,7 +69,9 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
                                             arrayCinco.map((columna, j) => (
                                                 <td
                                                     key={j}
-                                                    onClick={() => pintarTabla(i, j)}></td>
+                                                    onClick={() => pintarTabla(i, j)}
+                                                    id={`td-${i}-${j}`}
+                                                ></td>
                                             ))
                                         }
                                     </tr>

@@ -2,7 +2,7 @@ import axios from 'axios';
 let accessToken = localStorage.getItem('accessToken')
 
 export const millionApi = axios.create({
-    baseURL: 'https://w9r82gl0-4000.brs.devtunnels.ms',
+    baseURL: 'http://localhost:3331',
     headers: {
         Authorization: `Bearer ${accessToken}`
     }

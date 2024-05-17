@@ -32,23 +32,23 @@ export const PageMain = () => {
     for (let i = 0; i < 200; i++) {
       // for (let j = 0; j < 384; j++) { //1920
       for (let j = 0; j < 400; j++) {
-        context.strokeStyle = "black"; // Color de borde negro
-        context.lineWidth = 1; // Grosor del borde
-        context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight); // Dibujar el borde
+        context.strokeStyle = "black";
+        context.lineWidth = 1; 
+        context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight);
       }
     }
 
     context.beginPath();
     context.strokeStyle = "red";
-    context.moveTo(canvas.width / 2, 0); // Mover el lápiz al centro arriba
-    context.lineTo(canvas.width / 2, canvas.height); // Trazar la línea verticalmente al centro abajo
+    context.moveTo(canvas.width / 2, 0);
+    context.lineTo(canvas.width / 2, canvas.height);
     context.stroke();
     context.closePath();
 
     context.beginPath();
     context.strokeStyle = "red";
-    context.moveTo(0, canvas.height / 2); // Mover el lápiz al centro izquierda
-    context.lineTo(canvas.width, canvas.height / 2); // Trazar la línea horizontalmente al centro derecha
+    context.moveTo(0, canvas.height / 2);
+    context.lineTo(canvas.width, canvas.height / 2);
     context.stroke();
     context.closePath();
 
