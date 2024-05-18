@@ -8,7 +8,6 @@ import { GestionCompra } from '../components/PageMain/GestionCompra';
 export const PageMain = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
-  const contextRef: any = useRef(null);
   const [show, setShow] = useState(false);
   const [coors, setCoors] = useState({ x: 0, y: 0 })
 
@@ -21,23 +20,19 @@ export const PageMain = () => {
     canvas.style.width = `2000px`;
     canvas.style.height = `1000px`;
 
-    // const squareWidth = canvas.width / 384; // -> 1920
+    //dibuja los cuadros de 5*5
     const squareWidth = canvas.width / 400;
-    console.log('canvas.width', canvas.width);
-    // const squareHeight = canvas.height / 216; // -> 1080
-    const squareHeight = canvas.height / 200; // -> 1080
-    console.log('canvas.height', canvas.height);
+    const squareHeight = canvas.height / 200;
 
-    // for (let i = 0; i < 216; i++) { //-> 1080
     for (let i = 0; i < 200; i++) {
-      // for (let j = 0; j < 384; j++) { //1920
       for (let j = 0; j < 400; j++) {
         context.strokeStyle = "black";
-        context.lineWidth = 1; 
+        context.lineWidth = 1;
         context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight);
       }
     }
 
+    //dibuja la linea vertical
     context.beginPath();
     context.strokeStyle = "red";
     context.moveTo(canvas.width / 2, 0);
@@ -45,33 +40,26 @@ export const PageMain = () => {
     context.stroke();
     context.closePath();
 
+    //dibuja la linea horizontal
     context.beginPath();
     context.strokeStyle = "red";
     context.moveTo(0, canvas.height / 2);
     context.lineTo(canvas.width, canvas.height / 2);
     context.stroke();
     context.closePath();
-
-
-    context.scale(1, 1);
-    contextRef.current = context;
   }, [])
 
   const handleShow = () => setShow(true);
 
-  const handleClick = async (event: any) => {
+  const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
+    console.log('parametros', offsetX, offsetY);
+
     const canvas = canvasRef.current as HTMLCanvasElement | null;
     if (!canvas) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const offsetX = Math.floor(event.clientX - rect.left);
-    const offsetY = Math.floor(event.clientY - rect.top);
-
-    const x = offsetX
-    const y = offsetY
-
-    const xCinco = encontrarMultiploMenorDeCinco(x)
-    const yCinco = encontrarMultiploMenorDeCinco(y)
+    const xCinco = encontrarMultiploMenorDeCinco(offsetX)
+    const yCinco = encontrarMultiploMenorDeCinco(offsetY)
+    console.log('Cinco menor próximo', xCinco, yCinco);
 
     setCoors({ x: xCinco, y: yCinco })
 
@@ -80,6 +68,7 @@ export const PageMain = () => {
 
     context.fillStyle = "black";
     context.fillRect(xCinco, yCinco, 5, 5);
+    context.stroke();
 
     let tokenValido = await validarToken();
     // TODO: Validar que no haga click más de una vez, deshabilidar el click
