@@ -14,7 +14,7 @@ export const PageLogin = () => {
     })
       .then(({ data }) => {
         if (data && data.token) {
-          localStorage.setItem('accessToken', data.token);
+          localStorage.setItem('accessToken', data.token.token);
           navigate('/')
         }
       }).catch((err) => {

@@ -1,12 +1,12 @@
-export const Purchase = ({ xd }: any) => {
+export const Purchase = ({ purchase }: any) => {
     return (
         <div className="purchase">
             <div className="purchaseData">
-                <h5>Compra Nro.: {xd.compraId}</h5>
-                <p>fecha: {xd.fecha}</p>
-                <p>codigo afiliado: {xd.codigoAfiliado}</p>
-                <p>cantidad de pixeles: {xd.cantidadDePx}</p>
-                <p>monto compra: {xd.montoCompra}</p>
+                <h5>Compra Nro.: {purchase.compraId}</h5>
+                <p>fecha: {purchase.fecha}</p>
+                <p>codigo afiliado: {purchase.codigoAfiliado}</p>
+                <p>cantidad de pixeles: {purchase.cantidadDePx}</p>
+                <p>monto compra: {purchase.montoCompra}</p>
             </div>
             <div className="previewImg">
                 <div className="imgContainer">

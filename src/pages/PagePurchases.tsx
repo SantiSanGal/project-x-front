@@ -1,7 +1,24 @@
-import { Purchase } from '../components/PagePurchases/Purchase'
+import { useEffect, useState } from 'react';
+import { Purchase } from '../components/PagePurchases/Purchase';
 import './styles/pagePurchases.css'
+import { millionApi } from '../api/millionApi'
 
 export const PagePurchases = () => {
+  const [purchases, setPurchase] = useState([])
+  useEffect(() => {
+    let accessToken = localStorage.getItem('accessToken')
+    millionApi.get('/purchases', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((data) => {
+        //TODO: corregir en el backend
+        setPurchase(data.data.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
   let x = [
     {
       compraId: 'xx99xx99xx99',
@@ -92,9 +109,14 @@ export const PagePurchases = () => {
     <div className="pagePuchases">
       <div className="purchasesContainer">
         {
-          x.map(xd => (
-            <Purchase xd={xd} />
-          ))
+          purchases && purchases.length > 0 ? (
+            purchases.map(purchase => (
+              <Purchase purchase={purchase} />
+            ))
+          ) : (
+            <h1>Not Available</h1>
+          )
+
         }
       </div>
     </div>
