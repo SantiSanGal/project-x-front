@@ -15,7 +15,7 @@ export const Header = () => {
   return (
     <header className="header">
       <div className="logo" onClick={() => handleClick('')}>
-        <h1>Million</h1>
+        <h2>Pixel War</h2>
       </div>
       <div className="nav">
         <ul>

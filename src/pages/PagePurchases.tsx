@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Purchase } from '../components/PagePurchases/Purchase';
-import './styles/pagePurchases.css'
+import style from './styles/pagePurchases.module.css'
 import { millionApi } from '../api/millionApi'
 
 export const PagePurchases = () => {
@@ -12,106 +12,25 @@ export const PagePurchases = () => {
         Authorization: `Bearer ${accessToken}`
       }
     })
-      .then((data) => {
-        //TODO: corregir en el backend
-        setPurchase(data.data.data)
+      .then((res) => {
+        let { data } = res
+        console.log(data);
+
+        setPurchase(data.data)
       })
       .catch((err) => console.log(err))
   }, [])
 
-  let x = [
-    {
-      compraId: 'xx99xx99xx99',
-      fecha: '19052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 99,
-      montoCompra: 99,
-    },
-    {
-      compraId: 'xx88xx88xx88',
-      fecha: '19052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 99,
-      montoCompra: 99,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    },
-    {
-      compraId: 'xx77xx77xx77',
-      fecha: '17052001',
-      codigoAfiliado: 'xxxxxxxx',
-      cantidadDePx: 77,
-      montoCompra: 77,
-    }
-  ]
   return (
-    <div className="pagePuchases">
-      <div className="purchasesContainer">
+    <div className={style.pagePuchases}>
+      <div className={style.purchasesContainer}>
         {
           purchases && purchases.length > 0 ? (
-            purchases.map(purchase => (
-              <Purchase purchase={purchase} />
+            purchases.map((purchase) => (
+              <Purchase
+                key={purchase.id_datos_compra}
+                purchase={purchase}
+              />
             ))
           ) : (
             <h1>Not Available</h1>
