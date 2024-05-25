@@ -13,7 +13,7 @@ export const Purchase = ({ purchase }: any) => {
                 <div className={style.imgContainer}>
                     <img src="/xxx.png" alt="" />
                 </div>
-                <button className='btn btn-success'>Editar</button>
+                <button className={`btn btn-success ${style.btnEdit}`}>Edit</button>
             </div>
         </div>
     )
