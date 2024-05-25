@@ -1,0 +1,14 @@
+.info {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    color: aliceblue;
+}
+
+.info h2 {
+    color: #50623A;
+}
+
+.info .btn {
+    margin-top: 0.5rem;
+}
