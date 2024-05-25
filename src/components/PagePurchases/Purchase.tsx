@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import style from './../../pages/styles/pagePurchases.module.css'
+import style from './../styles/pagePurchases.module.css'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
 export const Purchase = ({ purchase }: any) => {

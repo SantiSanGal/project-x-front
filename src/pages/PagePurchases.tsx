@@ -22,8 +22,8 @@ export const PagePurchases = () => {
   }, [])
 
   return (
-    <div className={style.pagePuchases}>
-      <div className={style.purchasesContainer}>
+    <div className='page'>
+      <div className='pageMainContent'>
         {
           purchases && purchases.length > 0 ? (
             purchases.map((purchase) => (

@@ -40,7 +40,6 @@ export const PageMain = () => {
     context.stroke();
     context.closePath();
 
-    //dibuja la linea horizontal
     context.beginPath();
     context.strokeStyle = "red";
     context.moveTo(0, canvas.height / 2);
@@ -52,14 +51,11 @@ export const PageMain = () => {
   const handleShow = () => setShow(true);
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
-    console.log('parametros', offsetX, offsetY);
-
     const canvas = canvasRef.current as HTMLCanvasElement | null;
     if (!canvas) return;
 
     const xCinco = encontrarMultiploMenorDeCinco(offsetX)
     const yCinco = encontrarMultiploMenorDeCinco(offsetY)
-    console.log('Cinco menor próximo', xCinco, yCinco);
 
     setCoors({ x: xCinco, y: yCinco })
 

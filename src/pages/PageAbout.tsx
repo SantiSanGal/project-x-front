@@ -2,22 +2,25 @@ import './styles/pageAbout.css'
 
 export const PageAbout = () => {
   return (
-    <div className="pageAbout">
-      <div className="aboutContainer">
+    <div className="page">
+      <div className="pageMainContent">
         <div className="descriptionContainer">
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nulla laboriosam perspiciatis explicabo praesentium consectetur voluptatem laborum temporibus asperiores magni minus? Minus, illum sit! Cupiditate praesentium ipsum similique delectus eligendi quis.
-            Hic voluptates perspiciatis est animi, at facilis fuga cupiditate, saepe voluptatum similique dignissimos eos blanditiis ducimus odio ex qui unde commodi molestias. Labore voluptatum exercitationem adipisci laboriosam iusto architecto vitae.
-            Corporis mollitia officiis velit assumenda est a harum dolores? Blanditiis officiis laudantium harum sed doloremque, soluta sit ad explicabo quo recusandae fuga similique nemo velit fugit illo, labore ipsa odit.
-            Impedit recusandae debitis illum corrupti aliquid itaque voluptatum saepe aperiam nihil consequuntur reiciendis in quae eos voluptatibus tempora, earum magni dignissimos voluptatem, pariatur nobis fugit delectus amet veritatis? Tenetur, impedit.
-            Possimus et libero non facere unde omnis ab officia corrupti similique vel, vero quisquam sequi at autem itaque deleniti, eius expedita doloremque. Cumque, accusantium maiores quaerat excepturi quasi quis odit.
-            Labore mollitia voluptate minus voluptatem doloribus tempora ipsa, earum veniam, similique, explicabo vero ratione accusantium eum esse dolorum modi corporis porro eius eligendi. Veniam soluta provident enim non dicta harum!
-            Maiores illo aliquid in aut dolorem voluptatum iure, saepe facilis quod, asperiores dolores quis alias vel, necessitatibus illum cum minus eligendi deleniti. Similique id eveniet labore in impedit sapiente adipisci.
-            Quas ea expedita, recusandae sed molestias, ipsum id adipisci aut tempore molestiae, consequatur corporis! Quaerat magnam aut expedita iure a atque, assumenda nesciunt tenetur. Tenetur voluptatem nulla velit officia corporis.
-            Vel omnis aliquid, minima rem consequatur sapiente autem laborum, commodi asperiores ipsum fuga ducimus, non quis at. Sequi natus fugiat modi voluptas nemo excepturi enim rerum iure. Et, distinctio labore!
-            Maxime vel doloribus ut esse explicabo molestias exercitationem sapiente optio accusantium quis? Nulla laboriosam voluptatum laborum eum mollitia exercitationem quod. Debitis repellendus omnis expedita odio aut nesciunt, eum hic maiores.</p>
-        </div>
-        <div className="imgContainer">
-          <img src="/xxx.png" alt="" />
+          <h2>¿Cómo Funciona?</h2>
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quidem libero accusantium repudiandae, facere hic nemo saepe nobis asperiores commodi placeat earum deleniti praesentium doloribus sed expedita ab quas, beatae velit.
+            Impedit incidunt dolores sapiente vero corrupti laudantium cum quos eos. Sapiente ut, nobis, facilis voluptatum totam soluta non at et dolorem corrupti tempore quod alias doloremque hic quis? Eveniet, in!
+            Facilis delectus reprehenderit consectetur reiciendis tempora rem modi. Veritatis, harum. In omnis deleniti laborum quae labore sint provident? Earum enim vel quae sit, cupiditate tempora fugit doloremque voluptas ipsam molestias!
+            Eaque, earum dolores id molestias delectus praesentium excepturi odit blanditiis voluptate perferendis? Minima modi similique, aut illo earum, ducimus doloribus quibusdam quod ipsa veritatis commodi minus ad fugit architecto distinctio?
+            Asperiores ab quia explicabo quos velit doloremque minima nobis doloribus voluptatum, illo eaque reiciendis ex similique, laborum exercitationem atque! Minus sequi distinctio beatae dolore eum! Eaque quis atque reiciendis libero.
+          </p>
+          <h2>¿Por qué Hago Esto?</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque, labore ad. Amet, nemo vero. Officia voluptatem est veritatis neque, amet temporibus itaque possimus debitis reiciendis molestias officiis minus provident non!
+            Ullam est tempora corrupti consectetur commodi fugiat quisquam ex nobis totam sint veniam sed quidem praesentium perferendis minus quasi, assumenda sapiente quos. Placeat esse adipisci molestias similique? Voluptatum, optio tenetur!
+            Mollitia recusandae accusantium itaque officiis hic beatae pariatur culpa ut magni cumque aut adipisci repellat ex architecto, dolorum ipsa maiores quae unde laboriosam tenetur quaerat temporibus similique exercitationem esse. Quam!
+            Magnam ea laboriosam ullam reiciendis obcaecati eaque ad blanditiis mollitia numquam. Corrupti veniam laboriosam vitae quis, maxime, iusto quas impedit quo debitis delectus minus ratione in commodi, odio aliquid quidem.
+            Repudiandae quas molestias, eveniet sequi tenetur voluptatibus repellat iste, quisquam voluptate velit quod nisi ratione deleniti autem hic quia doloremque corporis neque fugit placeat? Quaerat tempora ad asperiores sint facere.
+          </p>
         </div>
       </div>
     </div>
