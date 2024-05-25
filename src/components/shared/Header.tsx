@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import '../styles/header.css'
 import { useState } from 'react';
 
@@ -22,7 +24,7 @@ export const Header = () => {
           <li className={activeUrl == '' ? 'active' : ''} onClick={() => handleClick('')}>Home</li>
           <li className={activeUrl == 'Purchases' ? 'active' : ''} onClick={() => handleClick('Purchases')}>Purchases</li>
           <li className={activeUrl == 'About' ? 'active' : ''} onClick={() => handleClick('About')}>About</li>
-          <li className={activeUrl == 'Account' ? 'active' : ''} onClick={() => handleClick('Account')}> Account</li >
+          <li className={activeUrl == 'Account' ? 'active' : ''} onClick={() => handleClick('Account')}> <FontAwesomeIcon icon={faUser} /></li >
         </ul >
       </div >
     </header >

@@ -1,4 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import style from './../../pages/styles/pagePurchases.module.css'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 
 export const Purchase = ({ purchase }: any) => {
     return (
@@ -13,7 +15,11 @@ export const Purchase = ({ purchase }: any) => {
                 <div className={style.imgContainer}>
                     <img src="/xxx.png" alt="" />
                 </div>
-                <button className={`btn btn-success ${style.btnEdit}`}>Edit</button>
+                <button className={`btn btn-success ${style.btnEdit}`}>
+                    Edit 
+                    &nbsp;
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                </button>
             </div>
         </div>
     )
