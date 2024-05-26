@@ -1,9 +1,10 @@
+import './styles/pageRegister.css'
 import { useForm } from 'react-hook-form'
-import '../styles/sv-auth/pageRegisterLogin.css'
-import { millionApi } from '../../api/millionApi'
+import { millionApi } from '../api/millionApi'
+import { useNavigate } from 'react-router-dom'
 
 export const PageRegister = () => {
-
+  const navigate = useNavigate()
   const { register, handleSubmit } = useForm()
 
   const submit = (data: any) => {
@@ -24,7 +25,7 @@ export const PageRegister = () => {
     <div className="pageRegister">
       <div className="formContainer">
         <form className="formRegister" onSubmit={handleSubmit(submit)}>
-          <h2>Sing Up</h2>
+          <h2>Sing up to <span style={{ color: '#50623A' }}>Pixel War</span></h2>
           <label>Name</label>
           <input
             {...register('name')}
@@ -61,8 +62,9 @@ export const PageRegister = () => {
             type="password"
             name="confirm_password"
           />
-          <button type='submit' className="btnSubmit">Register</button>
+          <button type='submit' className="btn btn-success">Register</button>
         </form>
+        <p>¿Ya tienes una cuenta? <span onClick={() => navigate('/login')} style={{ color: '#50623A' }}>Login</span></p>
       </div>
     </div>
   )

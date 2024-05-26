@@ -1,0 +1,44 @@
+.pageLogin {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #181818;
+}
+
+.pageLogin .formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    background-color: #1f1f1f;
+    box-shadow: 0px 6px 7px 0px rgba(181, 193, 142, 0.3);
+}
+
+.pageLogin .formContainer .formLogin {
+    color: aliceblue;
+    max-width: 500px;
+    max-height: 300px;
+    min-width: 400px;
+    min-height: 200px;
+    width: 40vw;
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.pageLogin .formContainer .formLogin .btn-success {
+    margin-top: 0.5rem;
+}
+
+.pageLogin .formContainer a {
+    color: #50623A;
+    margin: 0 auto;
+}
+
+.pageLogin .formContainer a:hover {
+    cursor: pointer;
+    color: #3e4c2d;
+}

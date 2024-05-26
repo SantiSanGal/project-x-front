@@ -1,6 +1,6 @@
+import './styles/pageLogin.css'
 import { useForm } from 'react-hook-form'
-import '../styles/sv-auth/pageRegisterLogin.css'
-import { millionApi } from '../../api/millionApi';
+import { millionApi } from '../api/millionApi';
 import { useNavigate } from 'react-router-dom';
 
 export const PageLogin = () => {
@@ -26,7 +26,7 @@ export const PageLogin = () => {
     <div className="pageLogin">
       <div className="formContainer">
         <form className="formLogin" onSubmit={handleSubmit(submit)}>
-          <h2>Login</h2>
+          <h2>Sign in to <span style={{ color: '#50623A' }}>Pixel War</span></h2>
           <label>Usuario</label>
           <input
             {...register('username')}
@@ -39,8 +39,9 @@ export const PageLogin = () => {
             type="password"
             name="password"
           />
-          <button className="btnSubmit">Sign in</button>
+          <button className="btn btn-success">Sign in</button>
         </form>
+        <a>¿Olvidó su Contraseña?</a>
       </div>
     </div>
   )

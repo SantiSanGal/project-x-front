@@ -1,0 +1,43 @@
+.pageRegister {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #181818;
+}
+
+.pageRegister .formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    background-color: #1f1f1f;
+    box-shadow: 0px 6px 7px 0px rgba(181, 193, 142, 0.3);
+}
+
+.pageRegister .formContainer .formRegister {
+    color: aliceblue;
+    max-width: 500px;
+    max-height: 400px;
+    min-width: 400px;
+    min-height: 200px;
+    width: 40vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.pageRegister .formContainer .formRegister .btn-success {
+    margin-top: 0.5rem;
+}
+
+.pageRegister .formContainer p {
+    color: aliceblue;
+    margin: 0.5rem 0 0 0;
+}
+
+.pageRegister .formContainer p span {
+    cursor: pointer;
+}

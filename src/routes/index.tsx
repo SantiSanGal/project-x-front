@@ -1,12 +1,14 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PageMain } from '../pages/PageMain';
-import { PageLogin } from '../pages/sv-auth/PageLogin';
+import { PageLogin } from '../pages/PageLogin';
+import { PageRegister } from '../pages/PageRegister';
 import { PageAbout } from '../pages/PageAbout';
 import { PagePurchases } from '../pages/PagePurchases';
 import { PageAccount } from '../pages/PageAccount';
 import { Header } from '../components/shared/Header';
 import React from 'react';
-import { PageRegister } from '../pages/sv-auth/PageRegister';
+
+
 
 const CustomRoute: React.FC<{ element: React.ReactNode }> = ({ element, ...rest }) => {
     return (
