@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Purchase } from '../components/PagePurchases/Purchase';
-import style from './styles/pagePurchases.module.css'
 import { millionApi } from '../api/millionApi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';

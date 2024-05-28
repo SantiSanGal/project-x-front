@@ -13,7 +13,7 @@
     background-color: #181818;
 }
 
-.pageMainContent{
+.pageMainContent {
     width: 98%;
     height: 98%;
     padding: 5px;
@@ -40,4 +40,41 @@
 .btn-success:active {
     background-color: #333f25;
     border-color: #333f25;
+}
+
+input {
+    background-color: #242424;
+    border: 1px solid #50623A;
+    border-radius: 5px;
+    color: #cccccc;
+}
+
+input:focus {
+    outline: none !important;
+    border-color: #a7cb7b;
+}
+
+td {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+[type='color'] {
+    appearance: none;
+    padding: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
+    border-radius: none;
+}
+
+[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+[type='color']::-webkit-color-swatch {
+    border: none;
 }
