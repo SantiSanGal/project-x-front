@@ -21,7 +21,6 @@ interface ObjToSend {
 }
 
 let arrayCinco = new Array(5).fill(null);
-let arrayObjCompra = new Array()
 
 interface Coors {
     x: number;
@@ -63,17 +62,14 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
                     const color = inputColorElement.value;
                     console.log(`color at [${i},${j}]`, color);
                     let objIndividualPixel = {
-                        coordenada_x: coors.x + i,
-                        coordenada_y: coors.x + j,
+                        coordenada_x: coors.x + j,
+                        coordenada_y: coors.y + i,
                         color: color
                     }
                     objToSend.pixeles.push(objIndividualPixel)
                 }
             }
         }
-
-        console.log('objToSend', objToSend);
-        console.log('accessToken', accessToken);
 
         millionApi.post('/canvas', objToSend, {
             headers: {
