@@ -86,8 +86,6 @@ export const PageMain = () => {
         setShow={setShow}
       />
 
-
-
       <div className={style.contenidoPageMain}>
         <canvas
           ref={canvasRef}

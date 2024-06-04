@@ -3,35 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useState } from "react"
 import { millionApi } from '../../api/millionApi';
 
-interface IndividualPixel {
-    coordenada_x: number;
-    coordenada_y: number;
-    color: string;
-}
-
-interface ObjToSend {
-    grupo_pixeles: {
-        link: string;
-        coordenada_x_inicio: number;
-        coordenada_y_inicio: number;
-        coordenada_x_fin: number;
-        coordenada_y_fin: number;
-    };
-    pixeles: IndividualPixel[];
-}
-
 let arrayCinco = new Array(5).fill(null);
-
-interface Coors {
-    x: number;
-    y: number;
-}
-
-interface GestionCompraProps {
-    coors: Coors;
-    show: boolean;
-    setShow: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
     const [showModalSeleccionarColores, setShowModalSeleccionarColores] = useState(false);

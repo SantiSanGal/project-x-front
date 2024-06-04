@@ -13,7 +13,7 @@
     cursor: pointer;
 }
 
-.header .logo h2{
+.header .logo h2 {
     margin: 0;
 }
 
@@ -42,4 +42,10 @@
 .active {
     background-color: #50623A;
     color: aliceblue;
+}
+
+#dropdown-basic {
+    width: 100%;
+    background-color: transparent;
+    border: none;
 }
