@@ -40,6 +40,7 @@ export const PageMain = () => {
     context.stroke();
     context.closePath();
 
+    //dibuja la linea horizontal
     context.beginPath();
     context.strokeStyle = "red";
     context.moveTo(0, canvas.height / 2);
@@ -67,13 +68,9 @@ export const PageMain = () => {
     context.stroke();
 
     let tokenValido = await validarToken();
-    // TODO: Validar que no haga click más de una vez, deshabilidar el click
-    // porque queda cargando despues de un rato la primera vez
     if (!tokenValido) {
-      // console.log('ep');
       navigate('login')
     } else {
-      // console.log('habemus token');
       handleShow()
     }
   };

@@ -4,13 +4,21 @@ export const millionApi = axios.create({
     baseURL: 'http://localhost:3331',
 });
 
-//hacer que retorne true or false
 export const validarToken = async () => {
-    let tokenValido = true
-    // await axios.get('/validar')
-    //     .then(res => console.log(res))
-    //     .catch(err => console.log(err))
+    let accessToken = localStorage.getItem('accessToken');
+    let tokenValido = false;
 
-    return tokenValido
+    try {
+        const res = await millionApi.get('/auth/verify', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        console.log('res', res);
+        tokenValido = true;
+    } catch (err) {
+        console.log('err', err);
+    }
+
+    return tokenValido;
 }
-
