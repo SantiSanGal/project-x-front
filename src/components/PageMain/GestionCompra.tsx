@@ -2,6 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useState } from "react"
 import { millionApi } from '../../api/millionApi';
+import { GestionCompraProps, ObjToSend } from '../../interfaces';
 
 let arrayCinco = new Array(5).fill(null);
 

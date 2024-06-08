@@ -3,13 +3,17 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { logout } from '../../store/slices/user';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
+import { RootState } from '../../interfaces';
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const { isLogged } = useSelector((state: RootState) => ({
+    isLogged: state.isLogged
+  }));
   const [activeUrl, setActiveUrl] = useState<String>('')
 
   useEffect(() => {

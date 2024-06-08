@@ -1,11 +1,16 @@
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../interfaces';
 
 export const millionApi = axios.create({
     baseURL: 'http://localhost:3331',
 });
 
 export const validarToken = async () => {
-    let accessToken = localStorage.getItem('accessToken');
+    const { accessToken } = useSelector((state: RootState) => ({
+        accessToken: state.accessToken
+    }));
+
     let tokenValido = false;
 
     try {
