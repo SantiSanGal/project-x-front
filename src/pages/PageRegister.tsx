@@ -25,7 +25,7 @@ export const PageRegister = () => {
     <div className="pageRegister">
       <div className="formContainer">
         <form className="formRegister" onSubmit={handleSubmit(submit)}>
-          <h2>Sing up to <span style={{ color: '#50623A' }}>Pixel War</span></h2>
+          <h2>Create a <span style={{ color: '#50623A' }}>Pixel War</span> account</h2>
           <label>Name</label>
           <input
             {...register('name')}
@@ -62,9 +62,9 @@ export const PageRegister = () => {
             type="password"
             name="confirm_password"
           />
-          <button type='submit' className="btn btn-success">Register</button>
+          <button type='submit' className="btn btn-success">Sign up</button>
         </form>
-        <p>¿Ya tienes una cuenta? <span onClick={() => navigate('/login')} style={{ color: '#50623A' }}>Login</span></p>
+        <p>Already have a Pixel War account? <span onClick={() => navigate('/login')} style={{ color: '#50623A' }}>Sign in</span></p>
       </div>
     </div>
   )

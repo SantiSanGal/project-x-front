@@ -1,10 +1,12 @@
 Canvas Y Purchases
-Post de grupo de pixeles seleccionados
+OK Post de grupo de pixeles seleccionados
 Edit de grupo de pixeles seleccionados
 
 Page About
 
+
 Page Account
+Consultar Información Personal
 Editar Información Personal
 Cambiar Contraseña
 Cerrar Sesión

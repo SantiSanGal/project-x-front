@@ -43,9 +43,10 @@ export const PageLogin = () => {
             type="password"
             name="password"
           />
-          <button className="btn btn-success">Sign in</button>
+          <button className="btn btn-success">Login</button>
         </form>
         <a>¿Olvidó su Contraseña?</a>
+        <p>New to Pixel War? <span onClick={() => navigate('/register')} style={{ color: '#50623A' }}>Sign up</span></p>
       </div>
     </div>
   )

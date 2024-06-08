@@ -43,16 +43,19 @@ export const Header = () => {
           <li className={activeUrl == 'Purchases' ? 'active' : ''} onClick={() => handleClick('Purchases')}>Purchases</li>
           <li className={activeUrl == 'About' ? 'active' : ''} onClick={() => handleClick('About')}>About</li>
           <li className={activeUrl == 'Account' ? 'active' : ''}>
-            <Dropdown>
-              <Dropdown.Toggle id="dropdown-basic">
-                <FontAwesomeIcon icon={faUser} />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => handleClick('Account')}>Account</Dropdown.Item>
-                <Dropdown.Item onClick={() => handleLogout()}>Logout</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            {isLogged ? (
+              <Dropdown>
+                <Dropdown.Toggle id="dropdown-basic">
+                  <FontAwesomeIcon icon={faUser} />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleClick('Account')}>Account</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleLogout()}>Logout</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <button className='btn btn-success' onClick={() => navigate('/login')}>Login</button>
+            )}
           </li>
         </ul >
       </div >

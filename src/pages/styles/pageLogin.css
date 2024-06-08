@@ -33,12 +33,17 @@
     margin-top: 0.5rem;
 }
 
-.pageLogin .formContainer a {
+.pageLogin .formContainer a,
+.pageLogin .formContainer p span {
     color: #50623A;
-    margin: 0 auto;
 }
 
-.pageLogin .formContainer a:hover {
+.pageLogin .formContainer a:hover,
+.pageLogin .formContainer p span {
     cursor: pointer;
     color: #3e4c2d;
+}
+
+.pageLogin .formContainer p {
+    color: aliceblue;
 }
