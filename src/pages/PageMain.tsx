@@ -20,33 +20,39 @@ export const PageMain = () => {
     canvas.style.width = `2000px`;
     canvas.style.height = `1000px`;
 
-    //dibuja los cuadros de 5*5
-    const squareWidth = canvas.width / 400;
-    const squareHeight = canvas.height / 200;
+    const img = new Image();
+    img.src = '/images/actual.png'
+    img.onload = () => {
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < 200; i++) {
-      for (let j = 0; j < 400; j++) {
-        context.strokeStyle = "black";
-        context.lineWidth = 1;
-        context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight);
+      //dibuja los cuadros de 5*5
+      const squareWidth = canvas.width / 400;
+      const squareHeight = canvas.height / 200;
+
+      for (let i = 0; i < 200; i++) {
+        for (let j = 0; j < 400; j++) {
+          context.strokeStyle = "black";
+          context.lineWidth = 1;
+          context.strokeRect(j * squareWidth, i * squareHeight, squareWidth, squareHeight);
+        }
       }
+
+      //dibuja la linea vertical
+      context.beginPath();
+      context.strokeStyle = "red";
+      context.moveTo(canvas.width / 2, 0);
+      context.lineTo(canvas.width / 2, canvas.height);
+      context.stroke();
+      context.closePath();
+
+      //dibuja la linea horizontal
+      context.beginPath();
+      context.strokeStyle = "red";
+      context.moveTo(0, canvas.height / 2);
+      context.lineTo(canvas.width, canvas.height / 2);
+      context.stroke();
+      context.closePath();
     }
-
-    //dibuja la linea vertical
-    context.beginPath();
-    context.strokeStyle = "red";
-    context.moveTo(canvas.width / 2, 0);
-    context.lineTo(canvas.width / 2, canvas.height);
-    context.stroke();
-    context.closePath();
-
-    //dibuja la linea horizontal
-    context.beginPath();
-    context.strokeStyle = "red";
-    context.moveTo(0, canvas.height / 2);
-    context.lineTo(canvas.width, canvas.height / 2);
-    context.stroke();
-    context.closePath();
   }, [])
 
   const handleShow = () => setShow(true);
