@@ -2,9 +2,12 @@ import './styles/pageLogin.css'
 import { useForm } from 'react-hook-form'
 import { millionApi } from '../api/millionApi';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login } from '../store/slices/user';
 
 export const PageLogin = () => {
   const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const submit = (data: any) => {
@@ -15,6 +18,7 @@ export const PageLogin = () => {
       .then(({ data }) => {
         if (data && data.token) {
           localStorage.setItem('accessToken', data.token.token);
+          dispatch(login(data.token.token))
           navigate('/')
         }
       }).catch((err) => {

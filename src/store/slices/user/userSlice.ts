@@ -8,7 +8,7 @@ export const userSlice = createSlice({
     },
     reducers: {
         login: (state, action) => {
-            //TODO: action.payload sacar el accessToken
+            state.accessToken = action.payload
             state.isLogged = true
         },
         logout: (state) => {

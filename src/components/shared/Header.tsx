@@ -1,12 +1,15 @@
-import { useNavigate } from 'react-router-dom'
-import Dropdown from 'react-bootstrap/Dropdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 import '../styles/header.css'
+import Dropdown from 'react-bootstrap/Dropdown';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { logout } from '../../store/slices/user';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 
 export const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [activeUrl, setActiveUrl] = useState<String>('')
 
   useEffect(() => {
@@ -17,6 +20,12 @@ export const Header = () => {
   const handleClick = (url: String) => {
     navigate(`/${url}`)
     setActiveUrl(url);
+  }
+
+  const handleLogout = () => {
+    //TODO: post al al back para invalidar token
+    dispatch(logout())
+    navigate('/login')
   }
 
   return (
@@ -37,7 +46,7 @@ export const Header = () => {
 
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => handleClick('Account')}>Account</Dropdown.Item>
-                <Dropdown.Item onClick={() => navigate('/login')}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={() => handleLogout()}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </li>
