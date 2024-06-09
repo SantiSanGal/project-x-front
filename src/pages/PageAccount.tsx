@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './styles/pageAccount.css'
 import { useForm } from 'react-hook-form'
 import { millionApi } from '../api/millionApi'
@@ -6,9 +6,25 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../interfaces'
 
 export const PageAccount = () => {
+  const [userData, setUserData] = useState()
   const accessToken = useSelector((state: RootState) => state.user.accessToken)
+
+  const getUserData = () => {
+    millionApi.get('/user', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then(res => {
+        let { data } = res
+        setUserData(state => data)
+      })
+      .catch(err => console.log(err))
+  }
+
+
   useEffect(() => {
-    //TODO: Traer la información del usuario
+    getUserData()
   }, [])
 
   const { register: registerInfo, handleSubmit: handleSubmitInfo } = useForm()
@@ -32,48 +48,58 @@ export const PageAccount = () => {
     <div className="page">
       <div className="pageMainContent pageAccount">
         <form onSubmit={handleSubmitInfo(submitInfo)} className="info">
-          <h2>Información Personal</h2>
-          <label>Nombres</label>
+          <h2>Personal Information</h2>
+          <label>Username</label>
           <input
             type="text"
             {...registerInfo('name')}
           />
-          <label>Apellidos</label>
+          <label>Email</label>
+          <input
+            type="text"
+            {...registerInfo('name')}
+          />
+          <label>Name</label>
+          <input
+            type="text"
+            {...registerInfo('name')}
+          />
+          <label>Last Name</label>
           <input
             type="text"
             {...registerInfo('last_name')}
           />
-          <label>Pais</label>
+          <label>Country</label>
           <input
             type="text"
             {...registerInfo('country')}
           />
-          <label>Ciudad</label>
+          <label>City</label>
           <input
             type="text"
             {...registerInfo('city')}
           />
-          <button className='btn btn-success'>Guardar</button>
+          <button className='btn btn-success'>Save</button>
         </form>
         <hr />
         <form onSubmit={handleSubmitPassword(submitChangePassword)} className="info">
-          <h2>Cambiar Contraseña</h2>
-          <label>Contraseña Actual</label>
+          <h2>Change Password</h2>
+          <label>Password</label>
           <input
             type="password"
             {...registerPassword('oldPassword')}
           />
-          <label>Contraseña Nueva</label>
+          <label>New Password</label>
           <input
             type="password"
             {...registerPassword('newPassword')}
           />
-          <label>Repetir Nueva Contraseña</label>
+          <label>Confirm New Password</label>
           <input
             type="password"
             {...registerPassword('confirm_new_password')}
           />
-          <button className="btn btn-success">Aceptar</button>
+          <button className="btn btn-success">Save</button>
         </form>
       </div>
     </div>

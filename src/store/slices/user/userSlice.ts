@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        accessToken: '',
-        isLogged: false
+        accessToken: localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : '',
+        isLogged: localStorage.getItem('accessToken') ? true : false
     },
     reducers: {
         login: (state, action) => {
