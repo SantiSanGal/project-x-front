@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
 import './styles/pageAccount.css'
 import { useForm } from 'react-hook-form'
+import { millionApi } from '../api/millionApi'
+import { useSelector } from 'react-redux'
+import { RootState } from '../interfaces'
 
 export const PageAccount = () => {
+  const accessToken = useSelector((state: RootState) => state.user.accessToken)
   useEffect(() => {
     //TODO: Traer la información del usuario
   }, [])
@@ -15,8 +19,13 @@ export const PageAccount = () => {
   }
 
   const submitChangePassword = (data: any) => {
-    console.log('data', data);
-
+    millionApi.put('/user/password', data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err))
   }
 
   return (
@@ -52,12 +61,12 @@ export const PageAccount = () => {
           <label>Contraseña Actual</label>
           <input
             type="password"
-            {...registerPassword('password')}
+            {...registerPassword('oldPassword')}
           />
           <label>Contraseña Nueva</label>
           <input
             type="password"
-            {...registerPassword('new_password')}
+            {...registerPassword('newPassword')}
           />
           <label>Repetir Nueva Contraseña</label>
           <input
