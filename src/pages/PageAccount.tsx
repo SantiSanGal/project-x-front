@@ -21,7 +21,7 @@ export const PageAccount = () => {
 
   return (
     <div className="page">
-      <div className="pageMainContent">
+      <div className="pageMainContent pageAccount">
         <form onSubmit={handleSubmitInfo(submitInfo)} className="info">
           <h2>Información Personal</h2>
           <label>Nombres</label>

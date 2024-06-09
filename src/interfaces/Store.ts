@@ -1,4 +1,6 @@
 export interface RootState {
-    accessToken: string,
-    isLogged: boolean;
+    user: {
+        isLogged: boolean;
+        accessToken: string;
+    };
 }

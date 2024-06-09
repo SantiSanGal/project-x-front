@@ -12,3 +12,24 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #181818;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #50623A;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #627254;
+}

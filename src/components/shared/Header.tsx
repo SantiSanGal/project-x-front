@@ -11,9 +11,7 @@ import { RootState } from '../../interfaces';
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  const { isLogged } = useSelector((state: RootState) => ({
-    isLogged: state.isLogged
-  }));
+  const isLogged = useSelector((state: RootState) => state.user.isLogged);
   const [activeUrl, setActiveUrl] = useState<String>('')
 
   useEffect(() => {

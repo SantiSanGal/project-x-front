@@ -12,3 +12,8 @@
 .info .btn {
     margin-top: 0.5rem;
 }
+
+.pageAccount {
+    display: flex;
+    justify-content: flex-start;
+}
