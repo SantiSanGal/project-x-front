@@ -12,6 +12,7 @@ export const userSlice = createSlice({
             state.isLogged = true
         },
         logout: (state) => {
+            localStorage.setItem('accessToken', '')
             state.accessToken = ''
             state.isLogged = false
         }
