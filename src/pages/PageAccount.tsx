@@ -1,13 +1,24 @@
-import { useEffect, useState } from 'react'
 import './styles/pageAccount.css'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { millionApi } from '../api/millionApi'
 import { useSelector } from 'react-redux'
-import { RootState } from '../interfaces'
+import { RootState, UserData } from '../interfaces'
 
 export const PageAccount = () => {
-  const [userData, setUserData] = useState()
+  const [userData, setUserData] = useState<UserData | null>(null)
   const accessToken = useSelector((state: RootState) => state.user.accessToken)
+  const {
+    register: registerInfo,
+    handleSubmit: handleSubmitInfo,
+    setValue: setValueInfo
+  } = useForm()
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    watch: watchPassword,
+    formState: { errors: errorsPassowrd }
+  } = useForm()
 
   const getUserData = () => {
     millionApi.get('/user', {
@@ -17,18 +28,26 @@ export const PageAccount = () => {
     })
       .then(res => {
         let { data } = res
-        setUserData(state => data)
+        setUserData(data[0])
       })
       .catch(err => console.log(err))
   }
-
 
   useEffect(() => {
     getUserData()
   }, [])
 
-  const { register: registerInfo, handleSubmit: handleSubmitInfo } = useForm()
-  const { register: registerPassword, handleSubmit: handleSubmitPassword } = useForm()
+  useEffect(() => {
+    if (userData) {
+      setValueInfo('username', userData.username)
+      setValueInfo('name', userData.name)
+      setValueInfo('email', userData.email)
+      setValueInfo('last_name', userData.last_name)
+      setValueInfo('country', userData.country)
+      setValueInfo('city', userData.city)
+    }
+  }, [userData, setValueInfo])
+
 
   const submitInfo = (data: any) => {
     console.log('data', data);
@@ -86,19 +105,23 @@ export const PageAccount = () => {
           <h2>Change Password</h2>
           <label>Password</label>
           <input
+            {...registerPassword('password', { required: 'Password is required', minLength: { value: 8, message: 'Password must be at least 8 characters' } })}
             type="password"
-            {...registerPassword('oldPassword')}
+            name="password"
           />
+          {errorsPassowrd.password && <p className="error">{String(errorsPassowrd.password.message)}</p>}
           <label>New Password</label>
           <input
             type="password"
-            {...registerPassword('newPassword')}
+            {...registerPassword('newPassword', { required: 'New Password is required', minLength: { value: 8, message: 'Password must be at least 8 characters' } })}
           />
+          {errorsPassowrd.newPassword && <p className="error">{String(errorsPassowrd.newPassword.message)}</p>}
           <label>Confirm New Password</label>
           <input
             type="password"
-            {...registerPassword('confirm_new_password')}
+            {...registerPassword('confirm_new_password', { validate: (value) => value === watchPassword('newPassword') || 'Passwords do not match' })}
           />
+          {errorsPassowrd.confirm_new_password && <p className="error">{String(errorsPassowrd.confirm_new_password.message)}</p>}
           <button className="btn btn-success">Save</button>
         </form>
       </div>
