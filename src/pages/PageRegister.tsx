@@ -28,28 +28,28 @@ export const PageRegister = () => {
           <h2>Create a <span style={{ color: '#50623A' }}>Pixel War</span> account</h2>
           <label>Name</label>
           <input
-            {...register('name', { required: 'Name is required' })}
+                    {...register('name', { required: 'Name is required', minLength: { value: 5, message: 'Name must be at least 5 characters' }, maxLength: { value: 25, message: 'Name can only contain up to 25 characters' } })}
             type="text"
             name="name"
           />
           {errors.name && <p className="error">{String(errors.name.message)}</p>}
           <label>Last Name</label>
           <input
-            {...register('last_name', { required: 'Last Name is required' })}
+                    {...register('last_name', {required: 'Last Name is required', minLength: { value: 5, message: 'Last Name must be at least 5 characters'}, maxLength: { value: 25, message: 'Last Name can only contain up to 25 characters'}})}
             type="text"
             name="last_name"
           />
           {errors.last_name && <p className="error">{String(errors.last_name.message)}</p>}
           <label>Email</label>
           <input
-            {...register('email', { required: 'Email is required' })}
+            {...register('email', { required: 'Email is required', minLength: { value: 5, message: 'Email must be at least 5 characters' } })}
             type="email"
             name="email"
           />
           {errors.email && <p className="error">{String(errors.email.message)}</p>}
           <label>Username</label>
           <input
-            {...register('username', { required: 'Username is required' })}
+            {...register('username', { required: 'Username is required', minLength: { value: 5, message: 'Username must be at least 5 characters' }, maxLength: { value: 25, message: 'Username can only contain up to 25 characters' } })}
             type="text"
             name="username"
           />

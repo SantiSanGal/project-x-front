@@ -1,13 +1,11 @@
 import { useForm } from "react-hook-form"
 import { millionApi } from "../../api/millionApi"
-import { useEffect, useState } from "react"
-import { RootState, UserData } from "../../interfaces"
-import { useSelector } from "react-redux"
+import React, { useEffect, useState } from "react"
+import { AboutComponentsProps, UserData } from "../../interfaces"
 
-export const ChangeUserInfo = () => {
+export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) => {
     const [userData, setUserData] = useState<UserData | null>(null)
-    const accessToken = useSelector((state: RootState) => state.user.accessToken)
-    const { register, handleSubmit, setValue } = useForm()
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm()
 
     const getUserData = () => {
         millionApi.get('/user', {
@@ -15,9 +13,8 @@ export const ChangeUserInfo = () => {
                 Authorization: `Bearer ${accessToken}`
             }
         })
-            .then(res => {
-                let { data } = res
-                setUserData(data[0])
+            .then(({ data }) => {
+                setUserData(data.data)
             })
             .catch(err => console.log(err))
     }
@@ -39,9 +36,15 @@ export const ChangeUserInfo = () => {
 
 
     const submitInfo = (data: any) => {
-        console.log('data', data);
+        millionApi.put('/user/edit', data, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
     }
-    
+
     return (
         <>
             <form onSubmit={handleSubmit(submitInfo)} className="info">
@@ -49,23 +52,27 @@ export const ChangeUserInfo = () => {
                 <label>Username</label>
                 <input
                     type="text"
-                    {...register('name')}
+                    {...register('username', { required: 'Username is required', minLength: { value: 5, message: 'Username must be at least 5 characters' }, maxLength: { value: 25, message: 'Username can only contain up to 25 characters' } })}
                 />
+                {errors.username && <p className="error">{String(errors.username.message)}</p>}
                 <label>Email</label>
                 <input
                     type="text"
-                    {...register('name')}
+                    {...register('email', { required: 'Email is required', minLength: { value: 5, message: 'Email must be at least 5 characters' } })}
                 />
+                {errors.email && <p className="error">{String(errors.email.message)}</p>}
                 <label>Name</label>
                 <input
                     type="text"
-                    {...register('name')}
+                    {...register('name', { required: 'Name is required', minLength: { value: 5, message: 'Name must be at least 5 characters' }, maxLength: { value: 25, message: 'Name can only contain up to 25 characters' } })}
                 />
+                {errors.name && <p className="error">{String(errors.name.message)}</p>}
                 <label>Last Name</label>
                 <input
                     type="text"
-                    {...register('last_name')}
+                    {...register('last_name', { required: 'Last Name is required', minLength: { value: 5, message: 'Last Name must be at least 5 characters' }, maxLength: { value: 25, message: 'Last Name can only contain up to 25 characters' } })}
                 />
+                {errors.last_name && <p className="error">{String(errors.last_name.message)}</p>}
                 <label>Country</label>
                 <input
                     type="text"

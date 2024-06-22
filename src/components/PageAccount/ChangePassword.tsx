@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form"
 import { millionApi } from "../../api/millionApi"
 import { useSelector } from "react-redux"
-import { RootState } from "../../interfaces"
+import { AboutComponentsProps, RootState } from "../../interfaces"
 
-export const ChangePassword = () => {
+export const ChangePassword: React.FC<AboutComponentsProps> = () => {
     const accessToken = useSelector((state: RootState) => state.user.accessToken)
     const { register, handleSubmit, watch, formState: { errors } } = useForm()
 

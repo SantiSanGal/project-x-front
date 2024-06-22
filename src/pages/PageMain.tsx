@@ -4,12 +4,19 @@ import { validarToken } from "../api/millionApi";
 import { useNavigate } from 'react-router-dom'
 import { encontrarMultiploMenorDeCinco } from "../utils/funcionesUtiles";
 import { GestionCompra } from '../components/PageMain/GestionCompra';
+import { getCanvasPixeles } from '../store/slices/canvas/thunks';
+import { useDispatch } from '../hooks/hooks';
 
 export const PageMain = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [coors, setCoors] = useState({ x: 0, y: 0 })
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getCanvasPixeles())
+  }, [dispatch])
 
   useEffect(() => {
     const canvas: any = canvasRef.current;

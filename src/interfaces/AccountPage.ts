@@ -6,3 +6,7 @@ export interface UserData {
     country?: string | null;
     city?: string | null;
 }
+
+export interface AboutComponentsProps {
+    accessToken: string | null;
+}

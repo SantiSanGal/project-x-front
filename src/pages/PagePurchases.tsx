@@ -21,14 +21,12 @@ export const PagePurchases = () => {
     })
       .then((res) => {
         let { data } = res
-        console.log(data);
         setPurchase(data.data)
         setLoadingPurchases(false)
         setUnauthorizedError(false)
       })
       .catch((err) => {
         if (err && err.response && err.response.status == 401) {
-          console.log('error 401');
           setUnauthorizedError(true)
           setLoadingPurchases(false)
         }

@@ -1,4 +1,3 @@
-// store/index.ts
 import { configureStore } from '@reduxjs/toolkit';
 import { canvasSlice } from './slices/canvas';
 import { userSlice } from './slices/user';
