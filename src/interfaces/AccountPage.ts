@@ -10,3 +10,9 @@ export interface UserData {
 export interface AboutComponentsProps {
     accessToken: string | null;
 }
+
+export interface PasswordChange {
+    confirm_new_password: string,
+    newPassword: string,
+    oldPassword: string
+}

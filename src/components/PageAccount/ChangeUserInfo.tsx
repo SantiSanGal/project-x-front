@@ -2,10 +2,13 @@ import { useForm } from "react-hook-form"
 import { millionApi } from "../../api/millionApi"
 import React, { useEffect, useState } from "react"
 import { AboutComponentsProps, UserData } from "../../interfaces"
+import { MyVerticallyCenteredModal } from "../shared/ModalCenter"
 
 export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) => {
     const [userData, setUserData] = useState<UserData | null>(null)
     const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+    const [showModalCenter, setShowModalCenter] = useState<boolean>(false)
+    const [modalMessage, setModalMessage] = useState<String>('')
 
     const getUserData = () => {
         millionApi.get('/user', {
@@ -41,8 +44,14 @@ export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) 
                 Authorization: `Bearer ${accessToken}`
             }
         })
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+            .then((res: any) => {
+                console.log('res', res);
+                setModalMessage('Success')
+                setShowModalCenter(true)
+            })
+            .catch((err: any) => {
+                console.log('F', err);
+            })
     }
 
     return (
@@ -85,6 +94,12 @@ export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) 
                 />
                 <button className='btn btn-success'>Save</button>
             </form>
+            <MyVerticallyCenteredModal
+                show={showModalCenter}
+                onHide={() => setShowModalCenter(false)}
+                setShowModalCenter={setShowModalCenter}
+                modalMessage={modalMessage}
+            />
         </>
     )
 }
