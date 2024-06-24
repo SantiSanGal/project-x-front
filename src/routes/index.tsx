@@ -7,6 +7,7 @@ import { PagePurchases } from '../pages/PagePurchases';
 import { PageAccount } from '../pages/PageAccount';
 import { Header } from '../components/shared/Header';
 import React from 'react';
+import { PageResult } from '../pages/PageResult';
 
 
 
@@ -43,5 +44,9 @@ export const router = createBrowserRouter([
     {
         path: '/account',
         element: <CustomRoute element={<PageAccount />} />,
+    },
+    {
+        path: '/result',
+        element: <CustomRoute element={<PageResult />} />,
     },
 ]);
