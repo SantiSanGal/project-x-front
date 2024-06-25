@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { RootState } from '../../interfaces';
+import { millionApi } from '../../api/millionApi';
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const isLogged = useSelector((state: RootState) => state.user.isLogged);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken)
   const [activeUrl, setActiveUrl] = useState<String>('')
 
   useEffect(() => {
@@ -25,9 +27,21 @@ export const Header = () => {
   }
 
   const handleLogout = () => {
-    //TODO: post al al back para invalidar token
-    dispatch(logout())
-    navigate('/login')
+    console.log('accessToken', accessToken);
+
+    millionApi.post('/auth/logout', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((res) => {
+        console.log(res);
+
+      }).catch((err) => {
+        console.log(err);
+      });
+    // dispatch(logout())
+    // navigate('/login')
   }
 
   return (

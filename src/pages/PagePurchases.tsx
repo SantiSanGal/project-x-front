@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/esm/Button';
 import { useNavigate } from 'react-router-dom';
+import { TypePurchase } from '../interfaces';
 
 export const PagePurchases = () => {
-  const [purchases, setPurchase] = useState([])
+  const [purchases, setPurchase] = useState<TypePurchase[]>([])
   const [loadingPurchases, setLoadingPurchases] = useState(true)
   const [unauthorizedError, setUnauthorizedError] = useState(false)
 
@@ -21,6 +22,8 @@ export const PagePurchases = () => {
     })
       .then((res) => {
         let { data } = res
+        console.log('purchases data', data);
+
         setPurchase(data.data)
         setLoadingPurchases(false)
         setUnauthorizedError(false)

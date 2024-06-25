@@ -12,7 +12,6 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
 
     const handlePurchase = () => {
         console.log('coordenadas del click desde el purchase -> ', coors);
-        //TODO: Hacer pasarela
         setShowModalSeleccionarColores(true)
     }
 

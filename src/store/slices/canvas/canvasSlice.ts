@@ -9,7 +9,11 @@ import { createSlice } from "@reduxjs/toolkit";
 export const canvasSlice = createSlice({
     name: 'user',
     initialState: {
-        canvasPixeles: [],
+        canvasPixeles: [], //pixeles sin pintar desde la última actualización de cada 24hs
+        rangoUnoOcupado: [], //rango de pixeles de 5x5 ocupados en el sector 1
+        rangoDosOcupado: [], //rango de pixeles de 5x5 ocupados en el sector 2
+        rangoTresOcupado: [], //rango de pixeles de 5x5 ocupados en el sector 3
+        rangoCuatroOcupado: [], //rango de pixeles de 5x5 ocupados en el sector 4
         isLoading: false
     },
     reducers: {
@@ -19,6 +23,24 @@ export const canvasSlice = createSlice({
         setCanvas: (state, action) => {
             state.isLoading = false;
             state.canvasPixeles = action.payload.canvasPixeles
+        },
+        setRangosOcupados: (state, action) => {
+            switch (action.payload.sector) {
+                case 1:
+                    state.rangoUnoOcupado = []
+                    break;
+                case 2:
+                    state.rangoDosOcupado = []
+                    break;
+                case 3:
+                    state.rangoTresOcupado = []
+                    break;
+                case 4:
+                    state.rangoCuatroOcupado = []
+                    break;
+                default:
+                    break;
+            }
         }
     },
 })
