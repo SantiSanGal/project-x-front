@@ -6,7 +6,7 @@ import { GestionCompra } from '../components/PageMain/GestionCompra';
 import { getCanvasPixeles, getPixelesOcupados } from '../store/slices/canvas/thunks';
 import { useDispatch } from '../hooks/hooks';
 import { useSelector } from 'react-redux';
-import { RootState } from '../interfaces';
+import { CanvasState, UserState } from '../interfaces';
 
 export const PageMain = () => {
   const canvasRef = useRef(null);
@@ -14,13 +14,35 @@ export const PageMain = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false);
   const [coors, setCoors] = useState({ x: 0, y: 0 })
-  const isLogged = useSelector((state: RootState) => state.user.isLogged);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken)
+  const isLogged = useSelector((state: UserState) => state.user.isLogged);
+  const accessToken = useSelector((state: UserState) => state.user.accessToken)
+  const canvasPixeles = useSelector((state: CanvasState) => state.canvas.canvasPixeles);
 
+  // Trae los pixeles que aún no se hayan pintando en la imágen actual
   useEffect(() => {
-    dispatch(getCanvasPixeles())
+    if (isLogged) {
+      dispatch(getCanvasPixeles(accessToken))
+    }
   }, [dispatch])
 
+  // Pinta los pixeles que aún no se hayan pintando en la imágen actual
+  useEffect(() => {
+    if (isLogged) {
+      canvasPixeles.map(({ coordenada_x, coordenada_y, color }) => {
+        const canvas = canvasRef.current as HTMLCanvasElement | null;
+        if (!canvas) return;
+
+        const context = canvas.getContext("2d");
+        if (!context) return;
+
+        context.fillStyle = color;
+        context.fillRect(coordenada_x, coordenada_y, 1, 1);
+        context.stroke();
+      })
+    }
+  }, [canvasPixeles])
+
+  // De la imágen actual (generada cada 24hr), dibuja en un canvas
   useEffect(() => {
     const canvas: any = canvasRef.current;
     const context = canvas.getContext("2d");

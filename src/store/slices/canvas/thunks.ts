@@ -2,12 +2,16 @@ import { millionApi } from "../../../api/millionApi"
 import { AppDispatch, RootState } from "../../store"
 import { setCanvas, setRangosOcupados, startLoadingCanvas } from "./canvasSlice"
 
-export const getCanvasPixeles = () => {
+export const getCanvasPixeles = (accessToken: string) => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
         dispatch(startLoadingCanvas())
-        // const { data } = await millionApi.get('canvas')
-        // console.log('data pixeles', data);
-        // dispatch(setCanvas(data))
+        const { data } = await millionApi.get('canvas', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        console.log('data pixeles', data);
+        dispatch(setCanvas(data))
     }
 }
 

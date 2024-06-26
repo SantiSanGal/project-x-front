@@ -22,7 +22,7 @@ export const canvasSlice = createSlice({
         },
         setCanvas: (state, action) => {
             state.isLoading = false;
-            state.canvasPixeles = action.payload.canvasPixeles
+            state.canvasPixeles = action.payload.data
         },
         setRangosOcupados: (state, action) => {
             switch (action.payload.sector) {

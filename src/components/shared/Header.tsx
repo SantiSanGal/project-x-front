@@ -6,14 +6,14 @@ import { logout } from '../../store/slices/user';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
-import { RootState } from '../../interfaces';
+import { UserState } from '../../interfaces';
 import { millionApi } from '../../api/millionApi';
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
-  const isLogged = useSelector((state: RootState) => state.user.isLogged);
-  const accessToken = useSelector((state: RootState) => state.user.accessToken)
+  const isLogged = useSelector((state: UserState) => state.user.isLogged);
+  const accessToken = useSelector((state: UserState) => state.user.accessToken)
   const [activeUrl, setActiveUrl] = useState<String>('')
 
   useEffect(() => {
