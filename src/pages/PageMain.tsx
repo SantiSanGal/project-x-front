@@ -1,11 +1,12 @@
 import style from './styles/pageMain.module.css'
 import { useEffect, useRef, useState } from "react"
-import { validarToken } from "../api/millionApi";
 import { useNavigate } from 'react-router-dom'
 import { encontrarMultiploMenorDeCinco } from "../utils/funcionesUtiles";
 import { GestionCompra } from '../components/PageMain/GestionCompra';
-import { getCanvasPixeles } from '../store/slices/canvas/thunks';
+import { getCanvasPixeles, getPixelesOcupados } from '../store/slices/canvas/thunks';
 import { useDispatch } from '../hooks/hooks';
+import { useSelector } from 'react-redux';
+import { RootState } from '../interfaces';
 
 export const PageMain = () => {
   const canvasRef = useRef(null);
@@ -13,6 +14,8 @@ export const PageMain = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false);
   const [coors, setCoors] = useState({ x: 0, y: 0 })
+  const isLogged = useSelector((state: RootState) => state.user.isLogged);
+  const accessToken = useSelector((state: RootState) => state.user.accessToken)
 
   useEffect(() => {
     dispatch(getCanvasPixeles())
@@ -65,26 +68,42 @@ export const PageMain = () => {
   const handleShow = () => setShow(true);
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
-    const canvas = canvasRef.current as HTMLCanvasElement | null;
-    if (!canvas) return;
+    if (isLogged) {
+      let sector = 0
 
-    const xCinco = encontrarMultiploMenorDeCinco(offsetX)
-    const yCinco = encontrarMultiploMenorDeCinco(offsetY)
+      if (offsetX >= 0 && offsetX <= 999) { //1 y 3
+        if (offsetY >= 0 && offsetY <= 499) { //1
+          sector = 1
+        } else { // 3
+          sector = 3
+        }
+      } else { // 2 y 4 
+        if (offsetY >= 0 && offsetY <= 499) { // 2
+          sector = 2
+        } else { // 4
+          sector = 4
+        }
+      }
 
-    setCoors({ x: xCinco, y: yCinco })
+      dispatch(getPixelesOcupados(sector, accessToken))
+      //TODO: Verificar si está ocupado antes de pintar
+      const canvas = canvasRef.current as HTMLCanvasElement | null;
+      if (!canvas) return;
 
-    const context = canvas.getContext("2d");
-    if (!context) return;
+      const xCinco = encontrarMultiploMenorDeCinco(offsetX)
+      const yCinco = encontrarMultiploMenorDeCinco(offsetY)
 
-    context.fillStyle = "black";
-    context.fillRect(xCinco, yCinco, 5, 5);
-    context.stroke();
+      setCoors({ x: xCinco, y: yCinco })
 
-    let tokenValido = await validarToken();
-    if (!tokenValido) {
-      navigate('login')
-    } else {
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      context.fillStyle = "black";
+      context.fillRect(xCinco, yCinco, 5, 5);
+      context.stroke();
       handleShow()
+    } else {
+      navigate('login')
     }
   };
 

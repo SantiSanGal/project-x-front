@@ -27,16 +27,16 @@ export const canvasSlice = createSlice({
         setRangosOcupados: (state, action) => {
             switch (action.payload.sector) {
                 case 1:
-                    state.rangoUnoOcupado = []
+                    state.rangoUnoOcupado = action.payload.data
                     break;
                 case 2:
-                    state.rangoDosOcupado = []
+                    state.rangoDosOcupado = action.payload.data
                     break;
                 case 3:
-                    state.rangoTresOcupado = []
+                    state.rangoTresOcupado = action.payload.data
                     break;
                 case 4:
-                    state.rangoCuatroOcupado = []
+                    state.rangoCuatroOcupado = action.payload.data
                     break;
                 default:
                     break;
@@ -45,4 +45,4 @@ export const canvasSlice = createSlice({
     },
 })
 
-export const { startLoadingCanvas, setCanvas } = canvasSlice.actions;
+export const { startLoadingCanvas, setCanvas, setRangosOcupados } = canvasSlice.actions;

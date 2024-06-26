@@ -40,8 +40,9 @@ export const Header = () => {
       }).catch((err) => {
         console.log(err);
       });
-    // dispatch(logout())
-    // navigate('/login')
+    //TODO: Arreglar en backend
+    dispatch(logout())
+    navigate('/login')
   }
 
   return (
