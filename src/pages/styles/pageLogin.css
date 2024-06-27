@@ -21,7 +21,6 @@
 .pageLogin .formContainer .formLogin {
     color: aliceblue;
     max-width: 500px;
-    /* max-height: 300px; */
     min-width: 400px;
     min-height: 200px;
     width: 40vw;
@@ -34,17 +33,20 @@
     margin-top: 0.5rem;
 }
 
-.pageLogin .formContainer a,
-.pageLogin .formContainer p span {
-    color: #50623A;
+.pageLogin .formContainer p {
+    color: aliceblue;
+    cursor: pointer;
 }
 
-.pageLogin .formContainer a:hover,
+.pageLogin .formContainer .forgotpassword:hover {
+    color: #3e4c2d;
+}
+
 .pageLogin .formContainer p span {
     cursor: pointer;
     color: #3e4c2d;
 }
 
-.pageLogin .formContainer p {
-    color: aliceblue;
+.pageLogin .formContainer p span:hover {
+    color: #6d8155 !important;
 }

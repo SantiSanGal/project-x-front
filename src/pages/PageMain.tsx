@@ -17,6 +17,10 @@ export const PageMain = () => {
   const isLogged = useSelector((state: UserState) => state.user.isLogged);
   const accessToken = useSelector((state: UserState) => state.user.accessToken)
   const canvasPixeles = useSelector((state: CanvasState) => state.canvas.canvasPixeles);
+  const rangoUnoOcupado = useSelector((state: CanvasState) => state.canvas.rangoUnoOcupado);
+  const rangoDosOcupado = useSelector((state: CanvasState) => state.canvas.rangoDosOcupado);
+  const rangoTresOcupado = useSelector((state: CanvasState) => state.canvas.rangoTresOcupado);
+  const rangoCuatroOcupado = useSelector((state: CanvasState) => state.canvas.rangoCuatroOcupado);
 
   // Trae los pixeles que aún no se hayan pintando en la imágen actual
   useEffect(() => {
@@ -107,8 +111,24 @@ export const PageMain = () => {
         }
       }
 
-      dispatch(getPixelesOcupados(sector, accessToken))
-      //TODO: Verificar si está ocupado antes de pintar
+      await dispatch(getPixelesOcupados(sector, accessToken))
+      switch (sector) {
+        case 1:
+          console.log('rango -> ', rangoUnoOcupado);
+          break;
+        case 2:
+          console.log('rango -> ', rangoDosOcupado);
+          break;
+        case 3:
+          console.log('rango -> ', rangoTresOcupado);
+          break;
+        case 4:
+          console.log('rango -> ', rangoCuatroOcupado);
+          break;
+        default:
+          break;
+      }
+
       const canvas = canvasRef.current as HTMLCanvasElement | null;
       if (!canvas) return;
 
