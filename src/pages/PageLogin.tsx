@@ -59,6 +59,7 @@ export const PageLogin = () => {
           <p>New to Pixel War? <span onClick={() => navigate('/register')} style={{ color: '#50623A' }}>Sign up</span></p>
         </div>
       </div>
+      
       <ForgotPassword
         show={showForgotPasswordModal}
         handleClose={setShowForgotPasswordModal}

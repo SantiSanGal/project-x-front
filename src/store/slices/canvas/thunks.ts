@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "../../store"
 import { setCanvas, setRangosOcupados, startLoadingCanvas } from "./canvasSlice"
 
 export const getCanvasPixeles = (accessToken: string) => {
-    return async (dispatch: AppDispatch, getState: () => RootState) => {
+    return async (dispatch: AppDispatch, _getState: () => RootState) => {
         dispatch(startLoadingCanvas())
         const { data } = await millionApi.get('canvas', {
             headers: {
@@ -16,7 +16,7 @@ export const getCanvasPixeles = (accessToken: string) => {
 }
 
 export const getPixelesOcupados = (idSector: number, accessToken: string) => {
-    return async (dispatch: AppDispatch, getState: () => RootState) => {
+    return async (dispatch: AppDispatch, _getState: () => RootState) => {
         const { data } = await millionApi.get(`/canvas/rangosOcupados/${idSector}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
