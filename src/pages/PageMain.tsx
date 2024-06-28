@@ -95,47 +95,38 @@ export const PageMain = () => {
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
     if (isLogged) {
-      let sector = 0
+      let sector = 0;
 
       if (offsetX >= 0 && offsetX <= 999) { //1 y 3
         if (offsetY >= 0 && offsetY <= 499) { //1
-          sector = 1
+          sector = 1;
         } else { // 3
-          sector = 3
+          sector = 3;
         }
       } else { // 2 y 4 
         if (offsetY >= 0 && offsetY <= 499) { // 2
-          sector = 2
+          sector = 2;
         } else { // 4
-          sector = 4
+          sector = 4;
         }
       }
 
-      await dispatch(getPixelesOcupados(sector, accessToken))
-      switch (sector) {
-        case 1:
-          console.log('rango -> ', rangoUnoOcupado);
-          break;
-        case 2:
-          console.log('rango -> ', rangoDosOcupado);
-          break;
-        case 3:
-          console.log('rango -> ', rangoTresOcupado);
-          break;
-        case 4:
-          console.log('rango -> ', rangoCuatroOcupado);
-          break;
-        default:
-          break;
-      }
+      console.log('sector', sector);
+
+      const pixelesOcupados = await dispatch(getPixelesOcupados(sector, accessToken));
+      console.log('pixelesOcupados ->', pixelesOcupados);
+      pixelesOcupados.map(({ coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin }: any) => {
+        console.log('pixelOcupado', coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin);
+      })
+
 
       const canvas = canvasRef.current as HTMLCanvasElement | null;
       if (!canvas) return;
 
-      const xCinco = encontrarMultiploMenorDeCinco(offsetX)
-      const yCinco = encontrarMultiploMenorDeCinco(offsetY)
+      const xCinco = encontrarMultiploMenorDeCinco(offsetX);
+      const yCinco = encontrarMultiploMenorDeCinco(offsetY);
 
-      setCoors({ x: xCinco, y: yCinco })
+      setCoors({ x: xCinco, y: yCinco });
 
       const context = canvas.getContext("2d");
       if (!context) return;
@@ -143,9 +134,9 @@ export const PageMain = () => {
       context.fillStyle = "black";
       context.fillRect(xCinco, yCinco, 5, 5);
       context.stroke();
-      handleShow()
+      handleShow();
     } else {
-      navigate('login')
+      navigate('login');
     }
   };
 

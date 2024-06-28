@@ -21,8 +21,8 @@ export const getPixelesOcupados = (idSector: number, accessToken: string) => {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        })
-        dispatch(setRangosOcupados({ sector: idSector, data: data.data }))
-        console.log('data pixeles Ocupados', data);
-    }
-}
+        });
+        dispatch(setRangosOcupados({ sector: idSector, data: data.data }));
+        return data.data; // Devolver la data obtenida
+    };
+};

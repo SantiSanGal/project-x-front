@@ -18,8 +18,8 @@ export const PageLogin = () => {
       username: data.username,
       password: data.password
     })
-      .then(({ data }) => {
-        console.log('login', data);
+      .then(({ data: { data } }) => {
+        console.log('login', data.token);
 
         if (data && data.token) {
           localStorage.setItem('accessToken', data.token.token);
