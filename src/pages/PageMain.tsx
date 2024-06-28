@@ -17,10 +17,6 @@ export const PageMain = () => {
   const isLogged = useSelector((state: UserState) => state.user.isLogged);
   const accessToken = useSelector((state: UserState) => state.user.accessToken)
   const canvasPixeles = useSelector((state: CanvasState) => state.canvas.canvasPixeles);
-  const rangoUnoOcupado = useSelector((state: CanvasState) => state.canvas.rangoUnoOcupado);
-  const rangoDosOcupado = useSelector((state: CanvasState) => state.canvas.rangoDosOcupado);
-  const rangoTresOcupado = useSelector((state: CanvasState) => state.canvas.rangoTresOcupado);
-  const rangoCuatroOcupado = useSelector((state: CanvasState) => state.canvas.rangoCuatroOcupado);
 
   // Trae los pixeles que aún no se hayan pintando en la imágen actual
   useEffect(() => {
@@ -94,9 +90,10 @@ export const PageMain = () => {
   const handleShow = () => setShow(true);
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
-    if (isLogged) {
-      let sector = 0;
+    if (isLogged) { //verifico si está loggueado
 
+      //compruebo el sector en donde dió el click
+      let sector = 0;
       if (offsetX >= 0 && offsetX <= 999) { //1 y 3
         if (offsetY >= 0 && offsetY <= 499) { //1
           sector = 1;
@@ -111,31 +108,37 @@ export const PageMain = () => {
         }
       }
 
-      console.log('sector', sector);
-
+      //traigo del estado global los pixeles ocupados del sector
       const pixelesOcupados = await dispatch(getPixelesOcupados(sector, accessToken));
-      console.log('pixelesOcupados ->', pixelesOcupados);
-      pixelesOcupados.map(({ coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin }: any) => {
-        console.log('pixelOcupado', coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin);
-      })
 
+      //recorro los pixeles ocupados del sector y verifico si en donde dió click, puede pintar nuevos pixeles
+      let permitir = true;
+      for (const { coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin } of pixelesOcupados) {
+        if (offsetX >= coordenada_x_inicio && offsetX <= coordenada_x_fin && offsetY >= coordenada_y_inicio && offsetY <= coordenada_y_fin) {
+          permitir = false;
+          break;
+        }
+      }
 
-      const canvas = canvasRef.current as HTMLCanvasElement | null;
-      if (!canvas) return;
+      //si está permitido, muestra el modal para seleccionar los colores
+      if (permitir) {
+        const canvas = canvasRef.current as HTMLCanvasElement | null;
+        if (!canvas) return;
 
-      const xCinco = encontrarMultiploMenorDeCinco(offsetX);
-      const yCinco = encontrarMultiploMenorDeCinco(offsetY);
+        const xCinco = encontrarMultiploMenorDeCinco(offsetX);
+        const yCinco = encontrarMultiploMenorDeCinco(offsetY);
 
-      setCoors({ x: xCinco, y: yCinco });
+        setCoors({ x: xCinco, y: yCinco });
 
-      const context = canvas.getContext("2d");
-      if (!context) return;
+        const context = canvas.getContext("2d");
+        if (!context) return;
 
-      context.fillStyle = "black";
-      context.fillRect(xCinco, yCinco, 5, 5);
-      context.stroke();
-      handleShow();
-    } else {
+        context.fillStyle = "black";
+        context.fillRect(xCinco, yCinco, 5, 5);
+        context.stroke();
+        handleShow();
+      }
+    } else { // si no está loggueado, va al login
       navigate('login');
     }
   };
