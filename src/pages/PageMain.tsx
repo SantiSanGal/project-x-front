@@ -145,6 +145,7 @@ export const PageMain = () => {
 
   return (
     <div className={style.pageMain}>
+    
       <GestionCompra
         coors={coors}
         show={show}

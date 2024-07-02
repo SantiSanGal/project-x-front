@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
-export const MyVerticallyCenteredModal = (props: any) => {
+export const ModalSuccess = (props: any) => {
     useEffect(() => {
         setTimeout(() => {
             props.setShowModalCenter(false)

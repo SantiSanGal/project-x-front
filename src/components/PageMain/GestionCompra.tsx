@@ -11,8 +11,9 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
     const handleClose = () => setShow(false);
 
     const handlePurchase = () => {
-        console.log('coordenadas del click desde el purchase -> ', coors);
-        setShowModalSeleccionarColores(true)
+        console.log('coordenadas del click desde el purchase handlePurchase -> ', coors);
+        //TODO: Post al back para verificar si los rangos están disponibles y generar pedido en pagopar
+        // setShowModalSeleccionarColores(true)
     }
 
     const handleConfirmColorsOfPurchase = () => {

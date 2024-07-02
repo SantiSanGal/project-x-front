@@ -3,7 +3,7 @@ import { millionApi } from "../../api/millionApi"
 import { useSelector } from "react-redux"
 import { AboutComponentsProps, UserState } from "../../interfaces"
 import { useState } from "react"
-import { MyVerticallyCenteredModal } from "../shared/ModalCenter"
+import { ModalSuccess } from "../shared/ModalSuccess"
 
 export const ChangePassword: React.FC<AboutComponentsProps> = () => {
     const accessToken = useSelector((state: UserState) => state.user.accessToken)
@@ -52,7 +52,8 @@ export const ChangePassword: React.FC<AboutComponentsProps> = () => {
                 {errors.confirm_new_password && <p className="error">{String(errors.confirm_new_password.message)}</p>}
                 <button className="btn btn-success">Save</button>
             </form>
-            <MyVerticallyCenteredModal
+            
+            <ModalSuccess
                 show={showModalCenter}
                 onHide={() => setShowModalCenter(false)}
                 setShowModalCenter={setShowModalCenter}

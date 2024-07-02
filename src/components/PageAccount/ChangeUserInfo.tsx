@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { millionApi } from "../../api/millionApi"
 import React, { useEffect, useState } from "react"
 import { AboutComponentsProps, UserData } from "../../interfaces"
-import { MyVerticallyCenteredModal } from "../shared/ModalCenter"
+import { ModalSuccess } from "../shared/ModalSuccess"
 
 export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) => {
     const [userData, setUserData] = useState<UserData | null>(null)
@@ -94,7 +94,7 @@ export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) 
                 />
                 <button className='btn btn-success'>Save</button>
             </form>
-            <MyVerticallyCenteredModal
+            <ModalSuccess
                 show={showModalCenter}
                 onHide={() => setShowModalCenter(false)}
                 setShowModalCenter={setShowModalCenter}
