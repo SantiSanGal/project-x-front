@@ -22,8 +22,6 @@ export const PagePurchases = () => {
     })
       .then((res) => {
         let { data } = res
-        console.log('purchases data', data);
-
         setPurchase(data.data)
         setLoadingPurchases(false)
         setUnauthorizedError(false)
@@ -45,7 +43,7 @@ export const PagePurchases = () => {
             <FontAwesomeIcon icon={faSpinner} spin style={{ color: "#b5c18e" }} />
           ) : unauthorizedError ? (
             <>
-              <h2>Inicie sesión para ver sus compras</h2>
+              <h2>Log in to view your purchases</h2>
               <Button
                 className='btn btn-success'
                 onClick={() => navigate('/login')}
@@ -59,7 +57,7 @@ export const PagePurchases = () => {
               />
             ))
           ) : (
-            <p>Aún no tiene compras</p>
+            <p>You don't have any purchases yet</p>
           )
         }
       </div>

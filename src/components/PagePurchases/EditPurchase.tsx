@@ -1,16 +1,11 @@
-import { useEffect } from "react"
 import Modal from 'react-bootstrap/Modal';
 import Button from "react-bootstrap/esm/Button";
 import { EditCompraProps } from "../../interfaces";
 // import { millionApi } from "../../api/millionApi";
 
 export const EditPurchase = ({ idPurchase, show, setShow }: EditCompraProps) => {
-    console.log('idPurchase', idPurchase);
-
-    useEffect(() => {
-        //TODO: Consultar los px del id
-        // millionApi
-    }, [])
+    //TODO: En vez de consultar los pixeles individuales, traer el objeto completo del componente padre
+    //los datos ya están en pixeles
 
     return (
         <>
@@ -22,29 +17,14 @@ export const EditPurchase = ({ idPurchase, show, setShow }: EditCompraProps) => 
                     <table >
                         <tbody>
                             {
-                                // arrayCinco.map((_fila, i) => (
-                                //     <tr
-                                //         key={i}
-                                //     >
-                                //         {
-                                //             arrayCinco.map((_columna, j) => (
-                                //                 <td
-                                //                     key={j}
-                                //                     id={`td-${i}-${j}`}
-                                //                 >
-                                //                     <input id={`inputColor-${i}-${j}`} type="color" />
-                                //                 </td>
-                                //             ))
-                                //         }
-                                //     </tr>
-                                // ))
+                                //TODO: hacer una tabla de 5x5 igual que en el post
                             }
                         </tbody>
                     </table>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary">
-                        Aceptar
+                        Accept
                     </Button>
                 </Modal.Footer>
             </Modal>
