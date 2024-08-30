@@ -1,0 +1,74 @@
+.pageRegister {
+    width: 100vw;
+    min-height: 100vh;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #181818;
+}
+
+.pageRegister .formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    background-color: #1f1f1f;
+    box-shadow: 0px 6px 7px 0px rgba(10, 10, 9, 0.9);
+}
+
+.pageRegister .formContainer .formRegister {
+    color: aliceblue;
+    max-width: 500px;
+    /* max-height: 400px; */
+    min-width: 400px;
+    min-height: 200px;
+    width: 40vw;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.pageRegister .formContainer .formRegister input{
+    background-color: #181818;
+    border: none;
+    color: aliceblue;
+}
+
+.pageRegister .formContainer .formRegister .btn-success {
+    margin-top: 0.5rem;
+}
+
+.pageRegister .formContainer p {
+    color: aliceblue;
+    margin: 0.5rem 0 0 0;
+}
+
+.pageRegister .formContainer p span {
+    cursor: pointer;
+}
+
+.pageRegister .formContainer .formRegister input:-webkit-autofill {
+    background-color: #181818 !important;
+    color: aliceblue !important;
+    -webkit-text-fill-color: aliceblue !important;
+    -webkit-box-shadow: 0 0 0px 1000px #181818 inset !important;
+    box-shadow: 0 0 0px 1000px #181818 inset !important;
+}
+
+.pageRegister .formContainer .formRegister input:-webkit-autofill:focus {
+    background-color: #181818 !important;
+    color: aliceblue !important;
+    -webkit-text-fill-color: aliceblue !important;
+    -webkit-box-shadow: 0 0 0px 1000px #181818 inset !important;
+    box-shadow: 0 0 0px 1000px #181818 inset !important;
+}
+
+.pageRegister .formContainer .formRegister input:-webkit-autofill:hover {
+    background-color: #181818 !important;
+    color: aliceblue !important;
+    -webkit-text-fill-color: aliceblue !important;
+    -webkit-box-shadow: 0 0 0px 1000px #181818 inset !important;
+    box-shadow: 0 0 0px 1000px #181818 inset !important;
+}

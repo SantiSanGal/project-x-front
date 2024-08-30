@@ -3,7 +3,7 @@ import { millionApi } from "../../api/millionApi"
 import { useSelector } from "react-redux"
 import { AboutComponentsProps, UserState } from "../../interfaces"
 import { useState } from "react"
-import { ModalSuccess } from "../shared/ModalSuccess"
+import { ModalSuccess } from "../shared/ModalSuccess/ModalSuccess"
 
 export const ChangePassword: React.FC<AboutComponentsProps> = () => {
     const accessToken = useSelector((state: UserState) => state.user.accessToken)

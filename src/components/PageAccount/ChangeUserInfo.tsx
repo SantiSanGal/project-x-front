@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { millionApi } from "../../api/millionApi"
 import React, { useEffect, useState } from "react"
 import { AboutComponentsProps, UserData } from "../../interfaces"
-import { ModalSuccess } from "../shared/ModalSuccess"
+import { ModalSuccess } from "../shared/ModalSuccess/ModalSuccess"
 
 export const ChangeUserInfo: React.FC<AboutComponentsProps> = ({ accessToken }) => {
     const [userData, setUserData] = useState<UserData | null>(null)

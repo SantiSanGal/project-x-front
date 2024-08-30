@@ -11,13 +11,30 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
     const handleClose = () => setShow(false);
 
     const handlePurchase = () => {
+        let accessToken = localStorage.getItem('accessToken')
         console.log('coordenadas del click desde el purchase handlePurchase -> ', coors);
+        let params: any = {
+            coordenada_x_inicio: coors.x,
+            coordenada_y_inicio: coors.y,
+            coordenada_x_fin: coors.x + 4,
+            coordenada_y_fin: coors.y + 4
+        }
+        
         //TODO: Post al back para verificar si los rangos están disponibles y generar pedido en pagopar
-        // setShowModalSeleccionarColores(true)
+
+        millionApi.post('/pagopar/generarPedido', params, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }).then(res => console.log(res))
+        .catch(err => console.log('err', err))
+
+        setShowModalSeleccionarColores(true)
     }
 
     const handleConfirmColorsOfPurchase = () => {
         let accessToken = localStorage.getItem('accessToken')
+
         let objToSend: ObjToSend = {
             grupo_pixeles: {
                 link: 'http://validarstring.com',
@@ -28,6 +45,7 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
             },
             pixeles: []
         }
+
         for (let i = 0; i < 5; i++) {
             for (let j = 0; j < 5; j++) {
                 const inputColorElement = document.getElementById(`inputColor-${i}-${j}`) as HTMLInputElement;

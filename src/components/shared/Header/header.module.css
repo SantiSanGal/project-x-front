@@ -44,8 +44,21 @@
     color: aliceblue;
 }
 
-#dropdown-basic {
+.dropdownBasic {
     width: 100%;
-    background-color: transparent;
+    background-color: transparent !important;
     border: none;
+}
+
+.dropdownContent {
+    background-color: #0d0d0d;
+}
+
+.dropdownContent .dropdownItem{
+    color: aliceblue !important;
+}
+
+.dropdownContent .dropdownItem:hover{
+    background-color: transparent !important;
+    filter: brightness(50%);
 }

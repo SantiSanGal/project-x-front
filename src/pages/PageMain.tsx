@@ -14,9 +14,11 @@ export const PageMain = () => {
   const dispatch = useDispatch()
   const [show, setShow] = useState(false);
   const [coors, setCoors] = useState({ x: 0, y: 0 })
+  const [verificandoOcupados, setVerificandoOcupados] = useState(false);
   const isLogged = useSelector((state: UserState) => state.user.isLogged);
   const accessToken = useSelector((state: UserState) => state.user.accessToken)
   const canvasPixeles = useSelector((state: CanvasState) => state.canvas.canvasPixeles);
+
 
   // Trae los pixeles que aún no se hayan pintando en la imágen actual
   useEffect(() => {
@@ -24,23 +26,6 @@ export const PageMain = () => {
       dispatch(getCanvasPixeles(accessToken))
     }
   }, [dispatch])
-
-  // Pinta los pixeles que aún no se hayan pintando en la imágen actual
-  useEffect(() => {
-    if (isLogged) {
-      canvasPixeles.map(({ coordenada_x, coordenada_y, color }) => {
-        const canvas = canvasRef.current as HTMLCanvasElement | null;
-        if (!canvas) return;
-
-        const context = canvas.getContext("2d");
-        if (!context) return;
-
-        context.fillStyle = color;
-        context.fillRect(coordenada_x, coordenada_y, 1, 1);
-        context.stroke();
-      })
-    }
-  }, [canvasPixeles])
 
   // De la imágen actual (generada cada 24hr), dibuja en un canvas
   useEffect(() => {
@@ -87,11 +72,28 @@ export const PageMain = () => {
     }
   }, [])
 
+  // Pinta los pixeles que aún no se hayan pintando en la imágen actual
+  useEffect(() => {
+    if (isLogged) {
+      canvasPixeles.map(({ coordenada_x, coordenada_y, color }) => {
+        const canvas = canvasRef.current as HTMLCanvasElement | null;
+        if (!canvas) return;
+
+        const context = canvas.getContext("2d");
+        if (!context) return;
+
+        context.fillStyle = color;
+        context.fillRect(coordenada_x, coordenada_y, 1, 1);
+        context.stroke();
+      })
+    }
+  }, [canvasPixeles])
+
   const handleShow = () => setShow(true);
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
     if (isLogged) { //verifico si está loggueado
-
+      setVerificandoOcupados(true)
       //compruebo el sector en donde dió el click
       let sector = 0;
       if (offsetX >= 0 && offsetX <= 999) { //1 y 3
@@ -136,16 +138,17 @@ export const PageMain = () => {
         context.fillStyle = "black";
         context.fillRect(xCinco, yCinco, 5, 5);
         context.stroke();
+        setVerificandoOcupados(false);
         handleShow();
       }
     } else { // si no está loggueado, va al login
+      //TODO: Mostrar un aviso
       navigate('login');
     }
   };
 
   return (
     <div className={style.pageMain}>
-    
       <GestionCompra
         coors={coors}
         show={show}
@@ -162,7 +165,7 @@ export const PageMain = () => {
         >
         </canvas>
       </div>
-
+      <div className='backdrop'></div>
     </div>
   )
 }

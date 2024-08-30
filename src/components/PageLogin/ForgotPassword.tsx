@@ -1,4 +1,4 @@
-import style from './../../components/styles/forgotPassword.module.css'
+import style from './forgotPassword.module.css'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/esm/Button';
 import { millionApi } from '../../api/millionApi';

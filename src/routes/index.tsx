@@ -5,20 +5,8 @@ import { PageRegister } from '../pages/PageRegister';
 import { PageAbout } from '../pages/PageAbout';
 import { PagePurchases } from '../pages/PagePurchases';
 import { PageAccount } from '../pages/PageAccount';
-import { Header } from '../components/shared/Header';
-import React from 'react';
 import { PageResult } from '../pages/PageResult';
-
-
-
-const CustomRoute: React.FC<{ element: React.ReactNode }> = ({ element, ...rest }) => {
-    return (
-        <>
-            <Header />
-            {React.cloneElement(element as React.ReactElement<any>, rest)}
-        </>
-    );
-};
+import { CustomRoute } from './Customs/CustomRoute';
 
 export const router = createBrowserRouter([
     {
