@@ -8,34 +8,11 @@ let arrayCinco = new Array(5).fill(null);
 
 export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
     const [showModalSeleccionarColores, setShowModalSeleccionarColores] = useState(false);
-    const handleClose = () => setShow(false);
-
-    const handlePurchase = () => {
-        let accessToken = localStorage.getItem('accessToken')
-        console.log('coordenadas del click desde el purchase handlePurchase -> ', coors);
-        let params: any = {
-            coordenada_x_inicio: coors.x,
-            coordenada_y_inicio: coors.y,
-            coordenada_x_fin: coors.x + 4,
-            coordenada_y_fin: coors.y + 4
-        }
-        
-        //TODO: Post al back para verificar si los rangos están disponibles y generar pedido en pagopar
-
-        millionApi.post('/pagopar/generarPedido', params, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        }).then(res => console.log(res))
-        .catch(err => console.log('err', err))
-
-        setShowModalSeleccionarColores(true)
-    }
 
     const handleConfirmColorsOfPurchase = () => {
         let accessToken = localStorage.getItem('accessToken')
 
-        let objToSend: ObjToSend = {
+        let grupo_pixeles_params: ObjToSend = {
             grupo_pixeles: {
                 link: 'http://validarstring.com',
                 coordenada_x_inicio: coors.x,
@@ -57,22 +34,41 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
                         coordenada_y: coors.y + i,
                         color: color
                     }
-                    objToSend.pixeles.push(objIndividualPixel)
+                    grupo_pixeles_params.pixeles.push(objIndividualPixel)
                 }
             }
         }
 
-        millionApi.post('/canvas', objToSend, {
+        //!
+
+        console.log('coordenadas del click desde el purchase handlePurchase -> ', coors);
+        let params: any = {
+            coordenada_x_inicio: coors.x,
+            coordenada_y_inicio: coors.y,
+            coordenada_x_fin: coors.x + 4,
+            coordenada_y_fin: coors.y + 4
+        }
+
+        //TODO: Post al back para verificar si los rangos están disponibles y generar pedido en pagopar
+
+        millionApi.post('/pagopar/generarPedido', params, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        })
-            .then((res) => {
-                console.log('res', res);
-            })
-            .catch(e => {
-                console.log('e', e);
-            });
+        }).then(res => console.log(res))
+            .catch(err => console.log('err', err))
+
+        // millionApi.post('/canvas', grupo_pixeles_params, {
+        //     headers: {
+        //         Authorization: `Bearer ${accessToken}`
+        //     }
+        // })
+        //     .then((res) => {
+        //         console.log('res', res);
+        //     })
+        //     .catch(e => {
+        //         console.log('e', e);
+        //     });
 
 
         setShow(false);
@@ -81,16 +77,16 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
 
     return (
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={() => setShow(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Comprar Pixel</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Has seleccionado este rango, ¿Te parece correcto para pintar?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleClose}>
+                    <Button variant="danger" onClick={() => setShow(false)}>
                         Cancel
                     </Button>
-                    <Button variant="success" onClick={handlePurchase}>
+                    <Button variant="success" onClick={() => setShowModalSeleccionarColores(true)}>
                         Buy
                     </Button>
                 </Modal.Footer>

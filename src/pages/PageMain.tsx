@@ -1,12 +1,14 @@
-import style from './styles/pageMain.module.css'
-import { useEffect, useRef, useState } from "react"
-import { useNavigate } from 'react-router-dom'
+import { getCanvasPixeles, getPixelesOcupados } from '../store/slices/canvas/thunks';
 import { encontrarMultiploMenorDeCinco } from "../utils/funcionesUtiles";
 import { GestionCompra } from '../components/PageMain/GestionCompra';
-import { getCanvasPixeles, getPixelesOcupados } from '../store/slices/canvas/thunks';
+import withReactContent from 'sweetalert2-react-content'
+import { CanvasState, UserState } from '../interfaces';
+import { useEffect, useRef, useState } from "react"
+import style from './styles/pageMain.module.css'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from '../hooks/hooks';
 import { useSelector } from 'react-redux';
-import { CanvasState, UserState } from '../interfaces';
+import Swal from 'sweetalert2'
 
 export const PageMain = () => {
   const canvasRef = useRef(null);
@@ -19,6 +21,7 @@ export const PageMain = () => {
   const accessToken = useSelector((state: UserState) => state.user.accessToken)
   const canvasPixeles = useSelector((state: CanvasState) => state.canvas.canvasPixeles);
 
+  console.log('verificandoOcupados', verificandoOcupados)
 
   // Trae los pixeles que aún no se hayan pintando en la imágen actual
   useEffect(() => {
@@ -89,6 +92,7 @@ export const PageMain = () => {
     }
   }, [canvasPixeles])
 
+  //cambia el estado para mostrar el modal para compra del pixel
   const handleShow = () => setShow(true);
 
   const handleClick: React.MouseEventHandler<HTMLCanvasElement> = async ({ nativeEvent: { offsetX, offsetY } }) => {
@@ -115,6 +119,7 @@ export const PageMain = () => {
 
       //recorro los pixeles ocupados del sector y verifico si en donde dió click, puede pintar nuevos pixeles
       let permitir = true;
+
       for (const { coordenada_x_inicio, coordenada_y_inicio, coordenada_x_fin, coordenada_y_fin } of pixelesOcupados) {
         if (offsetX >= coordenada_x_inicio && offsetX <= coordenada_x_fin && offsetY >= coordenada_y_inicio && offsetY <= coordenada_y_fin) {
           permitir = false;
@@ -124,26 +129,42 @@ export const PageMain = () => {
 
       //si está permitido, muestra el modal para seleccionar los colores
       if (permitir) {
+        //obtiene el canvas del DOM
         const canvas = canvasRef.current as HTMLCanvasElement | null;
         if (!canvas) return;
 
+        // De las coordenadas, encuentra el multiplo menor a cinco
+        //por ejemplo si dió click en la coordenada y = 177; x = 182
+        //entonces el resultado será  y = 175; x = 180
         const xCinco = encontrarMultiploMenorDeCinco(offsetX);
         const yCinco = encontrarMultiploMenorDeCinco(offsetY);
-
         setCoors({ x: xCinco, y: yCinco });
 
         const context = canvas.getContext("2d");
         if (!context) return;
 
+        //rellena en negro lo ocupado
         context.fillStyle = "black";
         context.fillRect(xCinco, yCinco, 5, 5);
         context.stroke();
         setVerificandoOcupados(false);
+        //cambia el estado para mostrar el modal para compra del pixel
         handleShow();
       }
+
     } else { // si no está loggueado, va al login
-      //TODO: Mostrar un aviso
-      navigate('login');
+      withReactContent(Swal).fire({
+        title: "You need to log in first",
+        icon: "info",
+        showCancelButton: false,
+        showCloseButton: false,
+        showConfirmButton: false,
+        showDenyButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      }).then(() => {
+        navigate('login');
+      })
     }
   };
 
