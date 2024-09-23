@@ -41,21 +41,14 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
 
         //!
 
-        console.log('coordenadas del click desde el purchase handlePurchase -> ', coors);
-        let params: any = {
-            coordenada_x_inicio: coors.x,
-            coordenada_y_inicio: coors.y,
-            coordenada_x_fin: coors.x + 4,
-            coordenada_y_fin: coors.y + 4
-        }
-
         //TODO: Post al back para verificar si los rangos están disponibles y generar pedido en pagopar
 
-        millionApi.post('/pagopar/generarPedido', params, {
+        millionApi.post('/pagopar/generarPedido', grupo_pixeles_params, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        }).then(res => console.log(res))
+        })
+            .then(res => console.log(res))
             .catch(err => console.log('err', err))
 
         // millionApi.post('/canvas', grupo_pixeles_params, {
@@ -69,7 +62,6 @@ export const GestionCompra = ({ coors, show, setShow }: GestionCompraProps) => {
         //     .catch(e => {
         //         console.log('e', e);
         //     });
-
 
         setShow(false);
         setShowModalSeleccionarColores(false);

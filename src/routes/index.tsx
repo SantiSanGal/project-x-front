@@ -3,7 +3,7 @@ import { PageMain } from '../pages/PageMain';
 import { PageLogin } from '../pages/PageLogin';
 import { PageRegister } from '../pages/PageRegister';
 import { PageAbout } from '../pages/PageAbout';
-import { PagePurchases } from '../pages/PagePurchases';
+// import { PagePurchases } from '../pages/PagePurchases';
 import { PageAccount } from '../pages/PageAccount';
 import { PageResult } from '../pages/PageResult';
 import { CustomRoute } from './Customs/CustomRoute';
@@ -21,10 +21,10 @@ export const router = createBrowserRouter([
         path: '/register',
         element: <PageRegister />,
     },
-    {
-        path: '/purchases',
-        element: <CustomRoute element={<PagePurchases />} />,
-    },
+    // {
+    //     path: '/purchases',
+    //     element: <CustomRoute element={<PagePurchases />} />,
+    // },
     {
         path: '/about',
         element: <CustomRoute element={<PageAbout />} />,

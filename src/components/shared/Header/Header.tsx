@@ -53,7 +53,7 @@ export const Header = () => {
       <div className={style.nav}>
         <ul>
           <li className={activeUrl == '' ? style.active : ''} onClick={() => handleClick('')}>Home</li>
-          <li className={activeUrl == 'Purchases' ? style.active : ''} onClick={() => handleClick('Purchases')}>Purchases</li>
+          {/* <li className={activeUrl == 'Purchases' ? style.active : ''} onClick={() => handleClick('Purchases')}>Purchases</li> */}
           <li className={activeUrl == 'About' ? style.active : ''} onClick={() => handleClick('About')}>About</li>
           <li className={activeUrl == 'Account' ? style.active : ''}>
             {isLogged ? (
