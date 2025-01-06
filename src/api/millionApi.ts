@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export const millionApi = axios.create({
-    baseURL: 'http://localhost:3331',
+    baseURL: 'http://localhost:3333',
 });

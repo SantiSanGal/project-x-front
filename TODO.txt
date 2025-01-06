@@ -4,7 +4,6 @@ Edit de grupo de pixeles seleccionados
 
 Page About
 
-
 Page Account
 Consultar Información Personal
 Editar Información Personal
