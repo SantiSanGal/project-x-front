@@ -1,19 +1,14 @@
-import { SocketProvider } from './store/socket/SocketContext.tsx'
-import { RouterProvider } from 'react-router'
-import { router } from './routes/index.tsx'
-import { store } from './store/store.ts'
-import ReactDOM from 'react-dom/client'
-import { Provider } from 'react-redux'
-import React from 'react'
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
 import './index.css'
-import './App.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <SocketProvider>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </SocketProvider>
-  </React.StrictMode>,
-)
+const container = document.getElementById("root");
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
