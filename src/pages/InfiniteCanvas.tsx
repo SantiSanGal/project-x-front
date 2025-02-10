@@ -1,9 +1,5 @@
+import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import React, { useCallback, useEffect, useRef } from "react";
-
-// Constantes del canvas virtual
-const VIRTUAL_WIDTH = 2000;
-const VIRTUAL_HEIGHT = 1000;
-const GRID_SIZE = 5; // cada bloque de 5*5
 
 const InfiniteCanvas: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
