@@ -3,6 +3,21 @@
 @tailwind utilities;
 
 /* ... */
+/* globals.css */
+/* Anulamos el estilo por defecto del navegador en autofill */
+@layer base {
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    background-color: #1c1917 !important;
+    color: aliceblue !important;
+    -webkit-text-fill-color: aliceblue !important;
+    -webkit-box-shadow: 0 0 0px 1000px #1c1917 inset !important;
+    box-shadow: 0 0 0px 1000px #1c1917 inset !important;
+  }
+}
+
 
 /* index.css */
 /* index.css */

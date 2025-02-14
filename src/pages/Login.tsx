@@ -1,6 +1,6 @@
 import { millionApi } from '@/api/million.api';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 export const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -24,17 +24,17 @@ export const Login = () => {
     }
 
     return (
-        <div className="w-screen min-h-screen flex items-center justify-center bg-[#181818]">
-            <div className="flex flex-col justify-center p-4 rounded-md bg-[#1f1f1f] shadow-lg">
+        <div className="w-screen min-h-screen flex items-center justify-center bg-stone-900">
+            <div className="flex flex-col justify-center p-4 rounded-md bg-stone-800 shadow-lg">
                 <form className="text-aliceblue max-w-[500px] min-w-[400px] min-h-[200px] w-[40vw] flex flex-col gap-2" onSubmit={handleSubmit(submit)}>
-                    <h2 className="text-xl font-semibold text-white">Sign in to <span className="text-lime-700">Pixel War</span></h2>
+                    <h2 className="text-xl font-semibold text-white">Sign in to <span className="text-lime-600">Pixel War</span></h2>
 
                     <label className='text-white'>User</label>
                     <input
                         {...register('username', { required: 'Username is required' })}
                         type="text"
                         name="username"
-                        className="text-white bg-[#181818] border-none text-aliceblue p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3e4c2d]"
+                        className="text-white bg-stone-900 border-none text-aliceblue p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-lime-600"
                     />
                     {errors.username && <p className="text-[#C7253E] text-sm">{String(errors.username.message)}</p>}
 
@@ -43,7 +43,7 @@ export const Login = () => {
                         {...register('password', { required: 'Password is required', minLength: { value: 8, message: 'Password must be at least 8 characters' } })}
                         type="password"
                         name="password"
-                        className="text-white bg-[#181818] border-none text-aliceblue p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3e4c2d]"
+                        className="text-white bg-stone-900 border-none text-aliceblue p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-lime-600"
                     />
                     {errors.password && <p className="text-[#C7253E] text-sm">{String(errors.password.message)}</p>}
 
@@ -54,7 +54,7 @@ export const Login = () => {
                     New to Pixel War? &nbsp;
                     <span
                         onClick={() => navigate('/register')}
-                        className="text-lime-700 hover:text-[#6d8155] transition-all">
+                        className="text-lime-600 hover:text-lime-700 transition-all">
                         Sign up
                     </span>
                 </p>
