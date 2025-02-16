@@ -4,6 +4,7 @@ import { Modal } from "@/components/Modal";
 
 const InfiniteCanvas: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [coors, setCoors] = useState({ x: 0, y: 0 })
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // Estado para detectar si se está arrastrando (panning)
   const isDraggingRef = useRef(false);
@@ -239,7 +240,7 @@ const InfiniteCanvas: React.FC = () => {
 
   return (
     <>
-      <Modal openModal={openModal} setOpenModal={setOpenModal} />
+      <Modal openModal={openModal} setOpenModal={setOpenModal} coors={coors} />
       <canvas
         className="w-screen h-screen block bg-stone-800"
         ref={canvasRef}
