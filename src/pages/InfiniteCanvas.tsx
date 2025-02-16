@@ -1,6 +1,6 @@
-import { Modal } from "@/components/Modal";
-import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
+import { Modal } from "@/components/Modal";
 
 const InfiniteCanvas: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -9,7 +9,7 @@ const InfiniteCanvas: React.FC = () => {
   const isDraggingRef = useRef(false);
   // Última posición del mouse (para calcular delta de arrastre)
   const lastPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  // Parámetros de transformación: desplazamientos de pan y escala de zoom.
+  // Parámetros de transformación: pan y zoom.
   const transformRef = useRef<{
     offsetX: number;
     offsetY: number;
@@ -20,58 +20,61 @@ const InfiniteCanvas: React.FC = () => {
     scale: 1,
   });
 
+  // Ref para almacenar la imagen cargada.
+  const imageRef = useRef<HTMLImageElement | null>(null);
+
   /**
    * draw()
    *
-   * Limpia y redibuja el canvas usando la transformación actual.
-   * Se dibujan las líneas de la grilla solo dentro del área virtual.
+   * Limpia y redibuja el canvas aplicando la transformación actual.
+   * Se dibuja la imagen (o un fondo blanco si aún no se carga) en el área virtual
+   * (2000×1000) y, sobre ella, se dibuja la grilla.
    */
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     const { offsetX, offsetY, scale } = transformRef.current;
 
     // Limpiar el canvas completo
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Guardar el estado del contexto y aplicar la transformación de pan & zoom.
+    // Guardar el contexto y aplicar la transformación (pan & zoom)
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
 
-    // Rellenar el fondo del área virtual
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+    // Desactivar el suavizado de imágenes para un efecto "pixel art"
+    ctx.imageSmoothingEnabled = false;
+    // Para mayor compatibilidad, también puedes establecer:
+    // ctx.webkitImageSmoothingEnabled = false;
+    // ctx.msImageSmoothingEnabled = false;
 
-    // Iniciar el dibujo de la grilla.
+    // Dibujar la imagen en el área virtual (2000×1000)
+    if (imageRef.current) {
+      ctx.drawImage(imageRef.current, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+    } else {
+      // Si la imagen aún no se carga, pintar un fondo blanco
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+    }
+
+    // Iniciar el dibujo de la grilla
     ctx.beginPath();
-
-    // Determinar el área visible en coordenadas del "mundo".
     const visibleLeft = -offsetX / scale;
     const visibleTop = -offsetY / scale;
     const visibleRight = visibleLeft + canvas.width / scale;
     const visibleBottom = visibleTop + canvas.height / scale;
 
-    // Limitar el dibujo al área virtual.
     const startX = Math.max(0, Math.floor(visibleLeft / GRID_SIZE) * GRID_SIZE);
-    const endX = Math.min(
-      VIRTUAL_WIDTH,
-      Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE
-    );
+    const endX = Math.min(VIRTUAL_WIDTH, Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE);
     const startY = Math.max(0, Math.floor(visibleTop / GRID_SIZE) * GRID_SIZE);
-    const endY = Math.min(
-      VIRTUAL_HEIGHT,
-      Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE
-    );
+    const endY = Math.min(VIRTUAL_HEIGHT, Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE);
 
-    // Dibujar líneas verticales.
     for (let x = startX; x <= endX; x += GRID_SIZE) {
       ctx.moveTo(x, startY);
       ctx.lineTo(x, endY);
     }
-    // Dibujar líneas horizontales.
     for (let y = startY; y <= endY; y += GRID_SIZE) {
       ctx.moveTo(startX, y);
       ctx.lineTo(endX, y);
@@ -80,21 +83,30 @@ const InfiniteCanvas: React.FC = () => {
     ctx.lineWidth = 0.5;
     ctx.stroke();
 
-    // Restaurar el estado del contexto.
+    // Restaurar el contexto
     ctx.restore();
   }, []);
+
+
+  // Efecto para cargar la imagen y redibujar el canvas (draw ya está definido)
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/actual.png";
+    img.onload = () => {
+      imageRef.current = img;
+      draw();
+    };
+  }, [draw]);
 
   // Redimensionar el canvas para que siempre coincida con el tamaño de la ventana.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       draw();
     };
-
     // Configuración inicial
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -106,8 +118,8 @@ const InfiniteCanvas: React.FC = () => {
    *
    * Actualiza el estilo del cursor según la posición del mouse:
    * - Si se está arrastrando, muestra "grabbing".
-   * - Si no se arrastra, convierte las coordenadas del mouse a "mundo" y,
-   *   si están dentro del área virtual (2000×1000), muestra "pointer"; de lo contrario, "default".
+   * - Si no, se convierte la posición a coordenadas "mundo" y, si está dentro del área virtual,
+   *   muestra "pointer"; de lo contrario, "default".
    */
   const updateCursor = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -145,7 +157,6 @@ const InfiniteCanvas: React.FC = () => {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // Si se está arrastrando, actualizar la transformación y redibujar.
     if (isDraggingRef.current) {
       const dx = e.clientX - lastPosRef.current.x;
       const dy = e.clientY - lastPosRef.current.y;
@@ -154,7 +165,6 @@ const InfiniteCanvas: React.FC = () => {
       lastPosRef.current = { x: e.clientX, y: e.clientY };
       draw();
     }
-    // Actualizar el cursor (tanto si se arrastra como si no).
     updateCursor(e);
   };
 
@@ -165,7 +175,6 @@ const InfiniteCanvas: React.FC = () => {
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
     isDraggingRef.current = false;
-    // Al salir del canvas, dejamos el cursor en "default"
     if (canvasRef.current) {
       canvasRef.current.style.cursor = "default";
     }
@@ -190,7 +199,7 @@ const InfiniteCanvas: React.FC = () => {
     const worldX = (mouseX - offsetX) / scale;
     const worldY = (mouseY - offsetY) / scale;
 
-    // Ajustar los offsets para mantener fija la posición bajo el mouse.
+    // Ajustar los offsets para mantener la posición bajo el mouse.
     transformRef.current.offsetX = mouseX - worldX * newScale;
     transformRef.current.offsetY = mouseY - worldY * newScale;
     transformRef.current.scale = newScale;
