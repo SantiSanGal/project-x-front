@@ -1,8 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/store/loginStore";
+import { postLogin } from "@/core/actions/auth";
 import { useNavigate } from "react-router-dom";
-import { millionApi } from "@/api/million.api";
 import { Modal, Spinner } from "@/components";
 import { useState } from "react";
 
@@ -24,22 +24,15 @@ export const Login = () => {
 
   const { isPending, isSuccess, isError, error, mutate, reset } = useMutation({
     mutationFn: async (data: LoginFormData) => {
-      const response = await millionApi.post<{ data: { token: { token: string } } }>(
-        "/auth/login",
-        { username: data.username, password: data.password }
-      );
+      const response = await postLogin(data);
       return response;
     },
     onSuccess: (response) => {
       const token = response.data.data.token.token;
       if (token) {
-        loginAction(token); // Guarda la sesión del usuario en el store
-        navigate("/"); // Redirige a la ruta "/"
+        loginAction(token);
+        navigate("/");
       }
-    },
-    onError: (err: any) => {
-      console.error("Login error:", err);
-      // No es necesario gestionar estados adicionales; usaremos `mutation.isError` y `mutation.error`
     },
   });
 

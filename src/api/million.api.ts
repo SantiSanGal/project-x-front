@@ -1,25 +1,24 @@
+import axios, { InternalAxiosRequestConfig, AxiosHeaders } from "axios";
 import { useUserStore } from "@/store/loginStore";
-import axios from "axios";
 
 export const millionApi = axios.create({
   baseURL: "http://localhost:3333",
 });
 
 millionApi.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const { accessToken } = useUserStore.getState();
-
-    // Aseguramos que config.data sea un objeto (útil para peticiones POST/PUT)
-    if (typeof config.data !== "object" || config.data === null) {
-      config.data = {};
+    if (accessToken) {
+      // Si headers ya es una instancia de AxiosHeaders y tiene el método set, úsalo.
+      if (config.headers && typeof config.headers.set === "function") {
+        config.headers.set("Authorization", `Bearer ${accessToken}`);
+      } else {
+        // Si no, crea una instancia de AxiosHeaders con el header Authorization.
+        config.headers = AxiosHeaders.from({
+          Authorization: `Bearer ${accessToken}`,
+        });
+      }
     }
-
-    // Inyectamos el accessToken en los datos de la petición
-    config.data = {
-      ...config.data,
-      accessToken,
-    };
-
     return config;
   },
   (error) => Promise.reject(error)

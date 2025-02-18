@@ -1,11 +1,21 @@
 import { SelectPixelsModalContent } from "./select-pixels-modal-content";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
+import { useQuery } from "@tanstack/react-query";
+import { getCanvasPixeles } from "@/core/actions/canvas";
 
 const InfiniteCanvas: React.FC = () => {
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { isLoading, data, isError, error } = useQuery({
+    queryKey: ['canvas'],
+    queryFn: () => getCanvasPixeles()
+  })
+
+  console.log('data', data);
+
 
   // Para detectar si se está arrastrando (panning)
   const isDraggingRef = useRef(false);

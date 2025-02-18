@@ -2,8 +2,8 @@ import { millionApi } from "@/api/million.api";
 
 export const getCanvasPixeles = async () => {
   try {
-    const { data } = await millionApi.get("canvas");
-    return data;
+    const response = await millionApi.get("canvas");
+    return response;
   } catch (error) {
     throw error;
   }
