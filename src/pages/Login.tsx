@@ -12,15 +12,14 @@ interface LoginFormData {
 }
 
 export const Login = () => {
+  const loginAction = useUserStore((state) => state.login);
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
-
-  const navigate = useNavigate();
-  const loginAction = useUserStore((state) => state.login);
-  const [modalOpen, setModalOpen] = useState(false);
 
   const { isPending, isSuccess, isError, error, mutate, reset } = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -40,7 +39,9 @@ export const Login = () => {
     mutate(data);
   };
 
-  const handleSetModalOpen: React.Dispatch<React.SetStateAction<boolean>> = (value) => {
+  const handleSetModalOpen: React.Dispatch<React.SetStateAction<boolean>> = (
+    value
+  ) => {
     setModalOpen((prev) => {
       const newValue = typeof value === "function" ? value(prev) : value;
       if (!newValue) {
@@ -49,7 +50,6 @@ export const Login = () => {
       return newValue;
     });
   };
-
 
   return (
     <>
@@ -98,10 +98,17 @@ export const Login = () => {
             <button
               type="submit"
               disabled={isPending}
-              className={`mt-2 bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-md transition-colors ${isPending && "opacity-50 cursor-not-allowed"
-                }`}
+              className={`mt-2 bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-md transition-colors ${
+                isPending && "opacity-50 cursor-not-allowed"
+              }`}
             >
-              {isPending ? <div className="w-full flex items-center justify-center"><Spinner /></div> : "Login"}
+              {isPending ? (
+                <div className="w-full flex items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
 

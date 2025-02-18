@@ -1,5 +1,7 @@
 import { ProfilePicture } from "@/components/ProfilePicture";
 import InfiniteCanvas from "./pages/Home/InfiniteCanvas";
+import { useMutation } from "@tanstack/react-query";
+import { postLogout } from "./core/actions/auth";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -7,10 +9,28 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
+import { useUserStore } from "./store";
+import { Loader } from "lucide-react";
 import React from "react";
 
 const App: React.FC = () => {
+  const { isLogged, logout } = useUserStore.getState();
   const navigate = useNavigate();
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: async () => {
+      const response = await postLogout();
+      return response;
+    },
+  });
+
+  const handleAuth = async () => {
+    if (isLogged) {
+      mutate();
+      logout();
+    }
+    navigate("/login");
+  };
 
   return (
     <div className="relative w-screen h-screen overflow-hidden p-0 m-0">
@@ -24,26 +44,28 @@ const App: React.FC = () => {
             align="end"
             className=" bg-stone-700 border-stone-700 shadow-2xl"
           >
-            {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
             <DropdownMenuItem
               className="cursor-pointer hover:bg-stone-800 text-lime-600 text-base"
               onClick={() => navigate("/about")}
             >
               About
             </DropdownMenuItem>
-            {/* <DropdownMenuSeparator /> */}
-            {/* <DropdownMenuItem className="cursor-pointer">Purchases</DropdownMenuItem> */}
             <DropdownMenuItem
+              disabled={isPending}
               className="text-base cursor-pointer hover:bg-stone-800 text-lime-600"
-              onClick={() => navigate("/login")}
+              onClick={handleAuth}
             >
-              Logout
+              {isPending ? (
+                <Loader className="animate-spin" />
+              ) : (
+                <>{isLogged ? "Logout" : "Login"}</>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <InfiniteCanvas />
+      <InfiniteCanvas isLogged={isLogged} />
     </div>
   );
 };

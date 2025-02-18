@@ -1,15 +1,27 @@
 import { millionApi } from "@/api/million.api";
 
 interface postLoginParams {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 export const postLogin = async ({ username, password }: postLoginParams) => {
-    try {
-        const response = await millionApi.post("/auth/login", { username, password });
-        return response;
-    } catch (error) {
-        throw error;
-    }
+  try {
+    const response = await millionApi.post("/auth/login", {
+      username,
+      password,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postLogout = async () => {
+  try {
+    const response = await millionApi.post("/auth/logout");
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };

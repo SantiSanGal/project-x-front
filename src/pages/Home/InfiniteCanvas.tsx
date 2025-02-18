@@ -1,21 +1,26 @@
 import { SelectPixelsModalContent } from "./select-pixels-modal-content";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
-import { useQuery } from "@tanstack/react-query";
 import { getCanvasPixeles } from "@/core/actions/canvas";
+import { useQuery } from "@tanstack/react-query";
 
-const InfiniteCanvas: React.FC = () => {
+interface InfiniteCanvasProps {
+  isLogged: boolean;
+}
+
+const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  console.log("isLogged", isLogged);
+
   const { isLoading, data, isError, error } = useQuery({
-    queryKey: ['canvas'],
-    queryFn: () => getCanvasPixeles()
-  })
+    queryKey: ["canvas"],
+    queryFn: () => getCanvasPixeles(),
+  });
 
-  console.log('data', data);
-
+  console.log("data", data);
 
   // Para detectar si se está arrastrando (panning)
   const isDraggingRef = useRef(false);
@@ -128,9 +133,9 @@ const InfiniteCanvas: React.FC = () => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-          worldX <= VIRTUAL_WIDTH &&
-          worldY >= 0 &&
-          worldY <= VIRTUAL_HEIGHT
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
