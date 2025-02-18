@@ -118,9 +118,9 @@ const InfiniteCanvas: React.FC = () => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+          worldX <= VIRTUAL_WIDTH &&
+          worldY >= 0 &&
+          worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -162,7 +162,7 @@ const InfiniteCanvas: React.FC = () => {
     initialPosRef.current = null;
   };
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseLeave = (_e: React.MouseEvent<HTMLCanvasElement>) => {
     isDraggingRef.current = false;
     initialPosRef.current = null;
     if (canvasRef.current) {
