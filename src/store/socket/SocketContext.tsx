@@ -15,7 +15,7 @@ export const SocketContext = createContext<SocketContextProps>({
 });
 
 export const SocketProvider = ({ children }: any) => {
-  const { socket, online } = useSocket("http://localhost:3331");
+  const { socket, online } = useSocket("http://localhost:3333");
 
   return (
     <SocketContext.Provider value={{ socket, online }}>

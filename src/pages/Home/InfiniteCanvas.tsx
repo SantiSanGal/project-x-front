@@ -20,7 +20,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sector, setSector] = useState(1);
 
-
   console.log("isLogged", isLogged);
 
   const { isLoading: pintarIsLoading,
@@ -189,6 +188,33 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       draw();
     }
     updateCursor(e);
+
+    // Actualizar el sector cuando se haga hover (o arrastre) dentro del área virtual (2000x1000)
+    if (canvasRef.current) {
+      const rect = canvasRef.current.getBoundingClientRect();
+      const rawX = e.clientX - rect.left;
+      const rawY = e.clientY - rect.top;
+      const { offsetX, offsetY, scale } = transformRef.current;
+      const worldX = (rawX - offsetX) / scale;
+      const worldY = (rawY - offsetY) / scale;
+      // Verificar que esté dentro del área virtual
+      if (worldX >= 0 && worldX <= VIRTUAL_WIDTH && worldY >= 0 && worldY <= VIRTUAL_HEIGHT) {
+        let newSector: number | null = null;
+        if (worldX >= 0 && worldX <= 999 && worldY >= 0 && worldY <= 499) {
+          newSector = 1;
+        } else if (worldX >= 1000 && worldX <= 1999 && worldY >= 0 && worldY <= 499) {
+          newSector = 2;
+        } else if (worldX >= 0 && worldX <= 999 && worldY >= 500 && worldY <= 999) {
+          newSector = 3;
+        } else if (worldX >= 1000 && worldX <= 1999 && worldY >= 500 && worldY <= 999) {
+          newSector = 4;
+        }
+        if (newSector !== null && newSector !== sector) {
+          setSector(newSector);
+          console.log("Nuevo sector asignado:", newSector);
+        }
+      }
+    }
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -261,6 +287,34 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       Y_START: gridYStart,
       Y_END: gridYEnd,
     });
+
+    // Verificar si el área ya está ocupada (solo si el usuario está logueado)
+    if (isLogged && ocupadosData && Array.isArray(ocupadosData)) {
+      let permitir = true;
+      for (const occupied of ocupadosData) {
+        if (
+          gridXStart >= occupied.coordenada_x_inicio &&
+          gridXStart <= occupied.coordenada_x_fin &&
+          gridYStart >= occupied.coordenada_y_inicio &&
+          gridYStart <= occupied.coordenada_y_fin
+        ) {
+          permitir = false;
+          break;
+        }
+      }
+      if (!permitir) {
+        console.log("Área ocupada. No se puede seleccionar.");
+        return;
+      }
+    }
+
+    // Si está permitido, pinta el bloque en negro (simula la reserva)
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "black";
+      ctx.fillRect(gridXStart, gridYStart, GRID_SIZE, GRID_SIZE);
+      ctx.stroke();
+    }
     setCoors({ x: gridXStart, y: gridYStart });
     setOpenModal(true);
   };
