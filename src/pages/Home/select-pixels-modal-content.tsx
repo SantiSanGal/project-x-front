@@ -1,11 +1,10 @@
+import { GrupoPixeles, postGrupoPixeles } from "@/core/actions/canvas";
 import { DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { Modal } from "@/components/Modal";
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { millionApi } from "@/api/million.api";
+import { Modal } from "@/components/Modal";
 import { Loader } from "lucide-react";
-import { GrupoPixeles, postGrupoPixeles } from "@/core/actions/canvas";
+import { useState } from "react";
 
 interface SelectPixelsModalContentProps {
   openModal: boolean;
