@@ -2,6 +2,10 @@ import { DialogHeader } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Modal } from "@/components/Modal";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { millionApi } from "@/api/million.api";
+import { Loader } from "lucide-react";
+import { GrupoPixeles, postGrupoPixeles } from "@/core/actions/canvas";
 
 interface SelectPixelsModalContentProps {
   openModal: boolean;
@@ -26,6 +30,13 @@ export const SelectPixelsModalContent = ({
 }: SelectPixelsModalContentProps) => {
   // Inicializamos un array de 25 colores (para un grid 5x5), por defecto blanco.
   const [colors, setColors] = useState<string[]>(Array(25).fill("#ffffff"));
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: async (data: GrupoPixeles) => {
+      const response = await postGrupoPixeles(data);
+      return response
+    }
+  })
 
   // Actualiza el color en la posición indicada.
   const handleColorChange = (index: number, color: string) => {
@@ -66,7 +77,8 @@ export const SelectPixelsModalContent = ({
     // Aquí llamarías al callback onConfirm si lo necesitas.
     // onConfirm(grupo_pixeles_params);
     // Cerramos el modal
-    setOpenModal(false);
+    mutate(grupo_pixeles_params);
+    // setOpenModal(false);
   };
 
   return (
@@ -90,12 +102,14 @@ export const SelectPixelsModalContent = ({
           ))}
         </div>
 
-        {/* Botón para confirmar */}
         <button
+          disabled={isPending}
           onClick={handleConfirm}
           className="mt-4 bg-lime-600 hover:bg-lime-700 text-white px-4 py-2 rounded transition-colors"
         >
-          Confirm
+          {
+            isPending ? <Loader className="size-6 animate-spin" /> : <>Confirm</>
+          }
         </button>
       </div>
     </Modal>
