@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { Point, Area } from "react-easy-crop";
 import Cropper from "react-easy-crop";
-import { ImageUp, Loader } from "lucide-react";
+import { ImageUp, Loader, ZoomIn, ZoomOut } from "lucide-react";
 import { toast } from "sonner";
 import imageCompression from "browser-image-compression";
 import {
@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
 interface PixelSelectorProps {
   openModal: boolean;
@@ -29,18 +29,19 @@ export const PixelSelector = ({
   onConfirm,
 }: PixelSelectorProps) => {
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(5); // Comenzamos con un zoom más alto
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [colors, setColors] = useState<string[]>([]);
   const [isPending, setIsPending] = useState(false);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const imgRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const onDrop = useCallback(
     async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       setCrop({ x: 0, y: 0 });
-      setZoom(1);
+      setZoom(5);
 
       if (fileRejections.length > 0) {
         toast.error("El archivo no es de tipo imagen");
@@ -49,14 +50,23 @@ export const PixelSelector = ({
 
       const file = acceptedFiles[0];
       const options = {
-        maxSizeMB: 2,
-        maxWidthOrHeight: 800,
+        maxSizeMB: 4,
+        maxWidthOrHeight: 2000, // Aumentamos el tamaño máximo para mejor resolución
         useWebWorker: true,
       };
 
       try {
         const compressedFile = await imageCompression(file, options);
         const imageUrl = URL.createObjectURL(compressedFile);
+
+        // Precargamos la imagen para obtener sus dimensiones
+        const img = new Image();
+        img.onload = () => {
+          setImageSize({ width: img.width, height: img.height });
+          imgRef.current = img;
+        };
+        img.src = imageUrl;
+
         setImageSrc(imageUrl);
         setCropModalOpen(true);
       } catch (error) {
@@ -76,33 +86,31 @@ export const PixelSelector = ({
     if (!imgRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
 
     const image = imgRef.current;
 
-    // Set canvas size to exactly 5x5 pixels
+    // Configuramos el canvas para una representación exacta de píxeles
     canvas.width = 5;
     canvas.height = 5;
 
-    // Calculate scaling factors
+    // Desactivamos el suavizado para obtener píxeles exactos
+    ctx.imageSmoothingEnabled = false;
+
+    // Calculamos las coordenadas exactas de píxeles
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
-    // Draw the selected area to our 5x5 canvas
-    ctx.drawImage(
-      image,
-      croppedAreaPixels.x * scaleX,
-      croppedAreaPixels.y * scaleY,
-      croppedAreaPixels.width * scaleX,
-      croppedAreaPixels.height * scaleY,
-      0,
-      0,
-      5,
-      5
-    );
+    const exactX = Math.floor(croppedAreaPixels.x * scaleX);
+    const exactY = Math.floor(croppedAreaPixels.y * scaleY);
+    const exactWidth = Math.floor(croppedAreaPixels.width * scaleX);
+    const exactHeight = Math.floor(croppedAreaPixels.height * scaleY);
 
-    // Extract colors from each pixel
+    // Dibujamos la sección exacta de 5x5 píxeles
+    ctx.drawImage(image, exactX, exactY, exactWidth, exactHeight, 0, 0, 5, 5);
+
+    // Extraemos los colores exactos
     const pixelColors: string[] = [];
     for (let y = 0; y < 5; y++) {
       for (let x = 0; x < 5; x++) {
@@ -151,9 +159,9 @@ export const PixelSelector = ({
       await onConfirm(grupo_pixeles_params);
       setCropModalOpen(false);
       setOpenModal(false);
-      // toast.success("Colores extraídos correctamente");
+      toast.success("Colores extraídos correctamente");
     } catch (error) {
-      // toast.error("Hubo un error al procesar los colores");
+      toast.error("Hubo un error al procesar los colores");
     } finally {
       setIsPending(false);
     }
@@ -166,7 +174,7 @@ export const PixelSelector = ({
           <DialogHeader>
             <DialogTitle className="text-white text-base">
               Select Area and Extract{" "}
-              <span className="text-lime-600">Colors</span>
+              <span className="text-lime-600">Pixels</span>
             </DialogTitle>
           </DialogHeader>
 
@@ -180,28 +188,50 @@ export const PixelSelector = ({
           </div>
 
           {imageSrc && cropModalOpen && (
-            <div className="relative h-80 mt-4">
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
-                onCropComplete={onCropComplete}
-                onMediaLoaded={(mediaSize) => {
-                  const img = new Image();
-                  img.src = imageSrc;
-                  img.onload = () => {
-                    imgRef.current = img;
-                  };
-                }}
-              />
-            </div>
+            <>
+              <div className="relative h-80 mt-4">
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={onCropComplete}
+                  minZoom={1}
+                  maxZoom={100} // Aumentamos el zoom máximo
+                  cropSize={{ width: 100, height: 100 }} // Tamaño fijo del área de crop
+                  onMediaLoaded={(mediaSize) => {
+                    const img = new Image();
+                    img.src = imageSrc;
+                    img.onload = () => {
+                      imgRef.current = img;
+                      setImageSize({ width: img.width, height: img.height });
+                    };
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center gap-4 mt-4">
+                <ZoomOut className="size-4" />
+                <Slider
+                  value={[zoom]}
+                  onValueChange={(value) => setZoom(value[0])}
+                  min={1}
+                  max={100}
+                  step={0.1}
+                  className="flex-1"
+                />
+                <ZoomIn className="size-4" />
+              </div>
+            </>
           )}
 
           {colors.length > 0 && (
             <div className="mt-4">
+              <p className="text-sm text-gray-400 mb-2">
+                Preview de píxeles exactos:
+              </p>
               <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
                 {colors.map((color, index) => (
                   <div
