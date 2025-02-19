@@ -2,8 +2,8 @@ import { millionApi } from "@/api/million.api";
 
 export const getCanvasPixeles = async () => {
   try {
-    const response = await millionApi.get("canvas");
-    return response;
+    const { data } = await millionApi.get("canvas");
+    return data.data;
   } catch (error) {
     throw error;
   }
@@ -12,7 +12,7 @@ export const getCanvasPixeles = async () => {
 export const getPixelesOcupados = async (idSector: number) => {
   try {
     const { data } = await millionApi.get(`/canvas/rangosOcupados/${idSector}`);
-    return data;
+    return data.data;
   } catch (error) {
     throw error;
   }

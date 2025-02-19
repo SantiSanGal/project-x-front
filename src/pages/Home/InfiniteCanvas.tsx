@@ -1,26 +1,42 @@
+import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
 import { SelectPixelsModalContent } from "./select-pixels-modal-content";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
-import { getCanvasPixeles } from "@/core/actions/canvas";
 import { useQuery } from "@tanstack/react-query";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
 }
 
+interface PintarData {
+  coordenada_x: number;
+  coordenada_y: number;
+  color: string;
+}
+
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [sector, setSector] = useState(1);
+
 
   console.log("isLogged", isLogged);
 
-  const { isLoading, data, isError, error } = useQuery({
-    queryKey: ["canvas"],
-    queryFn: () => getCanvasPixeles(),
-  });
+  const { isLoading: pintarIsLoading,
+    data: pintarData, isError: pintarIsError, error: pintarError } = useQuery({
+      queryKey: ["pintar"],
+      queryFn: () => getCanvasPixeles(),
+    });
 
-  console.log("data", data);
+  const { isLoading: ocupadosIsLoading, data: ocupadosData,
+    isError: ocupadosIsError, error: ocupadosError } = useQuery({
+      queryKey: ["ocupados", sector],
+      queryFn: () => getPixelesOcupados(sector),
+    });
+
+  console.log("pintarData", pintarData);
+  console.log("ocupadosData", ocupadosData);
 
   // Para detectar si se está arrastrando (panning)
   const isDraggingRef = useRef(false);
@@ -53,10 +69,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
-
     // Desactivar suavizado para efecto "pixel art"
     ctx.imageSmoothingEnabled = false;
 
+    // Fondo
     if (imageRef.current) {
       ctx.drawImage(imageRef.current, 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     } else {
@@ -64,6 +80,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     }
 
+    // Dibuja la cuadrícula
     ctx.beginPath();
     const visibleLeft = -offsetX / scale;
     const visibleTop = -offsetY / scale;
@@ -71,15 +88,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     const visibleBottom = visibleTop + canvas.height / scale;
 
     const startX = Math.max(0, Math.floor(visibleLeft / GRID_SIZE) * GRID_SIZE);
-    const endX = Math.min(
-      VIRTUAL_WIDTH,
-      Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE
-    );
+    const endX = Math.min(VIRTUAL_WIDTH, Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE);
     const startY = Math.max(0, Math.floor(visibleTop / GRID_SIZE) * GRID_SIZE);
-    const endY = Math.min(
-      VIRTUAL_HEIGHT,
-      Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE
-    );
+    const endY = Math.min(VIRTUAL_HEIGHT, Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE);
 
     for (let x = startX; x <= endX; x += GRID_SIZE) {
       ctx.moveTo(x, startY);
@@ -92,8 +103,17 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     ctx.strokeStyle = "#ccc";
     ctx.lineWidth = 0.5;
     ctx.stroke();
+
+    // Dibuja los píxeles de pintarData
+    if (isLogged && pintarData) {
+      pintarData.forEach(({ coordenada_x, coordenada_y, color }: PintarData) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(coordenada_x, coordenada_y, 1, 1);
+      });
+    }
+
     ctx.restore();
-  }, []);
+  }, [pintarData, isLogged]);
 
   // Cargar imagen
   useEffect(() => {
@@ -133,9 +153,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+          worldX <= VIRTUAL_WIDTH &&
+          worldY >= 0 &&
+          worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
