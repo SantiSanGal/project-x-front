@@ -37,7 +37,7 @@ const App: React.FC = () => {
       <div className="absolute  right-4 top-4">
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <ProfilePicture />
+            <ProfilePicture isLogged={isLogged} />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             side="bottom"

@@ -1,7 +1,7 @@
 import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
-import { SelectPixelsModalContent } from "./select-pixels-modal-content";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
+import { PixelSelector } from "./select-pixels-modal-content";
 import { useQuery } from "@tanstack/react-query";
 
 interface InfiniteCanvasProps {
@@ -19,20 +19,27 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sector, setSector] = useState(1);
-
   console.log("isLogged", isLogged);
 
-  const { isLoading: pintarIsLoading,
-    data: pintarData, isError: pintarIsError, error: pintarError } = useQuery({
-      queryKey: ["pintar"],
-      queryFn: () => getCanvasPixeles(),
-    });
+  const {
+    isLoading: pintarIsLoading,
+    data: pintarData,
+    isError: pintarIsError,
+    error: pintarError,
+  } = useQuery({
+    queryKey: ["pintar"],
+    queryFn: () => getCanvasPixeles(),
+  });
 
-  const { isLoading: ocupadosIsLoading, data: ocupadosData,
-    isError: ocupadosIsError, error: ocupadosError } = useQuery({
-      queryKey: ["ocupados", sector],
-      queryFn: () => getPixelesOcupados(sector),
-    });
+  const {
+    isLoading: ocupadosIsLoading,
+    data: ocupadosData,
+    isError: ocupadosIsError,
+    error: ocupadosError,
+  } = useQuery({
+    queryKey: ["ocupados", sector],
+    queryFn: () => getPixelesOcupados(sector),
+  });
 
   console.log("pintarData", pintarData);
   console.log("ocupadosData", ocupadosData);
@@ -87,9 +94,15 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     const visibleBottom = visibleTop + canvas.height / scale;
 
     const startX = Math.max(0, Math.floor(visibleLeft / GRID_SIZE) * GRID_SIZE);
-    const endX = Math.min(VIRTUAL_WIDTH, Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE);
+    const endX = Math.min(
+      VIRTUAL_WIDTH,
+      Math.ceil(visibleRight / GRID_SIZE) * GRID_SIZE
+    );
     const startY = Math.max(0, Math.floor(visibleTop / GRID_SIZE) * GRID_SIZE);
-    const endY = Math.min(VIRTUAL_HEIGHT, Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE);
+    const endY = Math.min(
+      VIRTUAL_HEIGHT,
+      Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE
+    );
 
     for (let x = startX; x <= endX; x += GRID_SIZE) {
       ctx.moveTo(x, startY);
@@ -105,10 +118,12 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
 
     // Dibuja los píxeles de pintarData
     if (isLogged && pintarData) {
-      pintarData.forEach(({ coordenada_x, coordenada_y, color }: PintarData) => {
-        ctx.fillStyle = color;
-        ctx.fillRect(coordenada_x, coordenada_y, 1, 1);
-      });
+      pintarData.forEach(
+        ({ coordenada_x, coordenada_y, color }: PintarData) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(coordenada_x, coordenada_y, 1, 1);
+        }
+      );
     }
 
     ctx.restore();
@@ -152,9 +167,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-          worldX <= VIRTUAL_WIDTH &&
-          worldY >= 0 &&
-          worldY <= VIRTUAL_HEIGHT
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -198,15 +213,35 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldX = (rawX - offsetX) / scale;
       const worldY = (rawY - offsetY) / scale;
       // Verificar que esté dentro del área virtual
-      if (worldX >= 0 && worldX <= VIRTUAL_WIDTH && worldY >= 0 && worldY <= VIRTUAL_HEIGHT) {
+      if (
+        worldX >= 0 &&
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
+      ) {
         let newSector: number | null = null;
         if (worldX >= 0 && worldX <= 999 && worldY >= 0 && worldY <= 499) {
           newSector = 1;
-        } else if (worldX >= 1000 && worldX <= 1999 && worldY >= 0 && worldY <= 499) {
+        } else if (
+          worldX >= 1000 &&
+          worldX <= 1999 &&
+          worldY >= 0 &&
+          worldY <= 499
+        ) {
           newSector = 2;
-        } else if (worldX >= 0 && worldX <= 999 && worldY >= 500 && worldY <= 999) {
+        } else if (
+          worldX >= 0 &&
+          worldX <= 999 &&
+          worldY >= 500 &&
+          worldY <= 999
+        ) {
           newSector = 3;
-        } else if (worldX >= 1000 && worldX <= 1999 && worldY >= 500 && worldY <= 999) {
+        } else if (
+          worldX >= 1000 &&
+          worldX <= 1999 &&
+          worldY >= 500 &&
+          worldY <= 999
+        ) {
           newSector = 4;
         }
         if (newSector !== null && newSector !== sector) {
@@ -321,7 +356,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
 
   return (
     <>
-      <SelectPixelsModalContent
+      <PixelSelector
+        onConfirm={() => {}}
         openModal={openModal}
         setOpenModal={setOpenModal}
         coors={coors}

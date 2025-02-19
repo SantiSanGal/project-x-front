@@ -1,9 +1,19 @@
+import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import React from "react";
 
-export const ProfilePicture: React.FC = () => {
+interface ProfilePictureProps {
+  isLogged: boolean;
+}
+
+export const ProfilePicture = ({ isLogged }: ProfilePictureProps) => {
+  // TODO: Hacer borde rojo cuando está fuera de linea, y verde cuando está loggueado
   return (
-    <Avatar className="size-10 cursor-pointer">
+    <Avatar
+      className={cn("size-10 cursor-pointer  border-2", {
+        "border-lime-500": isLogged,
+        "border-red-500": !isLogged,
+      })}
+    >
       <AvatarImage src="https://github.com/shadcn.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
