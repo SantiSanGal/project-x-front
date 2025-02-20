@@ -6,10 +6,9 @@ interface ProfilePictureProps {
 }
 
 export const ProfilePicture = ({ isLogged }: ProfilePictureProps) => {
-  // TODO: Hacer borde rojo cuando está fuera de linea, y verde cuando está loggueado
   return (
     <Avatar
-      className={cn("size-10 cursor-pointer  border-2", {
+      className={cn("size-10 cursor-pointer border-2", {
         "border-lime-500": isLogged,
         "border-red-500": !isLogged,
       })}

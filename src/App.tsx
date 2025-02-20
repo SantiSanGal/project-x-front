@@ -12,6 +12,7 @@ import {
 import { useUserStore } from "./store";
 import { Loader } from "lucide-react";
 import React from "react";
+import { cn } from "./lib/utils";
 
 const App: React.FC = () => {
   const { isLogged, logout } = useUserStore.getState();
@@ -36,23 +37,38 @@ const App: React.FC = () => {
     <div className="relative w-screen h-screen overflow-hidden p-0 m-0">
       <div className="absolute  right-4 top-4">
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger className="size-10 cursor-pointer ">
             <ProfilePicture isLogged={isLogged} />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             side="bottom"
             align="end"
-            className=" bg-stone-700 border-stone-700 shadow-2xl"
+            className={cn("bg-stone-700  shadow-2xl", {
+              "border-lime-600 border-2": isLogged,
+              "border-red-600 border-2": !isLogged,
+            })}
           >
             <DropdownMenuItem
-              className="cursor-pointer hover:bg-stone-800 text-lime-600 text-base"
+              className={cn(
+                "cursor-pointer hover:bg-stone-800 text-white text-base"
+                //   {
+                //   "text-lime-600": isLogged,
+                //   "text-red-600": !isLogged,
+                // }
+              )}
               onClick={() => navigate("/about")}
             >
               About
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled={isPending}
-              className="text-base cursor-pointer hover:bg-stone-800 text-lime-600"
+              className={cn(
+                "text-base cursor-pointer hover:bg-stone-800 text-white "
+                // {
+                //   "text-lime-600": isLogged,
+                //   "text-red-600": !isLogged,
+                // }
+              )}
               onClick={handleAuth}
             >
               {isPending ? (
