@@ -1,10 +1,13 @@
+import { GrupoPixeles, postGrupoPixeles } from "@/core/actions/canvas";
+import { ImageUp, Loader, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useCallback, useRef, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
+import imageCompression from "browser-image-compression";
+import { useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { Point, Area } from "react-easy-crop";
 import Cropper from "react-easy-crop";
-import { ImageUp, Loader, ZoomIn, ZoomOut } from "lucide-react";
-import { toast } from "sonner";
-import imageCompression from "browser-image-compression";
 import {
   Dialog,
   DialogContent,
@@ -12,31 +15,42 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
 
 interface PixelSelectorProps {
+  coors: { x: number; y: number };
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  coors: { x: number; y: number };
-  onConfirm: (data: any) => void;
 }
 
 export const PixelSelector = ({
+  coors,
   openModal,
   setOpenModal,
-  coors,
-  onConfirm,
 }: PixelSelectorProps) => {
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(5); // Comenzamos con un zoom más alto
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [colors, setColors] = useState<string[]>([]);
-  const [isPending, setIsPending] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const imgRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: async (grupo_pixeles: GrupoPixeles) => {
+      const respuesta = await postGrupoPixeles(grupo_pixeles);
+      return respuesta;
+    },
+    onSuccess: () => {
+      setCropModalOpen(false);
+      setOpenModal(false);
+      toast.success("Colores enviados correctamente");
+    },
+    onError: () => {
+      toast.error("Hubo un error al procesar los colores");
+    }
+  })
 
   const onDrop = useCallback(
     async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -138,8 +152,6 @@ export const PixelSelector = ({
   const handleConfirm = async () => {
     if (!colors.length) return;
 
-    setIsPending(true);
-
     const grupo_pixeles_params = {
       grupo_pixeles: {
         link: imageSrc || "http://validarstring.com",
@@ -155,16 +167,7 @@ export const PixelSelector = ({
       })),
     };
 
-    try {
-      await onConfirm(grupo_pixeles_params);
-      setCropModalOpen(false);
-      setOpenModal(false);
-      toast.success("Colores extraídos correctamente");
-    } catch (error) {
-      toast.error("Hubo un error al procesar los colores");
-    } finally {
-      setIsPending(false);
-    }
+    mutate(grupo_pixeles_params);
   };
 
   return (

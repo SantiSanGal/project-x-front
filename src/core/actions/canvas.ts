@@ -18,10 +18,14 @@ export interface GrupoPixeles {
   pixeles: IndividualPixel[];
 }
 
-export const getCanvasPixeles = async () => {
+export const getCanvasPixeles = async (isLogged: boolean) => {
   try {
-    const { data } = await millionApi.get("canvas");
-    return data.data;
+    if (isLogged) {
+      const { data } = await millionApi.get("canvas");
+      return data.data;
+    } else {
+      return []
+    }
   } catch (error) {
     throw error;
   }
@@ -38,7 +42,7 @@ export const getPixelesOcupados = async (idSector: number) => {
 
 export const postGrupoPixeles = async (data: GrupoPixeles) => {
   try {
-    const response = await millionApi.post('', data);
+    const response = await millionApi.post('/canvas', data);
     return response
   } catch (error) {
     throw error;

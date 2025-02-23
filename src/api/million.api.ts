@@ -5,15 +5,14 @@ export const millionApi = axios.create({
   baseURL: "http://localhost:3333",
 });
 
+// Interceptor de request
 millionApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const { accessToken } = useUserStore.getState();
     if (accessToken) {
-      // Si headers ya es una instancia de AxiosHeaders y tiene el método set, úsalo.
       if (config.headers && typeof config.headers.set === "function") {
         config.headers.set("Authorization", `Bearer ${accessToken}`);
       } else {
-        // Si no, crea una instancia de AxiosHeaders con el header Authorization.
         config.headers = AxiosHeaders.from({
           Authorization: `Bearer ${accessToken}`,
         });
@@ -23,3 +22,17 @@ millionApi.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+// Interceptor de response para manejar errores 401
+// millionApi.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       // Llama al método logout de tu store
+//       useUserStore.getState().logout();
+//       // Redirige a /login
+//       window.location.href = "/login";
+//     }
+//     return Promise.reject(error);
+//   }
+// );

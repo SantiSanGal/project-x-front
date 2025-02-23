@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import { PixelSelector } from "./select-pixels-modal-content";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -19,7 +20,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [sector, setSector] = useState(1);
-  console.log("isLogged", isLogged);
 
   const {
     isLoading: pintarIsLoading,
@@ -28,7 +28,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     error: pintarError,
   } = useQuery({
     queryKey: ["pintar"],
-    queryFn: () => getCanvasPixeles(),
+    queryFn: () => getCanvasPixeles(isLogged),
   });
 
   const {
@@ -40,9 +40,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     queryKey: ["ocupados", sector],
     queryFn: () => getPixelesOcupados(sector),
   });
-
-  console.log("pintarData", pintarData);
-  console.log("ocupadosData", ocupadosData);
 
   // Para detectar si se está arrastrando (panning)
   const isDraggingRef = useRef(false);
@@ -167,9 +164,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+          worldX <= VIRTUAL_WIDTH &&
+          worldY >= 0 &&
+          worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -287,6 +284,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   };
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isLogged) {
+      toast.error('Please log in first before making a selection.');
+      return
+    }
     // Solo se abre el modal si no se ha arrastrado
     if (hasDraggedRef.current) {
       return;
@@ -312,17 +313,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
 
     const gridXStart = Math.floor(worldX / GRID_SIZE) * GRID_SIZE;
     const gridYStart = Math.floor(worldY / GRID_SIZE) * GRID_SIZE;
-    const gridXEnd = gridXStart + GRID_SIZE - 1;
-    const gridYEnd = gridYStart + GRID_SIZE - 1;
-    console.log("Raw click coordinates:", { x: rawX, y: rawY });
-    console.log("Scaled (world) coordinates:", { x: worldX, y: worldY });
-    console.log("Grid block coordinates:", {
-      X_START: gridXStart,
-      X_END: gridXEnd,
-      Y_START: gridYStart,
-      Y_END: gridYEnd,
-    });
-
+    // const gridXEnd = gridXStart + GRID_SIZE - 1;
+    // const gridYEnd = gridYStart + GRID_SIZE - 1;
     // Verificar si el área ya está ocupada (solo si el usuario está logueado)
     if (isLogged && ocupadosData && Array.isArray(ocupadosData)) {
       let permitir = true;
@@ -357,10 +349,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   return (
     <>
       <PixelSelector
-        onConfirm={() => {}}
+        coors={coors}
         openModal={openModal}
         setOpenModal={setOpenModal}
-        coors={coors}
       />
       <canvas
         className="w-screen h-screen block bg-stone-800"
