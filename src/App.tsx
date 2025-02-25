@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "./store";
 import { Loader } from "lucide-react";
-import React from "react";
 import { cn } from "./lib/utils";
+import React from "react";
 
 const App: React.FC = () => {
   const { isLogged, logout } = useUserStore.getState();

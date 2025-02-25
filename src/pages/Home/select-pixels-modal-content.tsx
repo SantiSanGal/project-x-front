@@ -41,6 +41,14 @@ export const PixelSelector = ({
   const [zoom, setZoom] = useState(5);
   const [imageColors, setImageColors] = useState<string[]>([]);
   const [cropModalOpen, setCropModalOpen] = useState(false);
+  // Estado para almacenar el área recortada en píxeles (relativa a la imagen original)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
+
   const imgRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -113,9 +121,12 @@ export const PixelSelector = ({
   });
 
   // Función para extraer los colores de la sección recortada (5x5 píxeles)
-  const extractPixelColors = async (
-    croppedAreaPixels: { x: number; y: number; width: number; height: number }
-  ) => {
+  const extractPixelColors = async (croppedAreaPixels: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }) => {
     if (!imgRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -128,6 +139,7 @@ export const PixelSelector = ({
     canvas.height = 5;
     ctx.imageSmoothingEnabled = false;
 
+    // Calculamos las escalas (ya que croppedAreaPixels está relativo a la imagen mostrada)
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
@@ -151,11 +163,13 @@ export const PixelSelector = ({
     return colorsArray;
   };
 
+  // Al completar el crop se extraen los colores y se guarda el área recortada
   const onCropComplete = useCallback(
     async (
       croppedArea: any,
       croppedAreaPixels: { x: number; y: number; width: number; height: number }
     ) => {
+      setCroppedAreaPixels(croppedAreaPixels);
       const colors = await extractPixelColors(croppedAreaPixels);
       if (colors) {
         setImageColors(colors);
@@ -163,6 +177,43 @@ export const PixelSelector = ({
     },
     []
   );
+
+  // Función para descargar la imagen con el área seleccionada (rectángulo rojo de 2px)
+  const handleDownloadCroppedImage = () => {
+    if (!imgRef.current || !croppedAreaPixels) {
+      toast.error("No crop area defined");
+      return;
+    }
+    const img = imgRef.current;
+    // Creamos un canvas off-screen con el tamaño de la imagen original
+    const canvasDownload = document.createElement("canvas");
+    canvasDownload.width = img.naturalWidth;
+    canvasDownload.height = img.naturalHeight;
+    const ctx = canvasDownload.getContext("2d");
+    if (!ctx) return;
+
+    // Dibujamos la imagen completa en el canvas
+    ctx.drawImage(img, 0, 0, canvasDownload.width, canvasDownload.height);
+
+    // Dibujamos el rectángulo rojo. Asumimos que croppedAreaPixels está en relación a la imagen original.
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(
+      croppedAreaPixels.x,
+      croppedAreaPixels.y,
+      croppedAreaPixels.width,
+      croppedAreaPixels.height
+    );
+
+    // Convertimos el canvas a data URL y desencadenamos la descarga
+    const dataUrl = canvasDownload.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "image_with_crop.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Al confirmar, armamos el objeto a enviar según el modo seleccionado
   const handleConfirm = () => {
@@ -254,9 +305,7 @@ export const PixelSelector = ({
               >
                 <input {...getInputProps()} />
                 <ImageUp className="mx-auto mb-2" />
-                <p>
-                  Drag and drop an image here, or click to select one
-                </p>
+                <p>Drag and drop an image here, or click to select one</p>
               </div>
 
               {imageSrc && cropModalOpen && (
@@ -294,6 +343,15 @@ export const PixelSelector = ({
                     />
                     <ZoomIn className="size-4" />
                   </div>
+                  {/* Botón para descargar la imagen con el rectángulo rojo */}
+                  {croppedAreaPixels && (
+                    <Button
+                      onClick={handleDownloadCroppedImage}
+                      className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Download Image with Crop
+                    </Button>
+                  )}
                 </>
               )}
 
@@ -319,8 +377,7 @@ export const PixelSelector = ({
           <DialogFooter>
             <Button
               disabled={
-                isPending ||
-                (mode === "image" && imageColors.length === 0)
+                isPending || (mode === "image" && imageColors.length === 0)
               }
               onClick={handleConfirm}
               className="bg-lime-600 hover:bg-lime-700"
