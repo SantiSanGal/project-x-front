@@ -5,6 +5,7 @@ import { postLogin } from "@/core/actions/auth";
 import { useNavigate } from "react-router-dom";
 import { Modal, Spinner } from "@/components";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface LoginFormData {
   username: string;
@@ -21,17 +22,22 @@ export const Login = () => {
     formState: { errors },
   } = useForm<LoginFormData>();
 
-  const { isPending, isSuccess, isError, error, mutate, reset } = useMutation({
-    mutationFn: async (data: LoginFormData) => {
-      const response = await postLogin(data);
-      return response;
+  const { isPending, error, mutate, reset } = useMutation({
+    mutationFn: async (params: LoginFormData) => {
+      const data = await postLogin(params);
+      return data;
     },
-    onSuccess: (response) => {
-      const token = response.data.data.token.token;
+    onSuccess: (data) => {
+      const token = data.data.token.token;
       if (token) {
         loginAction(token);
         navigate("/");
       }
+    },
+    onError: (response: any) => {
+      response.response.data.messages.map((message: any) =>
+        toast.error(message)
+      );
     },
   });
 

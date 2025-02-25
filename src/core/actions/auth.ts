@@ -7,11 +7,11 @@ interface postLoginParams {
 
 export const postLogin = async ({ username, password }: postLoginParams) => {
   try {
-    const response = await millionApi.post("/auth/login", {
+    const { data } = await millionApi.post("/auth/login", {
       username,
       password,
     });
-    return response;
+    return data;
   } catch (error) {
     throw error;
   }
