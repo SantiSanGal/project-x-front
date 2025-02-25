@@ -1,12 +1,11 @@
 import { GrupoPixeles, postGrupoPixeles } from "@/core/actions/canvas";
-import { ImageUp, Loader, ZoomIn, ZoomOut } from "lucide-react";
-import React, { useCallback, useRef, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { Loader, ImageUp, ZoomIn, ZoomOut } from "lucide-react";
+import React, { useState, useCallback, useRef } from "react";
+import { useDropzone, FileRejection } from "react-dropzone";
 import imageCompression from "browser-image-compression";
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Point, Area } from "react-easy-crop";
+import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
 import {
   Dialog,
@@ -17,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
-interface PixelSelectorProps {
+interface CombinedPixelSelectorProps {
   coors: { x: number; y: number };
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,16 +26,25 @@ export const PixelSelector = ({
   coors,
   openModal,
   setOpenModal,
-}: PixelSelectorProps) => {
-  const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(5); // Comenzamos con un zoom más alto
+}: CombinedPixelSelectorProps) => {
+  // Estado para elegir el modo: 'manual' o 'image'
+  const [mode, setMode] = useState<"manual" | "image">("manual");
+
+  // Estado para selección manual
+  const [manualColors, setManualColors] = useState<string[]>(
+    Array(25).fill("#ffffff")
+  );
+
+  // Estados para selección por imagen
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(5);
+  const [imageColors, setImageColors] = useState<string[]>([]);
   const [cropModalOpen, setCropModalOpen] = useState(false);
-  const [colors, setColors] = useState<string[]>([]);
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const imgRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Hook de mutación para enviar los datos al backend
   const { isPending, mutate } = useMutation({
     mutationFn: async (grupo_pixeles: GrupoPixeles) => {
       const respuesta = await postGrupoPixeles(grupo_pixeles);
@@ -49,23 +57,32 @@ export const PixelSelector = ({
     },
     onError: () => {
       toast.error("Hubo un error al procesar los colores");
-    }
-  })
+    },
+  });
 
+  // Actualiza el color en la grilla manual
+  const handleManualColorChange = (index: number, color: string) => {
+    const newColors = [...manualColors];
+    newColors[index] = color;
+    setManualColors(newColors);
+  };
+
+  // Configuración de dropzone para el modo imagen
   const onDrop = useCallback(
     async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      // Reiniciamos el crop y zoom
       setCrop({ x: 0, y: 0 });
       setZoom(5);
 
       if (fileRejections.length > 0) {
-        toast.error("El archivo no es de tipo imagen");
+        toast.error("The file is not an image");
         return;
       }
 
       const file = acceptedFiles[0];
       const options = {
         maxSizeMB: 4,
-        maxWidthOrHeight: 2000, // Aumentamos el tamaño máximo para mejor resolución
+        maxWidthOrHeight: 2000,
         useWebWorker: true,
       };
 
@@ -73,10 +90,9 @@ export const PixelSelector = ({
         const compressedFile = await imageCompression(file, options);
         const imageUrl = URL.createObjectURL(compressedFile);
 
-        // Precargamos la imagen para obtener sus dimensiones
+        // Pre-cargamos la imagen para obtener sus dimensiones
         const img = new Image();
         img.onload = () => {
-          setImageSize({ width: img.width, height: img.height });
           imgRef.current = img;
         };
         img.src = imageUrl;
@@ -84,7 +100,7 @@ export const PixelSelector = ({
         setImageSrc(imageUrl);
         setCropModalOpen(true);
       } catch (error) {
-        toast.error("Hubo un problema al procesar la imagen");
+        toast.error("An error occurred while processing the image");
       }
     },
     []
@@ -96,7 +112,10 @@ export const PixelSelector = ({
     multiple: false,
   });
 
-  const extractPixelColors = async (croppedAreaPixels: Area) => {
+  // Función para extraer los colores de la sección recortada (5x5 píxeles)
+  const extractPixelColors = async (
+    croppedAreaPixels: { x: number; y: number; width: number; height: number }
+  ) => {
     if (!imgRef.current || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -104,15 +123,11 @@ export const PixelSelector = ({
     if (!ctx) return;
 
     const image = imgRef.current;
-
-    // Configuramos el canvas para una representación exacta de píxeles
+    // Configuramos el canvas para 5x5 píxeles
     canvas.width = 5;
     canvas.height = 5;
-
-    // Desactivamos el suavizado para obtener píxeles exactos
     ctx.imageSmoothingEnabled = false;
 
-    // Calculamos las coordenadas exactas de píxeles
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
@@ -121,50 +136,67 @@ export const PixelSelector = ({
     const exactWidth = Math.floor(croppedAreaPixels.width * scaleX);
     const exactHeight = Math.floor(croppedAreaPixels.height * scaleY);
 
-    // Dibujamos la sección exacta de 5x5 píxeles
     ctx.drawImage(image, exactX, exactY, exactWidth, exactHeight, 0, 0, 5, 5);
 
-    // Extraemos los colores exactos
-    const pixelColors: string[] = [];
+    const colorsArray: string[] = [];
     for (let y = 0; y < 5; y++) {
       for (let x = 0; x < 5; x++) {
         const pixel = ctx.getImageData(x, y, 1, 1).data;
         const color = `#${[pixel[0], pixel[1], pixel[2]]
           .map((x) => x.toString(16).padStart(2, "0"))
           .join("")}`;
-        pixelColors.push(color);
+        colorsArray.push(color);
       }
     }
-
-    return pixelColors;
+    return colorsArray;
   };
 
   const onCropComplete = useCallback(
-    async (croppedArea: Area, croppedAreaPixels: Area) => {
+    async (
+      croppedArea: any,
+      croppedAreaPixels: { x: number; y: number; width: number; height: number }
+    ) => {
       const colors = await extractPixelColors(croppedAreaPixels);
       if (colors) {
-        setColors(colors);
+        setImageColors(colors);
       }
     },
     []
   );
 
-  const handleConfirm = async () => {
-    if (!colors.length) return;
+  // Al confirmar, armamos el objeto a enviar según el modo seleccionado
+  const handleConfirm = () => {
+    let pixeles;
+    let linkValue = "http://validarstring.com";
+
+    if (mode === "manual") {
+      pixeles = manualColors.map((color, index) => ({
+        coordenada_x: coors.x + (index % 5),
+        coordenada_y: coors.y + Math.floor(index / 5),
+        color,
+      }));
+    } else {
+      if (!imageColors.length) {
+        toast.error("No colors have been extracted from the image");
+        return;
+      }
+      pixeles = imageColors.map((color, index) => ({
+        coordenada_x: coors.x + (index % 5),
+        coordenada_y: coors.y + Math.floor(index / 5),
+        color,
+      }));
+      linkValue = imageSrc || linkValue;
+    }
 
     const grupo_pixeles_params = {
       grupo_pixeles: {
-        link: imageSrc || "http://validarstring.com",
+        link: linkValue,
         coordenada_x_inicio: coors.x,
         coordenada_y_inicio: coors.y,
         coordenada_x_fin: coors.x + 4,
         coordenada_y_fin: coors.y + 4,
       },
-      pixeles: colors.map((color, index) => ({
-        coordenada_x: coors.x + (index % 5),
-        coordenada_y: coors.y + Math.floor(index / 5),
-        color: color,
-      })),
+      pixeles,
     };
 
     mutate(grupo_pixeles_params);
@@ -176,80 +208,120 @@ export const PixelSelector = ({
         <DialogContent className="bg-background">
           <DialogHeader>
             <DialogTitle className="text-white text-base">
-              Select Area and Extract{" "}
-              <span className="text-lime-600">Pixels</span>
+              Customize your <span className="text-lime-600">Pixels</span>
             </DialogTitle>
           </DialogHeader>
 
-          <div
-            {...getRootProps()}
-            className="cursor-pointer text-center p-4 border-2 border-dashed rounded-lg"
-          >
-            <input {...getInputProps()} />
-            <ImageUp className="mx-auto mb-2" />
-            <p>Drag and drop an image here, or click to select one</p>
+          {/* Selector de modo */}
+          <div className="flex justify-center gap-4 mb-4">
+            <Button
+              variant={mode === "manual" ? "default" : "outline"}
+              onClick={() => setMode("manual")}
+            >
+              Manual Selection
+            </Button>
+            <Button
+              variant={mode === "image" ? "default" : "outline"}
+              onClick={() => setMode("image")}
+            >
+              Upload an Image
+            </Button>
           </div>
 
-          {imageSrc && cropModalOpen && (
-            <>
-              <div className="relative h-80 mt-4">
-                <Cropper
-                  image={imageSrc}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                  minZoom={1}
-                  maxZoom={100} // Aumentamos el zoom máximo
-                  cropSize={{ width: 100, height: 100 }} // Tamaño fijo del área de crop
-                  onMediaLoaded={(mediaSize) => {
-                    const img = new Image();
-                    img.src = imageSrc;
-                    img.onload = () => {
-                      imgRef.current = img;
-                      setImageSize({ width: img.width, height: img.height });
-                    };
-                  }}
-                />
-              </div>
-
-              <div className="flex items-center gap-4 mt-4">
-                <ZoomOut className="size-4" />
-                <Slider
-                  value={[zoom]}
-                  onValueChange={(value) => setZoom(value[0])}
-                  min={1}
-                  max={100}
-                  step={0.1}
-                  className="flex-1"
-                />
-                <ZoomIn className="size-4" />
-              </div>
-            </>
-          )}
-
-          {colors.length > 0 && (
-            <div className="mt-4">
-              <p className="text-sm text-gray-400 mb-2">
-                Preview de píxeles exactos:
-              </p>
-              <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
-                {colors.map((color, index) => (
-                  <div
+          {mode === "manual" && (
+            <div className="flex flex-col items-center">
+              <div className="grid grid-cols-5 gap-0">
+                {Array.from({ length: 25 }).map((_, index) => (
+                  <input
                     key={index}
-                    className="h-8 w-8 border border-gray-300"
-                    style={{ backgroundColor: color }}
+                    type="color"
+                    className="h-10 w-10 m-0 p-0 border border-slate-400"
+                    value={manualColors[index]}
+                    onChange={(e) =>
+                      handleManualColorChange(index, e.target.value)
+                    }
                   />
                 ))}
               </div>
             </div>
           )}
 
+          {mode === "image" && (
+            <>
+              <div
+                {...getRootProps()}
+                className="cursor-pointer text-center p-4 border-2 border-dashed rounded-lg"
+              >
+                <input {...getInputProps()} />
+                <ImageUp className="mx-auto mb-2" />
+                <p>
+                  Drag and drop an image here, or click to select one
+                </p>
+              </div>
+
+              {imageSrc && cropModalOpen && (
+                <>
+                  <div className="relative h-80 mt-4">
+                    <Cropper
+                      image={imageSrc}
+                      crop={crop}
+                      zoom={zoom}
+                      aspect={1}
+                      onCropChange={setCrop}
+                      onZoomChange={setZoom}
+                      onCropComplete={onCropComplete}
+                      minZoom={1}
+                      maxZoom={100}
+                      cropSize={{ width: 100, height: 100 }}
+                      onMediaLoaded={() => {
+                        const img = new Image();
+                        img.src = imageSrc;
+                        img.onload = () => {
+                          imgRef.current = img;
+                        };
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-4 mt-4">
+                    <ZoomOut className="size-4" />
+                    <Slider
+                      value={[zoom]}
+                      onValueChange={(value) => setZoom(value[0])}
+                      min={1}
+                      max={100}
+                      step={0.1}
+                      className="flex-1"
+                    />
+                    <ZoomIn className="size-4" />
+                  </div>
+                </>
+              )}
+
+              {imageColors.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm text-gray-400 mb-2">
+                    Preview your Pixels:
+                  </p>
+                  <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
+                    {imageColors.map((color, index) => (
+                      <div
+                        key={index}
+                        className="h-8 w-8 border border-gray-300"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
           <DialogFooter>
             <Button
-              disabled={!colors.length || isPending}
+              disabled={
+                isPending ||
+                (mode === "image" && imageColors.length === 0)
+              }
               onClick={handleConfirm}
               className="bg-lime-600 hover:bg-lime-700"
             >
@@ -262,7 +334,7 @@ export const PixelSelector = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
+      {/* Canvas oculto para extraer los píxeles */}
       <canvas ref={canvasRef} className="hidden" />
     </>
   );
