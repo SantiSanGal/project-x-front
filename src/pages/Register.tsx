@@ -1,13 +1,14 @@
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useNavigate } from "react-router-dom";
 import { millionApi } from "@/api/million.api";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-
-// TODO: Mostrar errores de validación
 //TODO: Agregar captcha
-
+//6LcxgeMqAAAAAOPNkNhhgjPO0y6lvE8pVre7USDs
 export const Register = () => {
+  const [capVal, setCapVal] = useState<string | null>(null);
   const navigate = useNavigate();
   const {
     register,
@@ -33,8 +34,14 @@ export const Register = () => {
         }, 2000);
       })
       .catch((err) => {
+        if (err.status == 400) {
+          err.response.data.message.errors.map((error: any) =>
+            toast.error(error.message)
+          );
+        } else {
+          toast.error("Sorry, an error has occurred");
+        }
         console.log(err);
-        toast.error("Sorry, an error has occurred");
       });
   };
 
@@ -196,9 +203,23 @@ export const Register = () => {
 
           {/* Footer fijo */}
           <footer className="p-4 border-t border-stone-600">
+            <ReCAPTCHA
+              sitekey="6LcxgeMqAAAAAOPNkNhhgjPO0y6lvE8pVre7USDs"
+              onChange={(val) => {
+                console.log("val", val);
+                setCapVal(val);
+              }}
+            />
             <button
+              disabled={!capVal}
               type="submit"
-              className="w-full bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded transition-all"
+              className={cn(
+                "w-full  text-white font-bold py-2 px-4 rounded transition-all",
+                {
+                  "bg-slate-300 text-slate-600": !capVal,
+                  "bg-lime-600 hover:bg-lime-700": capVal,
+                }
+              )}
             >
               Sign up
             </button>

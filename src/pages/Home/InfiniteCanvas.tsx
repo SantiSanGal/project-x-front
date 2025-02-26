@@ -22,10 +22,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [sector, setSector] = useState(1);
 
   const {
-    isLoading: pintarIsLoading,
+    // isLoading: pintarIsLoading,
     data: pintarData,
-    isError: pintarIsError,
-    error: pintarError,
+    // isError: pintarIsError,
+    // error: pintarError,
     refetch: refetchPintar,
   } = useQuery({
     queryKey: ["pintar"],
@@ -34,10 +34,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   });
 
   const {
-    isLoading: ocupadosIsLoading,
+    // isLoading: ocupadosIsLoading,
     data: ocupadosData,
-    isError: ocupadosIsError,
-    error: ocupadosError,
+    // isError: ocupadosIsError,
+    // error: ocupadosError,
     refetch: refetchOcupados,
   } = useQuery({
     queryKey: ["ocupados", sector],
