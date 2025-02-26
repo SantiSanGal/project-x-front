@@ -28,7 +28,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     error: pintarError,
   } = useQuery({
     queryKey: ["pintar"],
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
     queryFn: () => getCanvasPixeles(isLogged),
   });
 
@@ -39,7 +39,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     error: ocupadosError,
   } = useQuery({
     queryKey: ["ocupados", sector],
-    staleTime: 1000 * 60 * 60,
+    // staleTime: 1000 * 60 * 60,
     queryFn: () => getPixelesOcupados(sector),
   });
 
@@ -286,14 +286,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   };
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isLogged) {
-      toast.error('Please log in first before making a selection.');
-      return
-    }
-    // Solo se abre el modal si no se ha arrastrado
-    if (hasDraggedRef.current) {
-      return;
-    }
+    // Solo se ejecuta la acción si el click es genuino (sin haber arrastrado más de 5 píxeles)
+    if (hasDraggedRef.current) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -303,7 +298,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     const worldX = (rawX - offsetX) / scale;
     const worldY = (rawY - offsetY) / scale;
 
-    // Mostrar el modal solo si se hizo click dentro del área virtual 2000x1000
+    // Verificar que el click se realice dentro del área virtual 2000x1000
     if (
       worldX < 0 ||
       worldX > VIRTUAL_WIDTH ||
@@ -313,12 +308,18 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       return;
     }
 
+    // Si el usuario no está logueado, mostrar toast error y salir
+    if (!isLogged) {
+      toast.error('Please log in first before making a selection.');
+      return;
+    }
+
+    // Cálculo de la celda (alineada a la cuadrícula) a seleccionar
     const gridXStart = Math.floor(worldX / GRID_SIZE) * GRID_SIZE;
     const gridYStart = Math.floor(worldY / GRID_SIZE) * GRID_SIZE;
-    // const gridXEnd = gridXStart + GRID_SIZE - 1;
-    // const gridYEnd = gridYStart + GRID_SIZE - 1;
+
     // Verificar si el área ya está ocupada (solo si el usuario está logueado)
-    if (isLogged && ocupadosData && Array.isArray(ocupadosData)) {
+    if (ocupadosData && Array.isArray(ocupadosData)) {
       let permitir = true;
       for (const occupied of ocupadosData) {
         if (
@@ -332,12 +333,11 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
         }
       }
       if (!permitir) {
-        console.log("Área ocupada. No se puede seleccionar.");
         return;
       }
     }
 
-    // Si está permitido, pinta el bloque en negro (simula la reserva)
+    // Si está permitido, pinta el bloque (simulando la reserva) y abre el modal
     const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.fillStyle = "black";
@@ -347,6 +347,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     setCoors({ x: gridXStart, y: gridYStart });
     setOpenModal(true);
   };
+
 
   return (
     <>
