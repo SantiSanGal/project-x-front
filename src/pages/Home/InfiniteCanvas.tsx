@@ -26,9 +26,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     data: pintarData,
     isError: pintarIsError,
     error: pintarError,
+    refetch: refetchPintar,
   } = useQuery({
     queryKey: ["pintar"],
-    // staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
     queryFn: () => getCanvasPixeles(isLogged),
   });
 
@@ -37,9 +38,10 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     data: ocupadosData,
     isError: ocupadosIsError,
     error: ocupadosError,
+    refetch: refetchOcupados,
   } = useQuery({
     queryKey: ["ocupados", sector],
-    // staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
     queryFn: () => getPixelesOcupados(sector),
   });
 
@@ -166,9 +168,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-          worldX <= VIRTUAL_WIDTH &&
-          worldY >= 0 &&
-          worldY <= VIRTUAL_HEIGHT
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -310,7 +312,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
 
     // Si el usuario no está logueado, mostrar toast error y salir
     if (!isLogged) {
-      toast.error('Please log in first before making a selection.');
+      toast.error("Please log in first before making a selection.");
       return;
     }
 
@@ -348,13 +350,14 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     setOpenModal(true);
   };
 
-
   return (
     <>
       <PixelSelector
         coors={coors}
         openModal={openModal}
         setOpenModal={setOpenModal}
+        refetchPintar={refetchPintar}
+        refetchOcupados={refetchOcupados}
       />
       <canvas
         className="w-screen h-screen block bg-stone-800"

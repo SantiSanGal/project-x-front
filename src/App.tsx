@@ -64,7 +64,7 @@ const App: React.FC = () => {
             <DropdownMenuItem
               disabled={isPending}
               className={cn(
-                "text-base cursor-pointer hover:bg-stone-800 text-white "
+                "text-base cursor-pointer hover:bg-stone-800 text-white"
                 // {
                 //   "text-lime-600": isLogged,
                 //   "text-red-600": !isLogged,

@@ -17,6 +17,16 @@
   }
 }
 
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cad5e2;
+  border-radius: 0.5rem;
+}
+
 input[type="color"] {
   -webkit-appearance: none;
   width: 32px;

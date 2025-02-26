@@ -3,7 +3,6 @@ import { Loader, ImageUp, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useState, useCallback, useRef } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import imageCompression from "browser-image-compression";
-import { useMutation } from "@tanstack/react-query";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
@@ -14,19 +13,35 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CombinedPixelSelectorProps {
   coors: { x: number; y: number };
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  refetchPintar: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<any, Error>>;
+  refetchOcupados: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<any, Error>>;
 }
 
 export const PixelSelector = ({
   coors,
   openModal,
   setOpenModal,
+  refetchPintar,
+  refetchOcupados,
 }: CombinedPixelSelectorProps) => {
+  const queryClient = useQueryClient();
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
 
@@ -59,12 +74,15 @@ export const PixelSelector = ({
       return respuesta;
     },
     onSuccess: () => {
-      setCropModalOpen(false);
       setOpenModal(false);
-      toast.success("Colores enviados correctamente");
+      setCropModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["ocupados", "pintar"] });
+      refetchPintar();
+      refetchOcupados();
+      toast.success("Colors sent successfully");
     },
     onError: () => {
-      toast.error("Hubo un error al procesar los colores");
+      toast.error("There was an error processing the colors");
     },
   });
 
@@ -256,9 +274,10 @@ export const PixelSelector = ({
   return (
     <>
       <Dialog open={openModal} onOpenChange={setOpenModal}>
-        <DialogContent className="bg-background">
+        <DialogContent className="bg-background max-h-screen h-[90vh] overflow-y-auto">
+          {/* <div className="flex-1  flex-col overflow-y-auto w-full"> */}
           <DialogHeader>
-            <DialogTitle className="text-white text-base">
+            <DialogTitle className="text-base">
               Customize your <span className="text-lime-600">Pixels</span>
             </DialogTitle>
           </DialogHeader>
@@ -345,19 +364,21 @@ export const PixelSelector = ({
                   </div>
                   {/* Botón para descargar la imagen con el rectángulo rojo */}
                   {croppedAreaPixels && (
-                    <Button
-                      onClick={handleDownloadCroppedImage}
-                      className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Download Image with Crop
-                    </Button>
+                    <div className="w-full flex items-center justify-center">
+                      <Button
+                        onClick={handleDownloadCroppedImage}
+                        className="mt-4  bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        Download Image with Crop
+                      </Button>
+                    </div>
                   )}
                 </>
               )}
 
               {imageColors.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-sm text-gray-400 mb-2">
+                  <p className="text-sm mx-auto w-fit text-gray-400 mb-2">
                     Preview your Pixels:
                   </p>
                   <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
@@ -389,6 +410,7 @@ export const PixelSelector = ({
               )}
             </Button>
           </DialogFooter>
+          {/* </div> */}
         </DialogContent>
       </Dialog>
       {/* Canvas oculto para extraer los píxeles */}

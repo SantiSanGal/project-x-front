@@ -1,9 +1,10 @@
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useNavigate } from "react-router-dom";
 import { millionApi } from "@/api/million.api";
 import { useForm } from "react-hook-form";
-import React from "react";
+import { toast } from "sonner";
 
-//TODO: Arreglar el overflow en el formulario
+// TODO: Mostrar errores de validación
 //TODO: Agregar captcha
 
 export const Register = () => {
@@ -24,8 +25,17 @@ export const Register = () => {
         last_name: data.last_name,
         email: data.email,
       })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.log(res);
+        toast.success("User Registered Successfully");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Sorry, an error has occurred");
+      });
   };
 
   return (

@@ -20,6 +20,7 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@tanstack/react-query": "^5.66.5",
+    "@tanstack/react-query-devtools": "^5.66.9",
     "@types/react-easy-crop": "^1.16.0",
     "axios": "^1.7.9",
     "browser-image-compression": "^2.0.2",
