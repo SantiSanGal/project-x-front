@@ -1,5 +1,6 @@
 import { ProfilePicture } from "@/components/ProfilePicture";
 import InfiniteCanvas from "./pages/Home/InfiniteCanvas";
+import SessionManager from "./components/SessionManager";
 import { useMutation } from "@tanstack/react-query";
 import { postLogout } from "./core/actions/auth";
 import { useNavigate } from "react-router-dom";
@@ -82,6 +83,7 @@ const App: React.FC = () => {
       </div>
 
       <InfiniteCanvas isLogged={isLogged} />
+      <SessionManager />
     </div>
   );
 };

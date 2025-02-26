@@ -28,6 +28,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     error: pintarError,
   } = useQuery({
     queryKey: ["pintar"],
+    staleTime: 1000 * 60 * 60,
     queryFn: () => getCanvasPixeles(isLogged),
   });
 
@@ -38,6 +39,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     error: ocupadosError,
   } = useQuery({
     queryKey: ["ocupados", sector],
+    staleTime: 1000 * 60 * 60,
     queryFn: () => getPixelesOcupados(sector),
   });
 
