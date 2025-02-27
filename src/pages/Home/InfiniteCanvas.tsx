@@ -1,9 +1,16 @@
 import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import { PixelSelector } from "./select-pixels-modal-content";
 import { useQuery } from "@tanstack/react-query";
+import { SocketContext } from "@/store";
 import { toast } from "sonner";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -19,7 +26,29 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { socket } = useContext(SocketContext);
   const [sector, setSector] = useState(1);
+
+  // Para detectar si se está arrastrando (panning)
+  const isDraggingRef = useRef(false);
+  // Para guardar la posición inicial en mouseDown
+  const initialPosRef = useRef<{ x: number; y: number } | null>(null);
+  // Para marcar si se ha arrastrado (movimiento mayor al umbral)
+  const hasDraggedRef = useRef(false);
+  // Última posición del mouse (para calcular el delta)
+  const lastPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  // Parámetros de transformación: pan y zoom.
+  const transformRef = useRef<{
+    offsetX: number;
+    offsetY: number;
+    scale: number;
+  }>({
+    offsetX: 0,
+    offsetY: 0,
+    scale: 1,
+  });
+  // Ref para la imagen cargada
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
   const {
     // isLoading: pintarIsLoading,
@@ -44,27 +73,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     staleTime: 1000 * 60 * 60,
     queryFn: () => getPixelesOcupados(sector),
   });
-
-  // Para detectar si se está arrastrando (panning)
-  const isDraggingRef = useRef(false);
-  // Para guardar la posición inicial en mouseDown
-  const initialPosRef = useRef<{ x: number; y: number } | null>(null);
-  // Para marcar si se ha arrastrado (movimiento mayor al umbral)
-  const hasDraggedRef = useRef(false);
-  // Última posición del mouse (para calcular el delta)
-  const lastPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  // Parámetros de transformación: pan y zoom.
-  const transformRef = useRef<{
-    offsetX: number;
-    offsetY: number;
-    scale: number;
-  }>({
-    offsetX: 0,
-    offsetY: 0,
-    scale: 1,
-  });
-  // Ref para la imagen cargada
-  const imageRef = useRef<HTMLImageElement | null>(null);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -153,6 +161,22 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [draw]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNuevoRegistro = () => {
+      console.log("handleNuevoRegistro");
+      refetchPintar();
+      refetchOcupados();
+    };
+
+    socket.on("nuevo_registro", handleNuevoRegistro);
+
+    return () => {
+      socket.off("nuevo_registro", handleNuevoRegistro);
+    };
+  }, [socket, refetchPintar, refetchOcupados]);
 
   const updateCursor = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
