@@ -20,7 +20,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CombinedPixelSelectorProps {
   coors: { x: number; y: number };
@@ -44,6 +43,7 @@ export const PixelSelector = ({
   const queryClient = useQueryClient();
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
+  const [link, setLink] = useState('');
 
   // Estado para selección manual
   const [manualColors, setManualColors] = useState<string[]>(
@@ -236,7 +236,6 @@ export const PixelSelector = ({
   // Al confirmar, armamos el objeto a enviar según el modo seleccionado
   const handleConfirm = () => {
     let pixeles;
-    let linkValue = "http://validarstring.com";
 
     if (mode === "manual") {
       pixeles = manualColors.map((color, index) => ({
@@ -254,12 +253,12 @@ export const PixelSelector = ({
         coordenada_y: coors.y + Math.floor(index / 5),
         color,
       }));
-      linkValue = imageSrc || linkValue;
+      // linkValue = imageSrc || linkValue;
     }
 
     const grupo_pixeles_params = {
       grupo_pixeles: {
-        link: linkValue,
+        link: link,
         coordenada_x_inicio: coors.x,
         coordenada_y_inicio: coors.y,
         coordenada_x_fin: coors.x + 4,
@@ -395,6 +394,16 @@ export const PixelSelector = ({
             </>
           )}
 
+          <div className="flex flex-col w-full items-center justify-center">
+            <label>Add a link or text of your choice</label>
+            <input
+              type="text"
+              placeholder="https://example.com or Hi mom C:"
+              value={link}
+              onChange={e => setLink(e.target.value)}
+              className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
+            />
+          </div>
           <DialogFooter>
             <Button
               disabled={
@@ -410,7 +419,6 @@ export const PixelSelector = ({
               )}
             </Button>
           </DialogFooter>
-          {/* </div> */}
         </DialogContent>
       </Dialog>
       {/* Canvas oculto para extraer los píxeles */}

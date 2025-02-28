@@ -22,6 +22,8 @@ interface PintarData {
   color: string;
 }
 
+//TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link 
+
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
@@ -49,6 +51,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   });
   // Ref para la imagen cargada
   const imageRef = useRef<HTMLImageElement | null>(null);
+  // Ref para guardar la celda (cuadrito) sobre la que se hace hover
+  const hoveredCellRef = useRef<{ x: number; y: number } | null>(null);
 
   const {
     // isLoading: pintarIsLoading,
@@ -135,6 +139,19 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       );
     }
 
+    // Agrego el efecto hover: borde oscuro en el cuadrito
+    if (hoveredCellRef.current) {
+      ctx.beginPath();
+      ctx.strokeStyle = "#000"; // Borde oscuro
+      ctx.lineWidth = 0.5;
+      ctx.strokeRect(
+        hoveredCellRef.current.x,
+        hoveredCellRef.current.y,
+        GRID_SIZE,
+        GRID_SIZE
+      );
+    }
+
     ctx.restore();
   }, [pintarData, isLogged]);
 
@@ -192,9 +209,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+          worldX <= VIRTUAL_WIDTH &&
+          worldY >= 0 &&
+          worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -237,44 +254,53 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const { offsetX, offsetY, scale } = transformRef.current;
       const worldX = (rawX - offsetX) / scale;
       const worldY = (rawY - offsetY) / scale;
-      // Verificar que esté dentro del área virtual
+      // Actualizar el cuadrito sobre el que se hace hover
       if (
         worldX >= 0 &&
         worldX <= VIRTUAL_WIDTH &&
         worldY >= 0 &&
         worldY <= VIRTUAL_HEIGHT
       ) {
-        let newSector: number | null = null;
-        if (worldX >= 0 && worldX <= 999 && worldY >= 0 && worldY <= 499) {
-          newSector = 1;
-        } else if (
-          worldX >= 1000 &&
-          worldX <= 1999 &&
-          worldY >= 0 &&
-          worldY <= 499
-        ) {
-          newSector = 2;
-        } else if (
-          worldX >= 0 &&
-          worldX <= 999 &&
-          worldY >= 500 &&
-          worldY <= 999
-        ) {
-          newSector = 3;
-        } else if (
-          worldX >= 1000 &&
-          worldX <= 1999 &&
-          worldY >= 500 &&
-          worldY <= 999
-        ) {
-          newSector = 4;
-        }
-        if (newSector !== null && newSector !== sector) {
-          setSector(newSector);
-          console.log("Nuevo sector asignado:", newSector);
-        }
+        hoveredCellRef.current = {
+          x: Math.floor(worldX / GRID_SIZE) * GRID_SIZE,
+          y: Math.floor(worldY / GRID_SIZE) * GRID_SIZE,
+        };
+      } else {
+        hoveredCellRef.current = null;
+      }
+      // Actualizar el sector según lo existente
+      let newSector: number | null = null;
+      if (worldX >= 0 && worldX <= 999 && worldY >= 0 && worldY <= 499) {
+        newSector = 1;
+      } else if (
+        worldX >= 1000 &&
+        worldX <= 1999 &&
+        worldY >= 0 &&
+        worldY <= 499
+      ) {
+        newSector = 2;
+      } else if (
+        worldX >= 0 &&
+        worldX <= 999 &&
+        worldY >= 500 &&
+        worldY <= 999
+      ) {
+        newSector = 3;
+      } else if (
+        worldX >= 1000 &&
+        worldX <= 1999 &&
+        worldY >= 500 &&
+        worldY <= 999
+      ) {
+        newSector = 4;
+      }
+      if (newSector !== null && newSector !== sector) {
+        setSector(newSector);
+        console.log("Nuevo sector asignado:", newSector);
       }
     }
+    // Vuelvo a dibujar para actualizar el efecto hover
+    draw();
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -286,9 +312,11 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const handleMouseLeave = (_e: React.MouseEvent<HTMLCanvasElement>) => {
     isDraggingRef.current = false;
     initialPosRef.current = null;
+    hoveredCellRef.current = null;
     if (canvasRef.current) {
       canvasRef.current.style.cursor = "default";
     }
+    draw();
   };
 
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
