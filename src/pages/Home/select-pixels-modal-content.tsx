@@ -28,9 +28,11 @@ interface CombinedPixelSelectorProps {
   refetchPintar: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<any, Error>>;
+  setPagoparToken: React.Dispatch<React.SetStateAction<string>>;
   refetchOcupados: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<any, Error>>;
+  setOpenAlertModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PixelSelector = ({
@@ -38,8 +40,11 @@ export const PixelSelector = ({
   openModal,
   setOpenModal,
   refetchPintar,
+  setPagoparToken,
   refetchOcupados,
+  setOpenAlertModal
 }: CombinedPixelSelectorProps) => {
+
   const queryClient = useQueryClient();
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
@@ -73,13 +78,23 @@ export const PixelSelector = ({
       const respuesta = await postGrupoPixeles(grupo_pixeles);
       return respuesta;
     },
-    onSuccess: () => {
-      setOpenModal(false);
-      setCropModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["ocupados", "pintar"] });
-      refetchPintar();
-      refetchOcupados();
-      toast.success("Colors sent successfully");
+    onSuccess: (respuesta) => {
+      const { data } = respuesta
+
+      if (data && data.data && data.data.dataToken) {
+        setPagoparToken(data.data.dataToken);
+        setOpenModal(false);
+        setCropModalOpen(false);
+        setOpenAlertModal(true);
+      } else {
+        console.log('error xd');
+
+      }
+      // TODO: hacer un listener de ws
+      // queryClient.invalidateQueries({ queryKey: ["ocupados", "pintar"] });
+      // refetchPintar();
+      // refetchOcupados();
+      // toast.success("Colors sent successfully");
     },
     onError: () => {
       toast.error("There was an error processing the colors");
@@ -184,7 +199,7 @@ export const PixelSelector = ({
   // Al completar el crop se extraen los colores y se guarda el área recortada
   const onCropComplete = useCallback(
     async (
-      croppedArea: any,
+      _croppedArea: any,
       croppedAreaPixels: { x: number; y: number; width: number; height: number }
     ) => {
       setCroppedAreaPixels(croppedAreaPixels);

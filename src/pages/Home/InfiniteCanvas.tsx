@@ -11,6 +11,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { WaitAlertModal } from "./wait-alert-modal";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -25,6 +26,8 @@ interface PintarData {
 //TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link 
 
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
+  const [openAlertModal, setOpenAlertModal] = useState(false);
+  const [pagoparToken, setPagoparToken] = useState('');
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -183,8 +186,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     if (!socket) return;
 
     const handleNuevoRegistro = () => {
-      console.log("handleNuevoRegistro");
-      refetchPintar();
+      // refetchPintar();
       refetchOcupados();
     };
 
@@ -409,7 +411,14 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         refetchPintar={refetchPintar}
+        setPagoparToken={setPagoparToken}
         refetchOcupados={refetchOcupados}
+        setOpenAlertModal={setOpenAlertModal}
+      />
+      <WaitAlertModal
+        openModal={openAlertModal}
+        pagoparToken={pagoparToken}
+        setOpenModal={setOpenAlertModal}
       />
       <canvas
         className="w-screen h-screen block bg-stone-800"

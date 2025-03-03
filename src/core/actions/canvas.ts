@@ -1,6 +1,5 @@
 import { millionApi } from "@/api/million.api";
 
-//Para componente GestionCompra
 export interface IndividualPixel {
   coordenada_x: number;
   coordenada_y: number;
