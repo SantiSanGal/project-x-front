@@ -1,5 +1,5 @@
+import { About, ErrorPage, Login, Redirect, Register } from "@/pages";
 import { createBrowserRouter } from "react-router-dom";
-import { About, Login, Register } from "@/pages";
 import App from "@/App";
 
 export const router = createBrowserRouter([
@@ -18,5 +18,13 @@ export const router = createBrowserRouter([
   {
     path: "about",
     element: <About />,
+  },
+  {
+    path: "redirect",
+    element: <Redirect />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
