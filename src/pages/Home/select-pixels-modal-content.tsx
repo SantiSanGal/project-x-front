@@ -42,13 +42,12 @@ export const PixelSelector = ({
   refetchPintar,
   setPagoparToken,
   refetchOcupados,
-  setOpenAlertModal
+  setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
-
   const queryClient = useQueryClient();
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
-  const [link, setLink] = useState('');
+  const [link, setLink] = useState("");
 
   // Estado para selección manual
   const [manualColors, setManualColors] = useState<string[]>(
@@ -79,22 +78,15 @@ export const PixelSelector = ({
       return respuesta;
     },
     onSuccess: (respuesta) => {
-      const { data } = respuesta
+      const { data } = respuesta;
 
       if (data && data.data && data.data.dataToken) {
         setPagoparToken(data.data.dataToken);
         setOpenModal(false);
         setCropModalOpen(false);
         setOpenAlertModal(true);
-      } else {
-        console.log('error xd');
-
       }
-      // TODO: hacer un listener de ws
-      // queryClient.invalidateQueries({ queryKey: ["ocupados", "pintar"] });
-      // refetchPintar();
-      // refetchOcupados();
-      // toast.success("Colors sent successfully");
+      // TODO: hacer un listener de ws para cuando se haya confirmado el pago
     },
     onError: () => {
       toast.error("There was an error processing the colors");
@@ -415,7 +407,7 @@ export const PixelSelector = ({
               type="text"
               placeholder="https://example.com or Hi mom C:"
               value={link}
-              onChange={e => setLink(e.target.value)}
+              onChange={(e) => setLink(e.target.value)}
               className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
             />
           </div>

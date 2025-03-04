@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-//TODO: Agregar captcha
-//6LcxgeMqAAAAAOPNkNhhgjPO0y6lvE8pVre7USDs
+
 export const Register = () => {
   const [capVal, setCapVal] = useState<string | null>(null);
   const navigate = useNavigate();

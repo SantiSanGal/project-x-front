@@ -1,3 +1,6 @@
+import React, { useState, useCallback, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import Cropper from "react-easy-crop";
 import {
   Dialog,
   DialogContent,
@@ -5,9 +8,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import Cropper from "react-easy-crop";
-import React, { useState, useCallback, useEffect } from "react";
 
 interface ImageCropModalProps {
   open: boolean;
@@ -46,9 +46,12 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
     }
   };
 
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixelsValue) => {
-    setCroppedAreaPixels(croppedAreaPixelsValue);
-  }, []);
+  const onCropComplete = useCallback(
+    (_croppedArea: any, croppedAreaPixelsValue: any) => {
+      setCroppedAreaPixels(croppedAreaPixelsValue);
+    },
+    []
+  );
 
   // Calcula si el crop es "válido": que el área en la imagen original sea 5x5 (dentro de una tolerancia)
   const isCropValid =

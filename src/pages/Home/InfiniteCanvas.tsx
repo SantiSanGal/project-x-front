@@ -23,11 +23,11 @@ interface PintarData {
   color: string;
 }
 
-//TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link 
+//TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link
 
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [openAlertModal, setOpenAlertModal] = useState(false);
-  const [pagoparToken, setPagoparToken] = useState('');
+  const [pagoparToken, setPagoparToken] = useState("");
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -211,9 +211,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-          worldX <= VIRTUAL_WIDTH &&
-          worldY >= 0 &&
-          worldY <= VIRTUAL_HEIGHT
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
