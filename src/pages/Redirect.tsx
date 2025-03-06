@@ -1,7 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const Redirect = () => {
   const navigate = useNavigate();
+  const { hash } = useParams();
+  console.log("hash", hash);
+
+  useEffect(() => {
+    //TODO: consultar estado del pago
+  }, []);
+
   return (
     <div className="w-screen h-screen bg-stone-950 flex items-center justify-center mt-0">
       <div className="flex flex-col max-h-40 max-w-80  w-full h-full p-4">

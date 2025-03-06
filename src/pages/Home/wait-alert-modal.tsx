@@ -23,14 +23,10 @@ export const WaitAlertModal = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Let's go to checkout</AlertDialogTitle>
           <AlertDialogDescription>
-            <p>
-              This window will close automatically when the payment is
-              confirmed.
-            </p>
-            <p>
-              If the payment is not confirmed, the selected coordinates will be
-              locked for 7 minutes before you can retry.
-            </p>
+            This window will close automatically when the payment is confirmed.
+            <br />
+            If the payment is not confirmed, the selected coordinates will be
+            locked for 7 minutes before you can retry.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <button

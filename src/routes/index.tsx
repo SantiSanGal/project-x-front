@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
     element: <About />,
   },
   {
-    path: "redirect",
+    path: "/redirect/:hash",
     element: <Redirect />,
   },
   {
