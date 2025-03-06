@@ -39,9 +39,9 @@ export const PixelSelector = ({
   coors,
   openModal,
   setOpenModal,
-  refetchPintar,
+  // refetchPintar,
   setPagoparToken,
-  refetchOcupados,
+  // refetchOcupados,
   setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
   const queryClient = useQueryClient();
