@@ -7,43 +7,30 @@ export const About = () => {
         </h2>
 
         <p className="mb-2">
-          Pixel started as an idea to support my family and make our dreams come
-          true—an idea that began 20 years ago.
+          Pixel started as an idea to support my family and make our dreams come true—an idea that began 20 years ago.
         </p>
         <p className="mb-2">
-          I've been trying to bring this project to life for a long time, but I
-          couldn’t because I lacked the necessary resources. I even bought a
-          couple of laptops to work on it, but they were stolen. So now, I’m
-          here, working on this project in my free time after my regular job.
+          I've been trying to bring this project to life for a long time, but I couldn’t because I lacked the necessary resources.
+          I even bought a couple of laptops to work on it, but they were stolen, one night when I invited a friend to my house so he could sleep because he had nowhere to go,
+          he took them and disappeared. So now, I’m here, working on this project in my free time after my regular job.
         </p>
         <p className="mb-2">
-          My name is Santiago, I'm in my twenties, and my brother and I are the
-          main providers for our family. I've been working since I was 14 to
-          help my parents.
+          My name is Santiago, I'm in my twenties, and my brother and I are the main providers for our family. I've been working since I was 14 to help my parents.
         </p>
         <p className="mb-2">
-          I’m doing this because I want to study. I dream of applying for a
-          scholarship abroad, but I can’t because my family needs me—so here I
-          am, trying to make it happen.
+          I’m doing this because I want to study. I dream of applying for a scholarship abroad, but I can’t because I am the provider for my family and they need me every day—we need each other.
+          So here I am, trying to make it happen.
         </p>
         <p className="mb-2">
-          I want to fulfill my mother’s dream of owning a house and taking her
-          to visit Turkey. And my dream? To study abroad and give my siblings
-          the privilege of focusing on their education without having to work
-          12-hour shifts, six days a week.
+          I want to fulfill my mother’s dream of owning a house and taking her to visit Turkey. It hurt me deeply to hear her say the other day that she had given up and would never be able to go.
         </p>
         <p className="mb-2">
-          PixelsWar is inspired by the iconic{" "}
-          <span className="text-lime-600">Million Dollar Homepage</span> created
-          by Alex Tew in 2005, a groundbreaking project that sold pixels as
-          advertising space. At the time, I was only three years old and
-          couldn't compete with him—but now, with modern technology, I’m
-          bringing the concept back with a twist. Our version upgrades the idea
-          with cryptocurrency payments, real-time interaction, and new dynamics.
+          PixelsWar is inspired by the iconic <span className="text-lime-600">Million Dollar Homepage</span> created by Alex Tew in 2005, a groundbreaking project that sold pixels as advertising space.
+          At the time, I was only three years old and couldn't compete with him—but now, with modern technology, I’m bringing the concept back with a twist.
+          Our version upgrades the idea with cryptocurrency payments, real-time interaction, and new dynamics.
         </p>
         <p className="mb-2 font-semibold text-lime-600">
-          I don’t seek fame, influence, or recognition. I just want my family
-          and me to be happy.
+          I don’t seek fame, influence, or recognition. I just want my family and me to be happy.
         </p>
         <p className="text-white text-center mt-4 cursor-pointer">
           So, could you please help me?

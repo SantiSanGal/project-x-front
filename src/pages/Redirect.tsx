@@ -1,18 +1,21 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { getEstadoPago } from "@/core/actions/pagopar";
 import { useQuery } from "@tanstack/react-query";
-import { millionApi } from "@/api/million.api";
+import { useUserStore } from "@/store";
 import { Loader } from "lucide-react";
 
 export const Redirect = () => {
+  const { isLogged } = useUserStore.getState();
   const navigate = useNavigate();
-  const { hash } = useParams();
-  console.log("hash", hash);
+  const { hash: hashPedido } = useParams();
 
-  //TODO: mostrar mensaje en caso de error del pago
+  console.log('hashPedido', hashPedido);
+
+
   const { data, isPending } = useQuery({
     queryKey: ["consulta-estado-pago"],
     queryFn: async () => {
-      const respuesta = await millionApi.post(`/consultarEstadoPago/${hash}`);
+      const respuesta = await getEstadoPago(isLogged, hashPedido!);
       console.log("respuesta", respuesta);
       return respuesta;
     },
