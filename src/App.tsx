@@ -51,11 +51,12 @@ const App: React.FC = () => {
           >
             <DropdownMenuItem
               className={cn(
-                "cursor-pointer hover:bg-stone-800 text-white text-base"
-                //   {
-                //   "text-lime-600": isLogged,
-                //   "text-red-600": !isLogged,
-                // }
+                "cursor-pointer hover:bg-stone-800 text-white text-base",
+                // por qué comenté esto?
+                {
+                  "text-lime-600": isLogged,
+                  "text-red-600": !isLogged,
+                }
               )}
               onClick={() => navigate("/about")}
             >
@@ -64,11 +65,12 @@ const App: React.FC = () => {
             <DropdownMenuItem
               disabled={isPending}
               className={cn(
-                "text-base cursor-pointer hover:bg-stone-800 text-white"
-                // {
-                //   "text-lime-600": isLogged,
-                //   "text-red-600": !isLogged,
-                // }
+                "text-base cursor-pointer hover:bg-stone-800 text-white",
+                // por qué comenté esto?
+                {
+                  "text-lime-600": isLogged,
+                  "text-red-600": !isLogged,
+                }
               )}
               onClick={handleAuth}
             >

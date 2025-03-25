@@ -1,6 +1,5 @@
-// loginStore.ts
-import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { create } from "zustand";
 
 interface UserState {
   accessToken: string;
@@ -18,8 +17,7 @@ export const useUserStore = create<UserState>()(
       isLogged: false,
       login: (token: string, expiresAt: string) =>
         set({ accessToken: token, expiresAt, isLogged: true }),
-      logout: () =>
-        set({ accessToken: "", expiresAt: null, isLogged: false }),
+      logout: () => set({ accessToken: "", expiresAt: null, isLogged: false }),
     }),
     {
       name: "user-storage",
