@@ -26,6 +26,7 @@ interface PintarData {
 //TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link
 
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
+  const [ocupadoSeleccionado, setOcupadoSeleccionado] = useState();
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const [pagoparToken, setPagoparToken] = useState("");
   const [coors, setCoors] = useState({ x: 0, y: 0 });
@@ -190,10 +191,17 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       refetchOcupados();
     };
 
+    const handlePintar = (data: any) => {
+      console.log('handlePintar', data)
+      refetchPintar();
+    }
+
     socket.on("nuevo_registro", handleNuevoRegistro);
+    socket.on("pintar", handlePintar);
 
     return () => {
       socket.off("nuevo_registro", handleNuevoRegistro);
+      socket.off("pintar", handleNuevoRegistro);
     };
   }, [socket, refetchPintar, refetchOcupados]);
 
@@ -211,9 +219,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+          worldX <= VIRTUAL_WIDTH &&
+          worldY >= 0 &&
+          worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -384,6 +392,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
           gridYStart >= occupied.coordenada_y_inicio &&
           gridYStart <= occupied.coordenada_y_fin
         ) {
+          setOcupadoSeleccionado(occupied);
           permitir = false;
           break;
         }
@@ -420,6 +429,13 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
         pagoparToken={pagoparToken}
         setOpenModal={setOpenAlertModal}
       />
+
+      {
+        ocupadoSeleccionado &&
+        <>
+        </>
+      }
+
       <canvas
         className="w-screen h-screen block bg-stone-800"
         ref={canvasRef}
