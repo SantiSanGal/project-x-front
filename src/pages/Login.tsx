@@ -67,7 +67,7 @@ export const Login = () => {
             onSubmit={handleSubmit(onSubmit)}
           >
             <h2 className="text-xl font-semibold text-white">
-              Sign in to <span className="text-lime-600">Pixel War</span>
+              Sign in to <span className="text-lime-600">Tatakae Pixel</span>
             </h2>
 
             <label className="text-white">User</label>
@@ -119,7 +119,7 @@ export const Login = () => {
           </form>
 
           <p className="text-white text-aliceblue mt-2 cursor-pointer">
-            New to Pixel War? &nbsp;
+            New to Tatakae Pixel? &nbsp;
             <span
               onClick={() => navigate("/register")}
               className="text-lime-600 hover:text-lime-700 transition-colors"

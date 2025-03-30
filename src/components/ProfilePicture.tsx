@@ -13,7 +13,7 @@ export const ProfilePicture = ({ isLogged }: ProfilePictureProps) => {
         "border-red-500": !isLogged,
       })}
     >
-      <AvatarImage src="https://github.com/shadcn.png" />
+      <AvatarImage src="/images/icon.png" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
   );

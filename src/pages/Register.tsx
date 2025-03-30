@@ -52,7 +52,7 @@ export const Register = () => {
           {/* Header fijo */}
           <header className="p-4 border-b border-stone-600">
             <h2 className="text-xl font-semibold text-[#f0f8ff]">
-              Create a <span className="text-lime-600">Pixel War</span> account
+              Create a <span className="text-lime-600">Tatakae Pixel</span> account
             </h2>
           </header>
 
@@ -223,7 +223,7 @@ export const Register = () => {
               Sign up
             </button>
             <p className="text-[#f0f8ff] mt-2 text-center">
-              Already have a Pixel War account?{" "}
+              Already have a Tatakae Pixel account?{" "}
               <span
                 onClick={() => navigate("/login")}
                 className="text-lime-600 cursor-pointer"
