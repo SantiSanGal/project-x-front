@@ -14,7 +14,7 @@ export const ProfilePicture = ({ isLogged }: ProfilePictureProps) => {
       })}
     >
       <AvatarImage src="/images/icon.png" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarFallback>TP</AvatarFallback>
     </Avatar>
   );
 };

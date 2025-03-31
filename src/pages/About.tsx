@@ -15,9 +15,9 @@ export const About = () => {
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-xl flex justify-start gap-2 font-semibold text-white mb-4">About <span className="text-lime-600">Tatakae Pixel & Me</span></AccordionTrigger>
             <AccordionContent>
-              <p className="mb-2">
+              {/* <p className="mb-2">
                 Tatakae Pixel started as an idea to support my family and make our dreams come true—an idea that began 20 years ago.
-              </p>
+              </p> */}
 
               <p className="mb-2">
                 Tatakae Pixel is inspired by the iconic <span className="text-lime-600">Million Dollar Homepage</span> created by Alex Tew in 2005, a groundbreaking project that sold pixels as advertising space. At the time, I was only three years old and couldn't compete with him, but now, with modern technology, I’m bringing the concept back with a twist. My version enhances the idea with online payments, real-time interaction, and new dynamics.
@@ -66,6 +66,9 @@ export const About = () => {
                 The winners will be announced on the official website, ensuring full transparency in the selection process.
               </p>
 
+              <p className="mb-2 ">
+                <strong>Special Bonus:</strong> If all the pixels are occupied before May 19 of this year (my birthday), I will conduct <span className="text-lime-600">four additional raffles of $50,000.00</span> each, separate from the main $100,000 raffle.
+              </p>
 
               <p className="mb-2 text-yellow-400">
                 <strong>Important notice:</strong> When redirected to the payment page, the currency displayed will be in Guaraníes instead of dollars. This is because the only available platform for receiving international donations does not support USD display. However, the conversion will be accurate, and your donation will still be processed correctly.
