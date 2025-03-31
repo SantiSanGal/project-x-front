@@ -93,6 +93,11 @@ export const PoliciesPrivacy = () => {
             To claim prizes, winners must provide verifiable identification
             matching their registered data.
           </li>
+          <li className="mt-2">
+            For the purpose of the raffle, only points generated through
+            purchase transactions and referral points that have been duly paid
+            will be taken into account.
+          </li>
         </ul>
 
         <h3 className="text-xl font-bold mt-6">6. Additional Disclaimers</h3>
@@ -119,17 +124,6 @@ export const PoliciesPrivacy = () => {
             posting on this page.
           </li>
         </ul>
-
-        {/* <h3 className="text-xl font-bold mt-6">8. Contact</h3>
-        <p>
-          For questions regarding these terms or your data privacy, please
-          contact:
-        </p>
-        <ul className="list-disc ml-6">
-          <li>
-            Email: <strong>[Insert your email here]</strong>
-          </li>
-        </ul> */}
 
         {/* Spanish Version */}
         <hr className="my-6" />
@@ -228,6 +222,11 @@ export const PoliciesPrivacy = () => {
             Para reclamar los premios, los ganadores deberán proporcionar una
             identificación verificable que coincida con los datos registrados.
           </li>
+          <li className="mt-2">
+            Para efectos del sorteo, únicamente se considerarán los puntos
+            generados a través de las compras y los puntos de referidos que
+            hayan sido debidamente pagados.
+          </li>
         </ul>
 
         <h3 className="text-xl font-bold mt-6">6. Otras Consideraciones</h3>
@@ -255,19 +254,6 @@ export const PoliciesPrivacy = () => {
             inmediatamente al publicarse en esta página.
           </li>
         </ul>
-
-        {/* <h3 className="text-xl font-bold mt-6">8. Contacto</h3>
-        <p>
-          Si tienes dudas sobre estos términos o la privacidad de tus datos, por
-          favor contáctanos a través de:
-        </p>
-        <ul className="list-disc ml-6">
-          <li>
-            Correo electrónico:{" "}
-            <strong>[Inserta aquí tu correo electrónico]</strong>
-          </li>
-        </ul>
-        <hr className="my-6" /> */}
       </div>
     </div>
   );
