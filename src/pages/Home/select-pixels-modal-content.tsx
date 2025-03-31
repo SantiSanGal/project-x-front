@@ -17,7 +17,6 @@ import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
-  useQueryClient,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -44,7 +43,6 @@ export const PixelSelector = ({
   // refetchOcupados,
   setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
-  const queryClient = useQueryClient();
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
   const [link, setLink] = useState("");

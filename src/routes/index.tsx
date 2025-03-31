@@ -1,6 +1,13 @@
-import { About, ErrorPage, Login, Redirect, Register } from "@/pages";
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
+import {
+  About,
+  ErrorPage,
+  Login,
+  PoliciesPrivacy,
+  Redirect,
+  Register,
+} from "@/pages";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +29,10 @@ export const router = createBrowserRouter([
   {
     path: "/redirect/:hash",
     element: <Redirect />,
+  },
+  {
+    path: "/policies",
+    element: <PoliciesPrivacy />,
   },
   {
     path: "*",
