@@ -9,12 +9,14 @@ import {
 interface WaitAlertModalProps {
   openModal: boolean;
   pagoparToken: string;
+  codeReferShow: string;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const WaitAlertModal = ({
   openModal,
   pagoparToken,
+  codeReferShow,
   setOpenModal,
 }: WaitAlertModalProps) => {
   return (
@@ -22,11 +24,23 @@ export const WaitAlertModal = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Let's go to checkout</AlertDialogTitle>
-          <AlertDialogDescription>
-            This window will close automatically when the payment is confirmed.
+          <AlertDialogDescription className="flex flex-col">
+            <p>
+              By sending this code to someone else, both of you will earn an
+              extra point for the upcoming raffle!
+            </p>
+            <div className="h-14 my-4 m-auto border border-1 w-52 border-slate-300 rounded-md p-2 flex items-center justify-center">
+              <h2 className="font-bold text-2xl">{codeReferShow}</h2>
+            </div>
+            <p>
+              This window will close automatically when the payment is
+              confirmed.
+            </p>
             <br />
-            If the payment is not confirmed, the selected coordinates will be
-            locked for 7 minutes before you can retry.
+            <p>
+              If the payment is not confirmed, the selected coordinates will be
+              locked for 7 minutes before you can retry.
+            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <button

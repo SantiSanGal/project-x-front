@@ -8,6 +8,7 @@ export interface IndividualPixel {
 
 export interface GrupoPixeles {
   grupo_pixeles: {
+    refer_code?: string;
     link: string;
     coordenada_x_inicio: number;
     coordenada_y_inicio: number;
@@ -23,7 +24,7 @@ export const getCanvasPixeles = async (isLogged: boolean) => {
       const { data } = await millionApi.get("canvas");
       return data.data;
     } else {
-      return []
+      return [];
     }
   } catch (error) {
     throw error;
@@ -41,9 +42,9 @@ export const getPixelesOcupados = async (idSector: number) => {
 
 export const postGrupoPixeles = async (data: GrupoPixeles) => {
   try {
-    const response = await millionApi.post('/canvas', data);
-    return response
+    const response = await millionApi.post("/canvas", data);
+    return response;
   } catch (error) {
     throw error;
   }
-}
+};

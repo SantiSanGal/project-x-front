@@ -28,6 +28,7 @@ interface CombinedPixelSelectorProps {
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<any, Error>>;
   setPagoparToken: React.Dispatch<React.SetStateAction<string>>;
+  setCodeReferShow: React.Dispatch<React.SetStateAction<string>>;
   refetchOcupados: (
     options?: RefetchOptions | undefined
   ) => Promise<QueryObserverResult<any, Error>>;
@@ -40,11 +41,13 @@ export const PixelSelector = ({
   setOpenModal,
   // refetchPintar,
   setPagoparToken,
+  setCodeReferShow,
   // refetchOcupados,
   setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
   // Estado para elegir el modo: 'manual' o 'image'
   const [mode, setMode] = useState<"manual" | "image">("manual");
+  const [referCode, setReferCode] = useState("");
   const [link, setLink] = useState("");
 
   // Estado para selección manual
@@ -77,14 +80,14 @@ export const PixelSelector = ({
     },
     onSuccess: (respuesta) => {
       const { data } = respuesta;
-
       if (data && data.data && data.data.dataToken) {
+        console.log("data.data.code_for_refer", data.data.code_for_refer);
+        setCodeReferShow(data.data.code_for_refer);
         setPagoparToken(data.data.dataToken);
         setOpenModal(false);
         setCropModalOpen(false);
         setOpenAlertModal(true);
       }
-      // TODO: hacer un listener de ws para cuando se haya confirmado el pago
     },
     onError: () => {
       toast.error("There was an error processing the colors");
@@ -270,6 +273,7 @@ export const PixelSelector = ({
         coordenada_y_fin: coors.y + 4,
       },
       pixeles,
+      refer_code: referCode,
     };
 
     mutate(grupo_pixeles_params);
@@ -399,15 +403,27 @@ export const PixelSelector = ({
             </>
           )}
 
-          <div className="flex flex-col w-full items-center justify-center">
-            <label>Add a link or text of your choice</label>
-            <input
-              type="text"
-              placeholder="https://example.com or Hi mom C:"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-              className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
-            />
+          <div className="flex flex-col w-full items-center justify-center gap-2">
+            <div className="flex flex-col w-full items-center justify-start">
+              <label>Add a link or text of your choice</label>
+              <input
+                type="text"
+                placeholder="https://example.com or Hi mom C:"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
+              />
+            </div>
+            <div className="flex flex-col w-full items-center justify-start">
+              <label>Enter a referral code to earn 1 extra point</label>
+              <input
+                type="text"
+                placeholder="For example: TP_1234"
+                value={referCode}
+                onChange={(e) => setReferCode(e.target.value)}
+                className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button

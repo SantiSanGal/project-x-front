@@ -1,6 +1,7 @@
 import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import { PixelSelector } from "./select-pixels-modal-content";
+import { WaitAlertModal } from "./wait-alert-modal";
 import { useQuery } from "@tanstack/react-query";
 import { SocketContext } from "@/store";
 import { toast } from "sonner";
@@ -11,7 +12,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { WaitAlertModal } from "./wait-alert-modal";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -28,6 +28,7 @@ interface PintarData {
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [ocupadoSeleccionado, setOcupadoSeleccionado] = useState();
   const [openAlertModal, setOpenAlertModal] = useState(false);
+  const [codeReferShow, setCodeReferShow] = useState("");
   const [pagoparToken, setPagoparToken] = useState("");
   const [coors, setCoors] = useState({ x: 0, y: 0 });
   const [openModal, setOpenModal] = useState(false);
@@ -192,9 +193,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     };
 
     const handlePintar = (data: any) => {
-      console.log('handlePintar', data)
+      console.log("handlePintar", data);
       refetchPintar();
-    }
+    };
 
     socket.on("nuevo_registro", handleNuevoRegistro);
     socket.on("pintar", handlePintar);
@@ -219,9 +220,9 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       const worldY = (rawY - offsetY) / scale;
       canvas.style.cursor =
         worldX >= 0 &&
-          worldX <= VIRTUAL_WIDTH &&
-          worldY >= 0 &&
-          worldY <= VIRTUAL_HEIGHT
+        worldX <= VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY <= VIRTUAL_HEIGHT
           ? "pointer"
           : "default";
     }
@@ -420,21 +421,20 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         refetchPintar={refetchPintar}
+        setCodeReferShow={setCodeReferShow}
         setPagoparToken={setPagoparToken}
         refetchOcupados={refetchOcupados}
         setOpenAlertModal={setOpenAlertModal}
       />
+
       <WaitAlertModal
+        codeReferShow={codeReferShow}
         openModal={openAlertModal}
         pagoparToken={pagoparToken}
         setOpenModal={setOpenAlertModal}
       />
 
-      {
-        ocupadoSeleccionado &&
-        <>
-        </>
-      }
+      {ocupadoSeleccionado && <></>}
 
       <canvas
         className="w-screen h-screen block bg-stone-800"
