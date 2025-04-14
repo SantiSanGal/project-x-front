@@ -1,3 +1,3 @@
-export * from './Modal';
-export * from './ProfilePicture';
-export * from './Spinner';
+export * from "./Modal";
+export * from "./Spinner";
+export * from "./ProfilePicture";

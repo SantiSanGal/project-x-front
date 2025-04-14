@@ -12,6 +12,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { Modal } from "@/components";
+import { GrupoPixelesDetail } from "./grupo-pixeles-detail";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -27,6 +29,7 @@ interface PintarData {
 
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const [ocupadoSeleccionado, setOcupadoSeleccionado] = useState();
+  const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const [codeReferShow, setCodeReferShow] = useState("");
   const [pagoparToken, setPagoparToken] = useState("");
@@ -393,6 +396,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
           gridYStart >= occupied.coordenada_y_inicio &&
           gridYStart <= occupied.coordenada_y_fin
         ) {
+          setOpenDetailModal(true);
           setOcupadoSeleccionado(occupied);
           permitir = false;
           break;
@@ -410,6 +414,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       ctx.fillRect(gridXStart, gridYStart, GRID_SIZE, GRID_SIZE);
       ctx.stroke();
     }
+    console.log("x", gridXStart, " y", gridYStart);
+
     setCoors({ x: gridXStart, y: gridYStart });
     setOpenModal(true);
   };
@@ -434,7 +440,16 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
         setOpenModal={setOpenAlertModal}
       />
 
-      {ocupadoSeleccionado && <></>}
+      {/* TODO: Hacer modal para que obtenga los datos del grupo ocupado, pixeles individuales y se pueda ver el detalle o reportar */}
+      {/* {ocupadoSeleccionado && ( */}
+      <Modal
+        openModal={openDetailModal}
+        setOpenModal={setOpenDetailModal}
+        className="w-[648px] h-[639px] bg-white"
+      >
+        <GrupoPixelesDetail />
+      </Modal>
+      {/* )} */}
 
       <canvas
         className="w-screen h-screen block bg-stone-800"

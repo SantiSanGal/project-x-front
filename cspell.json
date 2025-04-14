@@ -3,7 +3,19 @@
   "ignorePaths": [],
   "dictionaryDefinitions": [],
   "dictionaries": [],
-  "words": ["pagopar", "Pagopar"],
+  "words": [
+    "pagopar",
+    "Pagopar",
+    "sonner",
+    "Tatakae",
+    "imprecisiones",
+    "Reembolsos",
+    "retornables",
+    "coors",
+    "cuadrito",
+    "Redimensionar",
+    "logueado"
+  ],
   "ignoreWords": [],
   "import": []
 }
