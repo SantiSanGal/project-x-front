@@ -1,9 +1,11 @@
 import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import { PixelSelector } from "./select-pixels-modal-content";
+import { GrupoPixelesDetail } from "./grupo-pixeles-detail";
 import { WaitAlertModal } from "./wait-alert-modal";
 import { useQuery } from "@tanstack/react-query";
 import { SocketContext } from "@/store";
+import { Modal } from "@/components";
 import { toast } from "sonner";
 import React, {
   useCallback,
@@ -12,8 +14,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Modal } from "@/components";
-import { GrupoPixelesDetail } from "./grupo-pixeles-detail";
 
 interface InfiniteCanvasProps {
   isLogged: boolean;
@@ -71,7 +71,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   } = useQuery({
     queryKey: ["pintar"],
     staleTime: 1000 * 60 * 60,
-    queryFn: () => getCanvasPixeles(isLogged),
+    queryFn: () => getCanvasPixeles(),
+    enabled: isLogged,
   });
 
   const {
@@ -84,6 +85,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     queryKey: ["ocupados", sector],
     staleTime: 1000 * 60 * 60,
     queryFn: () => getPixelesOcupados(sector),
+    enabled: isLogged,
   });
 
   const draw = useCallback(() => {

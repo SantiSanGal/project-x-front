@@ -60,10 +60,10 @@ export const Login = () => {
 
   return (
     <>
-      <div className="w-screen min-h-screen flex items-center justify-center bg-stone-900">
+      <div className=" w-screen min-h-screen flex items-center justify-center bg-stone-900">
         <div className="flex flex-col justify-center p-4 rounded-md bg-stone-800 shadow-lg">
           <form
-            className="text-aliceblue max-w-[500px] min-w-[400px] min-h-[200px] w-[40vw] flex flex-col gap-2"
+            className="text-aliceblue sm:max-w-[500px] sm:min-w-[400px] max-w-[400px] min-w-[320px] min-h-[200px] w-[40vw] flex flex-col gap-2"
             onSubmit={handleSubmit(onSubmit)}
           >
             <h2 className="text-xl font-semibold text-white">

@@ -18,14 +18,10 @@ export interface GrupoPixeles {
   pixeles: IndividualPixel[];
 }
 
-export const getCanvasPixeles = async (isLogged: boolean) => {
+export const getCanvasPixeles = async () => {
   try {
-    if (isLogged) {
-      const { data } = await millionApi.get("canvas");
-      return data.data;
-    } else {
-      return [];
-    }
+    const { data } = await millionApi.get("canvas");
+    return data.data;
   } catch (error) {
     throw error;
   }
