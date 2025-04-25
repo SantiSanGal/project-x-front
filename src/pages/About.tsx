@@ -119,6 +119,16 @@ export const About = () => {
                   each, separate from the main $100,000 raffle.
                 </p>
 
+                <p className="mb-2 ">
+                  <strong>Another Ultra Special Bonus:</strong> If all the
+                  pixels are occupied before May 19 of this year (2025) (my
+                  birthday), I will conduct{" "}
+                  <span className="text-lime-600">
+                    one additional raffles of $500,000.00
+                  </span>{" "}
+                  each, separate from the main $100,000 raffle.
+                </p>
+
                 <p className="mb-2 text-yellow-400">
                   <strong>Important notice:</strong> When redirected to the
                   payment page, the currency displayed will be in Guaraníes
