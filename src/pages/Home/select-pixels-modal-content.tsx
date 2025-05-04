@@ -3,6 +3,7 @@ import { Loader, ImageUp, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useState, useCallback, useRef } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import imageCompression from "browser-image-compression";
+import SwitchCustom from "@/components/SwitchCustom";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
@@ -35,6 +36,17 @@ interface CombinedPixelSelectorProps {
   setOpenAlertModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export const Options = [
+  {
+    label: 'Manual',
+    value: 'manual',
+  },
+  {
+    label: 'Image',
+    value: 'image',
+  },
+];
+
 export const PixelSelector = ({
   coors,
   openModal,
@@ -46,7 +58,8 @@ export const PixelSelector = ({
   setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
   // Estado para elegir el modo: 'manual' o 'image'
-  const [mode, setMode] = useState<"manual" | "image">("manual");
+  const [selected, setSelected] = useState(Options[0]);
+  // const [mode, setMode] = useState<"manual" | "image">("manual");
   const [referCode, setReferCode] = useState("");
   const [link, setLink] = useState("");
 
@@ -245,7 +258,8 @@ export const PixelSelector = ({
   const handleConfirm = () => {
     let pixeles;
 
-    if (mode === "manual") {
+    // if (mode === "manual") {
+    if (selected.value === "manual") {
       pixeles = manualColors.map((color, index) => ({
         coordenada_x: coors.x + (index % 5),
         coordenada_y: coors.y + Math.floor(index / 5),
@@ -282,32 +296,23 @@ export const PixelSelector = ({
   return (
     <>
       <Dialog open={openModal} onOpenChange={setOpenModal}>
-        <DialogContent className="bg-background max-h-screen h-[90vh] overflow-y-auto">
-          {/* <div className="flex-1  flex-col overflow-y-auto w-full"> */}
-          <DialogHeader>
+        <DialogContent className="max-h-screen rounded-md flex flex-col justify-between w-[95vw] h-[90vh] overflow-y-auto p-0">
+          {/* <DialogContent className="sm:bg-red-400 md:bg-orange-400 lg:bg-yellow-400 xl:bg-green-400 max-h-screen rounded-md flex flex-col justify-between w-[95vw] h-[90vh] overflow-y-auto p-0"> */}
+          <DialogHeader className=" p-4 flex flex-col gap-4 ">
             <DialogTitle className="text-base">
               Customize your <span className="text-lime-600">Pixels</span>
             </DialogTitle>
+
+            <SwitchCustom
+              className='h-8 sm:w-[332px] xl:w-[618.91px]'
+              selected={selected.value}
+              onClick={setSelected}
+              options={Options}
+            />
           </DialogHeader>
 
-          {/* Selector de modo */}
-          <div className="flex justify-center gap-4 mb-4">
-            <Button
-              variant={mode === "manual" ? "default" : "outline"}
-              onClick={() => setMode("manual")}
-            >
-              Manual Selection
-            </Button>
-            <Button
-              variant={mode === "image" ? "default" : "outline"}
-              onClick={() => setMode("image")}
-            >
-              Upload an Image
-            </Button>
-          </div>
-
-          {mode === "manual" && (
-            <div className="flex flex-col items-center">
+          {selected.value === "manual" && (
+            <div className="flex flex-col items-center ">
               <div className="grid grid-cols-5 gap-0">
                 {Array.from({ length: 25 }).map((_, index) => (
                   <input
@@ -324,11 +329,11 @@ export const PixelSelector = ({
             </div>
           )}
 
-          {mode === "image" && (
-            <>
+          {selected.value === "image" && (
+            <div className="flex flex-col gap-2 items-center w-full ">
               <div
                 {...getRootProps()}
-                className="cursor-pointer text-center p-4 border-2 border-dashed rounded-lg"
+                className="cursor-pointer w-[90%] text-center p-4 border-2 border-dashed rounded-lg"
               >
                 <input {...getInputProps()} />
                 <ImageUp className="mx-auto mb-2" />
@@ -336,8 +341,8 @@ export const PixelSelector = ({
               </div>
 
               {imageSrc && cropModalOpen && (
-                <>
-                  <div className="relative h-80 mt-4">
+                <div className="w-[90%]">
+                  <div className="relative h-80">
                     <Cropper
                       image={imageSrc}
                       crop={crop}
@@ -370,9 +375,8 @@ export const PixelSelector = ({
                     />
                     <ZoomIn className="size-4" />
                   </div>
-                  {/* Botón para descargar la imagen con el rectángulo rojo */}
                   {croppedAreaPixels && (
-                    <div className="w-full flex items-center justify-center">
+                    <div className="w-full flex items-center justify-center ">
                       <Button
                         onClick={handleDownloadCroppedImage}
                         className="mt-4  bg-red-600 hover:bg-red-700 text-white"
@@ -381,26 +385,25 @@ export const PixelSelector = ({
                       </Button>
                     </div>
                   )}
-                </>
-              )}
-
-              {imageColors.length > 0 && (
-                <div className="mt-4">
-                  <p className="text-sm mx-auto w-fit text-gray-400 mb-2">
-                    Preview your Pixels:
-                  </p>
-                  <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
-                    {imageColors.map((color, index) => (
-                      <div
-                        key={index}
-                        className="h-8 w-8 border border-gray-300"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
+                  {imageColors.length > 0 && (
+                    <div className="mt-4 bg-red-950">
+                      <p className="text-sm mx-auto w-fit text-gray-400 mb-2">
+                        Preview your Pixels:
+                      </p>
+                      <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
+                        {imageColors.map((color, index) => (
+                          <div
+                            key={index}
+                            className="h-8 w-8 border border-gray-300"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </>
+            </div>
           )}
 
           <div className="flex flex-col w-full items-center justify-center gap-2">
@@ -418,17 +421,17 @@ export const PixelSelector = ({
               <label>Enter a referral code to earn 1 extra point</label>
               <input
                 type="text"
-                placeholder="For example: TP_1234"
+                placeholder="Example: TP_1234"
                 value={referCode}
                 onChange={(e) => setReferCode(e.target.value)}
                 className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="p-4">
             <Button
               disabled={
-                isPending || (mode === "image" && imageColors.length === 0)
+                isPending || (selected.value === "image" && imageColors.length === 0)
               }
               onClick={handleConfirm}
               className="bg-lime-600 hover:bg-lime-700"
@@ -442,7 +445,6 @@ export const PixelSelector = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Canvas oculto para extraer los píxeles */}
       <canvas ref={canvasRef} className="hidden" />
     </>
   );

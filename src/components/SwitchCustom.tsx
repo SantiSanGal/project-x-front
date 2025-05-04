@@ -26,12 +26,12 @@ const SwitchCustom = <T extends BaseOption>({
   className,
   rounded = "rounded-2xl",
   onClick,
-}: // size = 'default',
-SwitchCustomProps<T>) => {
+}:
+  SwitchCustomProps<T>) => {
   const layoutId = useId();
 
   return (
-    <Tabs value={selected} className="w-full">
+    <Tabs value={selected} className="w-full  flex items-center justify-center">
       <TabsList className={cn("w-full", className, rounded)}>
         {options.map((option) => (
           <TabsTrigger
