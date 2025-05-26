@@ -44,18 +44,32 @@ const App: React.FC = () => {
           <DropdownMenuContent
             side="bottom"
             align="end"
-            className={cn("bg-stone-700  shadow-2xl", {
-              "border-lime-600 border-2": isLogged,
-              "border-red-600 border-2": !isLogged,
-            })}
+            className={cn("bg-stone-700  shadow-2xl",
+              //   {
+              //   "border-lime-600 border-2": isLogged,
+              //   "border-red-600 border-2": !isLogged,
+              // }
+            )}
           >
+            {isLogged && <DropdownMenuItem
+              className={cn(
+                "cursor-pointer hover:bg-stone-800 text-white text-base",
+                // {
+                //   "text-lime-600": isLogged,
+                //   "text-red-600": !isLogged,
+                // }
+              )}
+              onClick={() => navigate("/purchases")}
+            >
+              Purchases
+            </DropdownMenuItem>}
             <DropdownMenuItem
               className={cn(
                 "cursor-pointer hover:bg-stone-800 text-white text-base",
-                {
-                  "text-lime-600": isLogged,
-                  "text-red-600": !isLogged,
-                }
+                // {
+                //   "text-lime-600": isLogged,
+                //   "text-red-600": !isLogged,
+                // }
               )}
               onClick={() => navigate("/about")}
             >
@@ -65,10 +79,10 @@ const App: React.FC = () => {
               disabled={isPending}
               className={cn(
                 "text-base cursor-pointer hover:bg-stone-800 text-white",
-                {
-                  "text-lime-600": isLogged,
-                  "text-red-600": !isLogged,
-                }
+                // {
+                //   "text-lime-600": isLogged,
+                //   "text-red-600": !isLogged,
+                // }
               )}
               onClick={handleAuth}
             >

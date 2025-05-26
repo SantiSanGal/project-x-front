@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Accordion,
-  AccordionContent,
   AccordionItem,
+  AccordionContent,
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
@@ -45,6 +45,12 @@ export const About = () => {
                 </p>
 
                 <p className="mb-2">
+                  With each purchase, a{" "}
+                  <span className="text-lime-600">unique referral code</span> will
+                  be issued. For each person who uses your code, you both will get one additional chance in the raffle.
+                </p>
+
+                <p className="mb-2">
                   The winners will be announced on the official website,
                   ensuring full transparency in the selection process.
                 </p>
@@ -55,16 +61,6 @@ export const About = () => {
                   conduct{" "}
                   <span className="text-lime-600">
                     four additional raffles of $50,000.00
-                  </span>{" "}
-                  each, separate from the main $100,000 raffle.
-                </p>
-
-                <p className="mb-2 ">
-                  <strong>Another Ultra Special Bonus:</strong> If all the
-                  pixels are occupied before May 19 of this year (2025) (my
-                  birthday), I will conduct{" "}
-                  <span className="text-lime-600">
-                    one additional raffles of $500,000.00
                   </span>{" "}
                   each, separate from the main $100,000 raffle.
                 </p>
@@ -126,6 +122,6 @@ export const About = () => {
           <ArrowRight /> Click to go back to the canvas{" "}
         </Link>
       </div>
-    </div>
+    </div >
   );
 };
