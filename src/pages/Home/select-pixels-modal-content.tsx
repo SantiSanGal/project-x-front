@@ -38,12 +38,12 @@ interface CombinedPixelSelectorProps {
 
 export const Options = [
   {
-    label: 'Manual',
-    value: 'manual',
+    label: "Manual",
+    value: "manual",
   },
   {
-    label: 'Image',
-    value: 'image',
+    label: "Image",
+    value: "image",
   },
 ];
 
@@ -304,7 +304,7 @@ export const PixelSelector = ({
             </DialogTitle>
 
             <SwitchCustom
-              className='h-8 sm:w-[332px] xl:w-[618.91px]'
+              className="h-8 sm:w-[332px] xl:w-[618.91px]"
               selected={selected.value}
               onClick={setSelected}
               options={Options}
@@ -421,7 +421,7 @@ export const PixelSelector = ({
               <label>Enter a referral code to earn 1 extra point</label>
               <input
                 type="text"
-                placeholder="Example: TP_1234"
+                placeholder="Example: TP-1234"
                 value={referCode}
                 onChange={(e) => setReferCode(e.target.value)}
                 className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
@@ -431,7 +431,8 @@ export const PixelSelector = ({
           <DialogFooter className="p-4">
             <Button
               disabled={
-                isPending || (selected.value === "image" && imageColors.length === 0)
+                isPending ||
+                (selected.value === "image" && imageColors.length === 0)
               }
               onClick={handleConfirm}
               className="bg-lime-600 hover:bg-lime-700"
