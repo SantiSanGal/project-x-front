@@ -1,5 +1,5 @@
-import { DialogContent, Dialog } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { DialogContent, Dialog } from "@/components";
+import { cn } from "@/lib";
 import React from "react";
 
 interface ModalProps {

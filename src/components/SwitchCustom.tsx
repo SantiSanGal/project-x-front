@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { memo, useId } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 type BaseOption = {
   label: string;
@@ -26,8 +26,7 @@ const SwitchCustom = <T extends BaseOption>({
   className,
   rounded = "rounded-2xl",
   onClick,
-}:
-  SwitchCustomProps<T>) => {
+}: SwitchCustomProps<T>) => {
   const layoutId = useId();
 
   return (

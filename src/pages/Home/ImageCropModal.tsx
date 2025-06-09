@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/components";
 
 interface ImageCropModalProps {
   open: boolean;

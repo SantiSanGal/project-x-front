@@ -62,6 +62,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   // Ref para guardar la celda (cuadrito) sobre la que se hace hover
   const hoveredCellRef = useRef<{ x: number; y: number } | null>(null);
 
+  /* --------------------------------- Queries -------------------------------- */
   const {
     // isLoading: pintarIsLoading,
     data: pintarData,
@@ -87,6 +88,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     queryFn: () => getPixelesOcupados(sector),
     enabled: isLogged,
   });
+  /* ------------------------------- End Queries ------------------------------ */
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -165,6 +167,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     ctx.restore();
   }, [pintarData, isLogged]);
 
+  /* --------------------------------- Effects -------------------------------- */
   // Cargar imagen
   useEffect(() => {
     const img = new Image();
@@ -210,6 +213,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       socket.off("pintar", handleNuevoRegistro);
     };
   }, [socket, refetchPintar, refetchOcupados]);
+  /* ------------------------------- End Effects ------------------------------ */
 
   const updateCursor = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;

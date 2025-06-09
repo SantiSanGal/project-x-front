@@ -3,17 +3,17 @@ import { Loader, ImageUp, ZoomIn, ZoomOut } from "lucide-react";
 import React, { useState, useCallback, useRef } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import imageCompression from "browser-image-compression";
-import SwitchCustom from "@/components/SwitchCustom";
-import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
+import SwitchCustom from "@/components/SwitchCustom";
 import {
+  Slider,
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@/components";
 import {
   QueryObserverResult,
   RefetchOptions,
@@ -85,6 +85,7 @@ export const PixelSelector = ({
   const imgRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  /* --------------------------------- Queries -------------------------------- */
   // Hook de mutación para enviar los datos al backend
   const { isPending, mutate } = useMutation({
     mutationFn: async (grupo_pixeles: GrupoPixeles) => {
@@ -106,6 +107,7 @@ export const PixelSelector = ({
       toast.error("There was an error processing the colors");
     },
   });
+  /* ------------------------------- End Queries ------------------------------ */
 
   // Actualiza el color en la grilla manual
   const handleManualColorChange = (index: number, color: string) => {

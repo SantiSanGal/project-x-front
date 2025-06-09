@@ -3,7 +3,7 @@ import { millionApi } from "@/api/million.api";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import { toast } from "sonner";
 
 export const Register = () => {
@@ -52,7 +52,8 @@ export const Register = () => {
           {/* Header fijo */}
           <header className="p-4 border-b border-stone-600">
             <h2 className="text-xl font-semibold text-[#f0f8ff]">
-              Create a <span className="text-lime-600">Tatakae Pixel</span> account
+              Create a <span className="text-lime-600">Tatakae Pixel</span>{" "}
+              account
             </h2>
           </header>
 

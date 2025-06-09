@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -7,10 +6,12 @@ import {
   AccordionContent,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ProfilePicture, ScrollArea } from "@/components";
 
 export const About = () => {
   return (
-    <div className="w-screen min-h-screen flex items-center justify-center bg-stone-900">
+    <div className="relative w-screen min-h-screen flex items-center justify-center bg-stone-900">
+      <ProfilePicture />
       <div className="flex flex-col justify-center text-slate-300 p-4 rounded-md bg-stone-800 shadow-lg w-[95vw] xl:max-w-[60vw]">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-2">
@@ -46,8 +47,9 @@ export const About = () => {
 
                 <p className="mb-2">
                   With each purchase, a{" "}
-                  <span className="text-lime-600">unique referral code</span> will
-                  be issued. For each person who uses your code, you both will get one additional chance in the raffle.
+                  <span className="text-lime-600">unique referral code</span>{" "}
+                  will be issued. For each person who uses your code, you both
+                  will get one additional chance in the raffle.
                 </p>
 
                 <p className="mb-2">
@@ -84,26 +86,44 @@ export const About = () => {
             <AccordionContent>
               <ScrollArea className="w-full h-[300px] lg:h-[400px]">
                 <p className="mb-2">
-                  Tatakae Pixel captures the essence of the <span className="text-lime-600">Million Dollar Homepage</span> from 2005, reinventing it with online payments, instant interaction, and fresh dynamics.
+                  Tatakae Pixel captures the essence of the{" "}
+                  <span className="text-lime-600">Million Dollar Homepage</span>{" "}
+                  from 2005, reinventing it with online payments, instant
+                  interaction, and fresh dynamics.
                 </p>
 
                 <p className="mb-2">
-                  I’m Santiago, I’m 23 years old, and together with my brother I’m the provider for our family of five. We shared a single room, and although we now live more comfortably, we still long for a home that is truly ours.
+                  I’m Santiago, I’m 23 years old, and together with my brother
+                  I’m the provider for our family of five. We shared a single
+                  room, and although we now live more comfortably, we still long
+                  for a home that is truly ours.
                 </p>
 
                 <p className="mb-2">
-                  With a loan I bought two laptops—one to sell and generate capital, the other to work with—but a friend I offered shelter to stole them. And now I’m trying to publish this page without knowing if I’ll make it to the end of the month.
+                  With a loan I bought two laptops—one to sell and generate
+                  capital, the other to work with—but a friend I offered shelter
+                  to stole them. And now I’m trying to publish this page without
+                  knowing if I’ll make it to the end of the month.
                 </p>
 
                 <p className="mb-2">
-                  My driving force is my parents, to whom I owe everything: I long to see my mother happy, owning her own home and fulfilling her dream of traveling; my father, now 61, who walked to elementary school barefoot and has lived on his own since he was 14—I want to take him to his first World Cup; and finally, to see my siblings able to study without having to work.
+                  My driving force is my parents, to whom I owe everything: I
+                  long to see my mother happy, owning her own home and
+                  fulfilling her dream of traveling; my father, now 61, who
+                  walked to elementary school barefoot and has lived on his own
+                  since he was 14—I want to take him to his first World Cup; and
+                  finally, to see my siblings able to study without having to
+                  work.
                 </p>
                 <p className="mb-2">
-                  As for me, I dream of earning a scholarship abroad, but every day I am the pillar that keeps my parents and siblings afloat. Our unity is what drives me.
+                  As for me, I dream of earning a scholarship abroad, but every
+                  day I am the pillar that keeps my parents and siblings afloat.
+                  Our unity is what drives me.
                 </p>
 
                 <p className="mb-2 font-semibold text-lime-600">
-                  I don’t seek fame or recognition; I only want my family to be happy and secure.
+                  I don’t seek fame or recognition; I only want my family to be
+                  happy and secure.
                 </p>
 
                 <p className="text-white text-center mt-4 cursor-pointer">
@@ -112,7 +132,6 @@ export const About = () => {
               </ScrollArea>
             </AccordionContent>
           </AccordionItem>
-
         </Accordion>
         <br />
         <Link
@@ -122,6 +141,6 @@ export const About = () => {
           <ArrowRight /> Click to go back to the canvas{" "}
         </Link>
       </div>
-    </div >
+    </div>
   );
 };
