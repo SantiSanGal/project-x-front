@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketProvider } from "./store/socket/SocketContext";
 import { RouterProvider } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
@@ -19,7 +18,6 @@ if (container) {
           <RouterProvider router={router} />
           <Toaster />
         </SocketProvider>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </React.StrictMode>
   );
