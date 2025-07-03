@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components";
-import { Loader } from "lucide-react";
+import { Brush, Info, Loader, LogIn, ShoppingBasket } from "lucide-react";
 import { postLogout } from "@/core/actions/auth";
 import { useUserStore } from "@/store";
 
@@ -48,12 +48,13 @@ export const ProfilePicture = () => {
         <DropdownMenuContent
           side="bottom"
           align="end"
-          className="bg-stone-700  shadow-2xl"
+          className="bg-stone-700 text-md shadow-2xl"
         >
           <DropdownMenuItem
             className="cursor-pointer hover:bg-stone-800 text-white text-base"
             onClick={() => navigate("/")}
           >
+            <Brush />
             Canvas
           </DropdownMenuItem>
           {isLogged && (
@@ -61,6 +62,7 @@ export const ProfilePicture = () => {
               className="cursor-pointer hover:bg-stone-800 text-white text-base"
               onClick={() => navigate("/purchases")}
             >
+              <ShoppingBasket />
               Purchases
             </DropdownMenuItem>
           )}
@@ -68,6 +70,7 @@ export const ProfilePicture = () => {
             className="cursor-pointer hover:bg-stone-800 text-white text-base"
             onClick={() => navigate("/about")}
           >
+            <Info />
             About
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -78,7 +81,9 @@ export const ProfilePicture = () => {
             {isPending ? (
               <Loader className="animate-spin" />
             ) : (
-              <>{isLogged ? "Logout" : "Login"}</>
+              <>
+                <LogIn /> {isLogged ? "Logout" : "Login"}
+              </>
             )}
           </DropdownMenuItem>
         </DropdownMenuContent>
