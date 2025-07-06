@@ -20,7 +20,7 @@ const ArrowLeft = (props) => (
 );
 
 export const About = () => {
-  const imageUrl = "https://i.imgur.com/mU4A4f4.jpeg";
+  const imageUrl = "./images/ilustration.png";
 
   return (
     <div className="h-screen w-screen bg-stone-50 font-sans text-stone-800 antialiased flex flex-col">
