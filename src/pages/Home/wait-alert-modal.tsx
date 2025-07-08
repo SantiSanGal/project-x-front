@@ -47,7 +47,7 @@ export const WaitAlertModal = ({
           className="mt-2 bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded-md transition-colors"
           onClick={() =>
             window.open(
-              `https://www.pagopar.com/pagos/${pagoparToken}?forma_pago=9`,
+              `https://www.pagopar.com/pagos/${pagoparToken}?forma_pago=26`,
               "_blank"
             )
           }
