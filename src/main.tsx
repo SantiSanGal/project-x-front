@@ -6,8 +6,11 @@ import { createRoot } from "react-dom/client";
 import { router } from "./routes";
 import React from "react";
 import "./index.css";
+import { GoogleOAuthProvider } from '@react-oauth/google'
+
 const queryClient = new QueryClient();
 const container = document.getElementById("root");
+const client_id = import.meta.env.VITE_CLIENT_ID
 
 if (container) {
   const root = createRoot(container);
@@ -15,8 +18,10 @@ if (container) {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <SocketProvider>
-          <RouterProvider router={router} />
-          <Toaster />
+          <GoogleOAuthProvider clientId={client_id}>
+            <RouterProvider router={router} />
+            <Toaster />
+          </GoogleOAuthProvider>
         </SocketProvider>
       </QueryClientProvider>
     </React.StrictMode>
