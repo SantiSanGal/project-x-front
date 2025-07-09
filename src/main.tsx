@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 
 const queryClient = new QueryClient();
 const container = document.getElementById("root");
-const client_id = import.meta.env.VITE_CLIENT_ID
+const client_id = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 if (container) {
   const root = createRoot(container);

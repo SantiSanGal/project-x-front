@@ -1,3 +1,4 @@
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/store/loginStore";
@@ -6,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "@/components";
 import { useState } from "react";
 import { toast } from "sonner";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { decodeJwt } from "@/utils";
+import { millionApi } from "@/api/million.api";
 
 interface LoginFormData {
   username: string;
@@ -81,14 +82,36 @@ export const Login = () => {
     mutate(data);
   };
 
-  const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
-    console.log('handleGoogleSuccess', credentialResponse);
-    if (credentialResponse.credential) {
-      const { payload } = decodeJwt(credentialResponse.credential);
-      console.log('payload credential', payload);
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    try {
+      // Envías el objeto completo como lo estabas haciendo
+      const response = await millionApi.post('/auth/googleAuth', { credentialResponse });
 
+      console.log('Respuesta del backend:', response);
+      console.log('Respuesta del backend:', response.data);
+
+      // Aquí está la clave: guarda el token de la API
+      const { token, user } = response.data;
+
+
+      // Guarda el token en localStorage para usarlo en futuras peticiones
+      localStorage.setItem('api_token', token);
+
+      // Guarda los datos del usuario en el estado de tu app (Context, Redux, etc.)
+      // Por ejemplo:
+      // login(user);
+
+      // Actualiza la instancia de Axios para incluir el token en todas las peticiones
+      millionApi.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      // Redirige al usuario al dashboard o a la página principal
+      // window.location.href = '/dashboard';
+
+    } catch (error) {
+      console.error('Error al autenticar con el backend:', error);
+      // Muestra un mensaje de error al usuario
     }
-  }
+  };
 
   return (
     <div className="flex w-full min-h-screen font-sans text-stone-100">
