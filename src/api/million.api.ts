@@ -23,6 +23,17 @@ millionApi.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+try {
+  const raw = localStorage.getItem("user-storage");
+  if (raw) {
+    const { state } = JSON.parse(raw);
+    const token = state?.accessToken;
+    if (token) {
+      millionApi.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+  }
+} catch {}
+
 // Interceptor de response para manejar errores 401
 // millionApi.interceptors.response.use(
 //   (response) => response,

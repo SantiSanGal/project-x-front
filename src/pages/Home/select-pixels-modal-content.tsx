@@ -20,6 +20,7 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { GRID_SIZE } from "@/constants"; // <-- ahora usamos la constante global
 
 interface CombinedPixelSelectorProps {
   coors: { x: number; y: number };
@@ -37,15 +38,13 @@ interface CombinedPixelSelectorProps {
 }
 
 export const Options = [
-  {
-    label: "Manual",
-    value: "manual",
-  },
-  {
-    label: "Image",
-    value: "image",
-  },
+  { label: "Manual", value: "manual" },
+  { label: "Image", value: "image" },
 ];
+
+// Derivados a partir de GRID_SIZE
+const BLOCK_SIDE = GRID_SIZE; // 10
+const BLOCK_PIXELS = GRID_SIZE * GRID_SIZE; // 100
 
 export const PixelSelector = ({
   coors,
@@ -57,24 +56,22 @@ export const PixelSelector = ({
   // refetchOcupados,
   setOpenAlertModal,
 }: CombinedPixelSelectorProps) => {
-  // Estado para elegir el modo: 'manual' o 'image'
+  // Estado para elegir el modo
   const [selected, setSelected] = useState(Options[0]);
-  // const [mode, setMode] = useState<"manual" | "image">("manual");
   const [referCode, setReferCode] = useState("");
   const [link, setLink] = useState("");
 
-  // Estado para selección manual
+  // -------- MODO MANUAL (10×10) --------
   const [manualColors, setManualColors] = useState<string[]>(
-    Array(25).fill("#ffffff")
+    Array(BLOCK_PIXELS).fill("#ffffff")
   );
 
-  // Estados para selección por imagen
+  // -------- MODO IMAGEN (crop + extracción 10×10) --------
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(5);
   const [imageColors, setImageColors] = useState<string[]>([]);
   const [cropModalOpen, setCropModalOpen] = useState(false);
-  // Estado para almacenar el área recortada en píxeles (relativa a la imagen original)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
     x: number;
     y: number;
@@ -86,7 +83,6 @@ export const PixelSelector = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   /* --------------------------------- Queries -------------------------------- */
-  // Hook de mutación para enviar los datos al backend
   const { isPending, mutate } = useMutation({
     mutationFn: async (grupo_pixeles: GrupoPixeles) => {
       const respuesta = await postGrupoPixeles(grupo_pixeles);
@@ -95,7 +91,6 @@ export const PixelSelector = ({
     onSuccess: (respuesta) => {
       const { data } = respuesta;
       if (data && data.data && data.data.dataToken) {
-        console.log("data.data.code_for_refer", data.data.code_for_refer);
         setCodeReferShow(data.data.code_for_refer);
         setPagoparToken(data.data.dataToken);
         setOpenModal(false);
@@ -109,17 +104,16 @@ export const PixelSelector = ({
   });
   /* ------------------------------- End Queries ------------------------------ */
 
-  // Actualiza el color en la grilla manual
+  // Actualiza color manual
   const handleManualColorChange = (index: number, color: string) => {
     const newColors = [...manualColors];
     newColors[index] = color;
     setManualColors(newColors);
   };
 
-  // Configuración de dropzone para el modo imagen
+  // Dropzone (modo imagen)
   const onDrop = useCallback(
     async (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      // Reiniciamos el crop y zoom
       setCrop({ x: 0, y: 0 });
       setZoom(5);
 
@@ -139,7 +133,6 @@ export const PixelSelector = ({
         const compressedFile = await imageCompression(file, options);
         const imageUrl = URL.createObjectURL(compressedFile);
 
-        // Pre-cargamos la imagen para obtener sus dimensiones
         const img = new Image();
         img.onload = () => {
           imgRef.current = img;
@@ -148,7 +141,7 @@ export const PixelSelector = ({
 
         setImageSrc(imageUrl);
         setCropModalOpen(true);
-      } catch (error) {
+      } catch {
         toast.error("An error occurred while processing the image");
       }
     },
@@ -161,8 +154,8 @@ export const PixelSelector = ({
     multiple: false,
   });
 
-  // Función para extraer los colores de la sección recortada (5x5 píxeles)
-  const extractPixelColors = async (croppedAreaPixels: {
+  // Extraer colores 10×10 desde el crop
+  const extractPixelColors = async (area: {
     x: number;
     y: number;
     width: number;
@@ -175,28 +168,44 @@ export const PixelSelector = ({
     if (!ctx) return;
 
     const image = imgRef.current;
-    // Configuramos el canvas para 5x5 píxeles
-    canvas.width = 5;
-    canvas.height = 5;
+
+    // Canvas de destino: 10×10
+    canvas.width = BLOCK_SIDE;
+    canvas.height = BLOCK_SIDE;
+
+    // ¡Importante para “pixel art”!
     ctx.imageSmoothingEnabled = false;
 
-    // Calculamos las escalas (ya que croppedAreaPixels está relativo a la imagen mostrada)
+    // Pasar del área del crop (en coords de la imagen mostrada) a la imagen original
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
-    const exactX = Math.floor(croppedAreaPixels.x * scaleX);
-    const exactY = Math.floor(croppedAreaPixels.y * scaleY);
-    const exactWidth = Math.floor(croppedAreaPixels.width * scaleX);
-    const exactHeight = Math.floor(croppedAreaPixels.height * scaleY);
+    const exactX = Math.floor(area.x * scaleX);
+    const exactY = Math.floor(area.y * scaleY);
+    const exactWidth = Math.floor(area.width * scaleX);
+    const exactHeight = Math.floor(area.height * scaleY);
 
-    ctx.drawImage(image, exactX, exactY, exactWidth, exactHeight, 0, 0, 5, 5);
+    // Reescalar esa área a 10×10 sin suavizado
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(
+      image,
+      exactX,
+      exactY,
+      exactWidth,
+      exactHeight,
+      0,
+      0,
+      BLOCK_SIDE,
+      BLOCK_SIDE
+    );
 
+    // Leer los 100 colores (fila mayor a menor importancia)
     const colorsArray: string[] = [];
-    for (let y = 0; y < 5; y++) {
-      for (let x = 0; x < 5; x++) {
+    for (let y = 0; y < BLOCK_SIDE; y++) {
+      for (let x = 0; x < BLOCK_SIDE; x++) {
         const pixel = ctx.getImageData(x, y, 1, 1).data;
         const color = `#${[pixel[0], pixel[1], pixel[2]]
-          .map((x) => x.toString(16).padStart(2, "0"))
+          .map((v) => v.toString(16).padStart(2, "0"))
           .join("")}`;
         colorsArray.push(color);
       }
@@ -204,39 +213,35 @@ export const PixelSelector = ({
     return colorsArray;
   };
 
-  // Al completar el crop se extraen los colores y se guarda el área recortada
+  // Al completar el crop → extraer 10×10
   const onCropComplete = useCallback(
     async (
       _croppedArea: any,
-      croppedAreaPixels: { x: number; y: number; width: number; height: number }
+      areaPixels: { x: number; y: number; width: number; height: number }
     ) => {
-      setCroppedAreaPixels(croppedAreaPixels);
-      const colors = await extractPixelColors(croppedAreaPixels);
-      if (colors) {
-        setImageColors(colors);
-      }
+      setCroppedAreaPixels(areaPixels);
+      const colors = await extractPixelColors(areaPixels);
+      if (colors) setImageColors(colors);
     },
     []
   );
 
-  // Función para descargar la imagen con el área seleccionada (rectángulo rojo de 2px)
+  // Descargar imagen con el rectángulo del crop (opcional)
   const handleDownloadCroppedImage = () => {
     if (!imgRef.current || !croppedAreaPixels) {
       toast.error("No crop area defined");
       return;
     }
     const img = imgRef.current;
-    // Creamos un canvas off-screen con el tamaño de la imagen original
+
     const canvasDownload = document.createElement("canvas");
     canvasDownload.width = img.naturalWidth;
     canvasDownload.height = img.naturalHeight;
     const ctx = canvasDownload.getContext("2d");
     if (!ctx) return;
 
-    // Dibujamos la imagen completa en el canvas
     ctx.drawImage(img, 0, 0, canvasDownload.width, canvasDownload.height);
 
-    // Dibujamos el rectángulo rojo. Asumimos que croppedAreaPixels está en relación a la imagen original.
     ctx.strokeStyle = "red";
     ctx.lineWidth = 1;
     ctx.strokeRect(
@@ -246,7 +251,6 @@ export const PixelSelector = ({
       croppedAreaPixels.height
     );
 
-    // Convertimos el canvas a data URL y desencadenamos la descarga
     const dataUrl = canvasDownload.toDataURL("image/png");
     const link = document.createElement("a");
     link.href = dataUrl;
@@ -256,15 +260,14 @@ export const PixelSelector = ({
     document.body.removeChild(link);
   };
 
-  // Al confirmar, armamos el objeto a enviar según el modo seleccionado
+  // Confirmar y armar payload (10×10)
   const handleConfirm = () => {
     let pixeles;
 
-    // if (mode === "manual") {
     if (selected.value === "manual") {
       pixeles = manualColors.map((color, index) => ({
-        coordenada_x: coors.x + (index % 5),
-        coordenada_y: coors.y + Math.floor(index / 5),
+        coordenada_x: coors.x + (index % BLOCK_SIDE),
+        coordenada_y: coors.y + Math.floor(index / BLOCK_SIDE),
         color,
       }));
     } else {
@@ -273,11 +276,10 @@ export const PixelSelector = ({
         return;
       }
       pixeles = imageColors.map((color, index) => ({
-        coordenada_x: coors.x + (index % 5),
-        coordenada_y: coors.y + Math.floor(index / 5),
+        coordenada_x: coors.x + (index % BLOCK_SIDE),
+        coordenada_y: coors.y + Math.floor(index / BLOCK_SIDE),
         color,
       }));
-      // linkValue = imageSrc || linkValue;
     }
 
     const grupo_pixeles_params = {
@@ -285,22 +287,21 @@ export const PixelSelector = ({
         link: link,
         coordenada_x_inicio: coors.x,
         coordenada_y_inicio: coors.y,
-        coordenada_x_fin: coors.x + 4,
-        coordenada_y_fin: coors.y + 4,
+        coordenada_x_fin: coors.x + (BLOCK_SIDE - 1), // +9
+        coordenada_y_fin: coors.y + (BLOCK_SIDE - 1), // +9
       },
       pixeles,
       refer_code: referCode,
     };
 
-    mutate(grupo_pixeles_params);
+    mutate(grupo_pixeles_params as unknown as GrupoPixeles);
   };
 
   return (
     <>
       <Dialog open={openModal} onOpenChange={setOpenModal}>
         <DialogContent className="max-h-screen rounded-md flex flex-col justify-between w-[95vw] h-[90vh] overflow-y-auto p-0">
-          {/* <DialogContent className="sm:bg-red-400 md:bg-orange-400 lg:bg-yellow-400 xl:bg-green-400 max-h-screen rounded-md flex flex-col justify-between w-[95vw] h-[90vh] overflow-y-auto p-0"> */}
-          <DialogHeader className=" p-4 flex flex-col gap-4 ">
+          <DialogHeader className="p-4 flex flex-col gap-4">
             <DialogTitle className="text-base">
               Customize your <span className="text-lime-600">Pixels</span>
             </DialogTitle>
@@ -313,10 +314,11 @@ export const PixelSelector = ({
             />
           </DialogHeader>
 
+          {/* --------- MODO MANUAL: 10×10 --------- */}
           {selected.value === "manual" && (
-            <div className="flex flex-col items-center ">
-              <div className="grid grid-cols-5 gap-0">
-                {Array.from({ length: 25 }).map((_, index) => (
+            <div className="flex flex-col items-center">
+              <div className="grid grid-cols-10 gap-0">
+                {Array.from({ length: BLOCK_PIXELS }).map((_, index) => (
                   <input
                     key={index}
                     type="color"
@@ -331,8 +333,9 @@ export const PixelSelector = ({
             </div>
           )}
 
+          {/* --------- MODO IMAGEN: crop + preview 10×10 --------- */}
           {selected.value === "image" && (
-            <div className="flex flex-col gap-2 items-center w-full ">
+            <div className="flex flex-col gap-2 items-center w-full">
               <div
                 {...getRootProps()}
                 className="cursor-pointer w-[90%] text-center p-4 border-2 border-dashed rounded-lg"
@@ -355,7 +358,11 @@ export const PixelSelector = ({
                       onCropComplete={onCropComplete}
                       minZoom={1}
                       maxZoom={100}
-                      cropSize={{ width: 100, height: 100 }}
+                      // tamaño visual del cuadro del crop (px de pantalla)
+                      cropSize={{
+                        width: BLOCK_SIDE * 10,
+                        height: BLOCK_SIDE * 10,
+                      }} // 100×100
                       onMediaLoaded={() => {
                         const img = new Image();
                         img.src = imageSrc;
@@ -377,22 +384,24 @@ export const PixelSelector = ({
                     />
                     <ZoomIn className="size-4" />
                   </div>
+
                   {croppedAreaPixels && (
-                    <div className="w-full flex items-center justify-center ">
+                    <div className="w-full flex items-center justify-center">
                       <Button
                         onClick={handleDownloadCroppedImage}
-                        className="mt-4  bg-red-600 hover:bg-red-700 text-white"
+                        className="mt-4 bg-red-600 hover:bg-red-700 text-white"
                       >
                         Download Image with Crop
                       </Button>
                     </div>
                   )}
+
                   {imageColors.length > 0 && (
-                    <div className="mt-4 bg-red-950">
+                    <div className="mt-4">
                       <p className="text-sm mx-auto w-fit text-gray-400 mb-2">
                         Preview your Pixels:
                       </p>
-                      <div className="grid grid-cols-5 gap-0 w-fit mx-auto">
+                      <div className="grid grid-cols-10 gap-0 w-fit mx-auto">
                         {imageColors.map((color, index) => (
                           <div
                             key={index}
@@ -408,6 +417,7 @@ export const PixelSelector = ({
             </div>
           )}
 
+          {/* --------- Campos extra --------- */}
           <div className="flex flex-col w-full items-center justify-center gap-2">
             <div className="flex flex-col w-full items-center justify-start">
               <label>Add a link or text of your choice</label>
@@ -430,6 +440,7 @@ export const PixelSelector = ({
               />
             </div>
           </div>
+
           <DialogFooter className="p-4">
             <Button
               disabled={
@@ -448,6 +459,8 @@ export const PixelSelector = ({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Canvas oculto para lectura de píxeles al extraer 10×10 */}
       <canvas ref={canvasRef} className="hidden" />
     </>
   );

@@ -95,12 +95,18 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const { offsetX, offsetY, scale } = transformRef.current;
 
+    const { offsetX, offsetY, scale } = transformRef.current;
+    const crisp = 0.5 / scale; // <-- offset “crisp” dependiente del zoom
+
+    // Limpio canvas físico
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Pan/zoom
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
-    // Desactivar suavizado para efecto "pixel art"
+
+    // ¡IMPORTANTE!
     ctx.imageSmoothingEnabled = false;
 
     // Fondo
@@ -111,8 +117,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     }
 
-    // Dibuja la cuadrícula
-    ctx.beginPath();
+    // ---------------- Grilla (alineada con “crisp”) ----------------
     const visibleLeft = -offsetX / scale;
     const visibleTop = -offsetY / scale;
     const visibleRight = visibleLeft + canvas.width / scale;
@@ -129,39 +134,52 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       Math.ceil(visibleBottom / GRID_SIZE) * GRID_SIZE
     );
 
+    ctx.beginPath();
     for (let x = startX; x <= endX; x += GRID_SIZE) {
-      ctx.moveTo(x, startY);
-      ctx.lineTo(x, endY);
+      ctx.moveTo(x + crisp, startY);
+      ctx.lineTo(x + crisp, endY);
     }
     for (let y = startY; y <= endY; y += GRID_SIZE) {
-      ctx.moveTo(startX, y);
-      ctx.lineTo(endX, y);
+      ctx.moveTo(startX, y + crisp);
+      ctx.lineTo(endX, y + crisp);
     }
     ctx.strokeStyle = "#ccc";
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.5 / scale; // misma “finura” en cualquier zoom
     ctx.stroke();
 
-    // Dibuja los píxeles de pintarData
+    // ---------------- Píxeles pintados ----------------
     if (isLogged && pintarData) {
-      pintarData.forEach(
-        ({ coordenada_x, coordenada_y, color }: PintarData) => {
+      for (const { coordenada_x, coordenada_y, color } of pintarData) {
+        if (
+          coordenada_x >= 0 &&
+          coordenada_x < VIRTUAL_WIDTH &&
+          coordenada_y >= 0 &&
+          coordenada_y < VIRTUAL_HEIGHT
+        ) {
           ctx.fillStyle = color;
           ctx.fillRect(coordenada_x, coordenada_y, 1, 1);
         }
-      );
+      }
     }
 
-    // Agrego el efecto hover: borde oscuro en el cuadrito
+    // ---------------- Hover (alineado con la grilla) ----------------
     if (hoveredCellRef.current) {
+      const { x, y } = hoveredCellRef.current;
+      const w = Math.min(GRID_SIZE, VIRTUAL_WIDTH - x);
+      const h = Math.min(GRID_SIZE, VIRTUAL_HEIGHT - y);
+
       ctx.beginPath();
-      ctx.strokeStyle = "#000"; // Borde oscuro
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(
-        hoveredCellRef.current.x,
-        hoveredCellRef.current.y,
-        GRID_SIZE,
-        GRID_SIZE
-      );
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 0.5 / scale; // igual que la grilla
+      // mismo offset “crisp” que usamos para las líneas de la grilla
+      ctx.strokeRect(x + crisp, y + crisp, w, h);
+
+      // (Opcional) sombreado suave del bloque
+      // ctx.save();
+      // ctx.globalAlpha = 0.06;
+      // ctx.fillStyle = "#000";
+      // ctx.fillRect(x, y, w, h);
+      // ctx.restore();
     }
 
     ctx.restore();
@@ -218,23 +236,27 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   const updateCursor = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     if (isDraggingRef.current) {
       canvas.style.cursor = "grabbing";
-    } else {
-      const rect = canvas.getBoundingClientRect();
-      const rawX = e.clientX - rect.left;
-      const rawY = e.clientY - rect.top;
-      const { offsetX, offsetY, scale } = transformRef.current;
-      const worldX = (rawX - offsetX) / scale;
-      const worldY = (rawY - offsetY) / scale;
-      canvas.style.cursor =
-        worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
-        worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
-          ? "pointer"
-          : "default";
+      return;
     }
+
+    const rect = canvas.getBoundingClientRect();
+    const rawX = e.clientX - rect.left;
+    const rawY = e.clientY - rect.top;
+    const { offsetX, offsetY, scale } = transformRef.current;
+
+    const worldX = (rawX - offsetX) / scale;
+    const worldY = (rawY - offsetY) / scale;
+
+    const inside =
+      worldX >= 0 &&
+      worldX < VIRTUAL_WIDTH &&
+      worldY >= 0 &&
+      worldY < VIRTUAL_HEIGHT;
+
+    canvas.style.cursor = inside ? "pointer" : "default";
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -247,14 +269,16 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    // --- Panning (drag) ---
     if (isDraggingRef.current) {
       const dx = e.clientX - lastPosRef.current.x;
       const dy = e.clientY - lastPosRef.current.y;
       transformRef.current.offsetX += dx;
       transformRef.current.offsetY += dy;
+
       lastPosRef.current = { x: e.clientX, y: e.clientY };
 
-      // Verificar si se superó el umbral (por ejemplo, 5 píxeles)
+      // Marcar arrastre real (umbral 5px)
       if (initialPosRef.current) {
         const totalDx = Math.abs(e.clientX - initialPosRef.current.x);
         const totalDy = Math.abs(e.clientY - initialPosRef.current.y);
@@ -262,64 +286,60 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
           hasDraggedRef.current = true;
         }
       }
-      draw();
     }
+
     updateCursor(e);
 
-    // Actualizar el sector cuando se haga hover (o arrastre) dentro del área virtual (2000x1000)
-    if (canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
+    // --- Hover y sector ---
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
       const rawX = e.clientX - rect.left;
       const rawY = e.clientY - rect.top;
       const { offsetX, offsetY, scale } = transformRef.current;
+
       const worldX = (rawX - offsetX) / scale;
       const worldY = (rawY - offsetY) / scale;
-      // Actualizar el cuadrito sobre el que se hace hover
+
+      // Hover (snap a GRID_SIZE) sólo si estamos dentro del área virtual
       if (
         worldX >= 0 &&
-        worldX <= VIRTUAL_WIDTH &&
+        worldX < VIRTUAL_WIDTH &&
         worldY >= 0 &&
-        worldY <= VIRTUAL_HEIGHT
+        worldY < VIRTUAL_HEIGHT
       ) {
+        // clamp para evitar caer justo en 1000
+        const clampedX = Math.min(Math.max(worldX, 0), VIRTUAL_WIDTH - 0.0001);
+        const clampedY = Math.min(Math.max(worldY, 0), VIRTUAL_HEIGHT - 0.0001);
+
         hoveredCellRef.current = {
-          x: Math.floor(worldX / GRID_SIZE) * GRID_SIZE,
-          y: Math.floor(worldY / GRID_SIZE) * GRID_SIZE,
+          x: Math.floor(clampedX / GRID_SIZE) * GRID_SIZE,
+          y: Math.floor(clampedY / GRID_SIZE) * GRID_SIZE,
         };
       } else {
         hoveredCellRef.current = null;
       }
-      // Actualizar el sector según lo existente
+
+      // Sectores: 4 cuadrantes de 500×500
       let newSector: number | null = null;
-      if (worldX >= 0 && worldX <= 999 && worldY >= 0 && worldY <= 499) {
-        newSector = 1;
-      } else if (
-        worldX >= 1000 &&
-        worldX <= 1999 &&
-        worldY >= 0 &&
-        worldY <= 499
-      ) {
-        newSector = 2;
-      } else if (
+      if (
         worldX >= 0 &&
-        worldX <= 999 &&
-        worldY >= 500 &&
-        worldY <= 999
+        worldX < VIRTUAL_WIDTH &&
+        worldY >= 0 &&
+        worldY < VIRTUAL_HEIGHT
       ) {
-        newSector = 3;
-      } else if (
-        worldX >= 1000 &&
-        worldX <= 1999 &&
-        worldY >= 500 &&
-        worldY <= 999
-      ) {
-        newSector = 4;
+        const right = worldX >= 500; // 0..499 = izq, 500..999 = der
+        const bottom = worldY >= 500; // 0..499 = arriba, 500..999 = abajo
+        // 1: arriba-izq, 2: arriba-der, 3: abajo-izq, 4: abajo-der
+        newSector = bottom ? (right ? 4 : 3) : right ? 2 : 1;
       }
       if (newSector !== null && newSector !== sector) {
         setSector(newSector);
         console.log("Nuevo sector asignado:", newSector);
       }
     }
-    // Vuelvo a dibujar para actualizar el efecto hover
+
+    // Redibuja para actualizar hover y/o pan
     draw();
   };
 
@@ -343,56 +363,67 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const { scale, offsetX, offsetY } = transformRef.current;
     const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-    const newScale = scale * zoomFactor;
-    if (newScale < 0.1 || newScale > 10) return;
+
+    let newScale = scale * zoomFactor;
+    // límites razonables de zoom
+    newScale = Math.max(0.1, Math.min(10, newScale));
+
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+
     const worldX = (mouseX - offsetX) / scale;
     const worldY = (mouseY - offsetY) / scale;
+
     transformRef.current.offsetX = mouseX - worldX * newScale;
     transformRef.current.offsetY = mouseY - worldY * newScale;
     transformRef.current.scale = newScale;
+
     draw();
     updateCursor(e);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // Solo se ejecuta la acción si el click es genuino (sin haber arrastrado más de 5 píxeles)
+    // Ignorar si el click vino con arrastre real
     if (hasDraggedRef.current) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
     const rawX = e.clientX - rect.left;
     const rawY = e.clientY - rect.top;
     const { offsetX, offsetY, scale } = transformRef.current;
+
     const worldX = (rawX - offsetX) / scale;
     const worldY = (rawY - offsetY) / scale;
 
-    // Verificar que el click se realice dentro del área virtual 2000x1000
+    // Dentro del área virtual 1000×1000
     if (
       worldX < 0 ||
-      worldX > VIRTUAL_WIDTH ||
+      worldX >= VIRTUAL_WIDTH ||
       worldY < 0 ||
-      worldY > VIRTUAL_HEIGHT
+      worldY >= VIRTUAL_HEIGHT
     ) {
       return;
     }
 
-    // Si el usuario no está logueado, mostrar toast error y salir
+    // Requiere login
     if (!isLogged) {
       toast.error("Please log in first before making a selection.");
       return;
     }
 
-    // Cálculo de la celda (alineada a la cuadrícula) a seleccionar
-    const gridXStart = Math.floor(worldX / GRID_SIZE) * GRID_SIZE;
-    const gridYStart = Math.floor(worldY / GRID_SIZE) * GRID_SIZE;
+    // Snap al bloque 10×10 (con clamp para bordes)
+    const clampedX = Math.min(Math.max(worldX, 0), VIRTUAL_WIDTH - 0.0001);
+    const clampedY = Math.min(Math.max(worldY, 0), VIRTUAL_HEIGHT - 0.0001);
+    const gridXStart = Math.floor(clampedX / GRID_SIZE) * GRID_SIZE;
+    const gridYStart = Math.floor(clampedY / GRID_SIZE) * GRID_SIZE;
 
-    // Verificar si el área ya está ocupada (solo si el usuario está logueado)
+    // Verificar ocupación contra los rects recibidos
     if (ocupadosData && Array.isArray(ocupadosData)) {
       let permitir = true;
       for (const occupied of ocupadosData) {
@@ -408,20 +439,31 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
           break;
         }
       }
-      if (!permitir) {
-        return;
-      }
+      if (!permitir) return;
     }
 
-    // Si está permitido, pinta el bloque (simulando la reserva) y abre el modal
+    // Feedback visual inmediato del bloque seleccionado (no llama a draw)
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      ctx.fillStyle = "black";
-      ctx.fillRect(gridXStart, gridYStart, GRID_SIZE, GRID_SIZE);
-      ctx.stroke();
-    }
-    console.log("x", gridXStart, " y", gridYStart);
+      ctx.save();
+      ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+      ctx.imageSmoothingEnabled = false; // ¡importante!
 
+      const w =
+        gridXStart + GRID_SIZE <= VIRTUAL_WIDTH
+          ? GRID_SIZE
+          : VIRTUAL_WIDTH - gridXStart;
+      const h =
+        gridYStart + GRID_SIZE <= VIRTUAL_HEIGHT
+          ? GRID_SIZE
+          : VIRTUAL_HEIGHT - gridYStart;
+
+      ctx.fillStyle = "black";
+      ctx.fillRect(gridXStart, gridYStart, w, h);
+      ctx.restore();
+    }
+
+    // Abre el selector con las coords del bloque
     setCoors({ x: gridXStart, y: gridYStart });
     setOpenModal(true);
   };
