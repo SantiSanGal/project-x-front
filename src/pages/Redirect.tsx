@@ -9,19 +9,19 @@ export const Redirect = () => {
   const navigate = useNavigate();
   const { hash: hashPedido } = useParams();
 
-  console.log('hashPedido', hashPedido);
+  // console.log('hashPedido', hashPedido);
 
 
   const { data, isPending } = useQuery({
     queryKey: ["consulta-estado-pago"],
     queryFn: async () => {
       const respuesta = await getEstadoPago(isLogged, hashPedido!);
-      console.log("respuesta", respuesta);
+      // console.log("respuesta", respuesta);
       return respuesta;
     },
   });
 
-  console.log("data", data);
+  // console.log("data", data);
 
   return (
     <div className="w-screen h-screen bg-stone-950 flex items-center justify-center mt-0">

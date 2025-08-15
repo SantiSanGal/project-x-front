@@ -1,17 +1,16 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { EyeClosedIcon } from "@/icons/EyeCloseIcon";
-import { useMutation } from "@tanstack/react-query";
 import { useUserStore } from "@/store/loginStore";
 import { EyeOpenIcon } from "@/icons/EyeOpenIcon";
 import { GoogleIcon } from "@/icons/GoogleIcon";
 import { useNavigate } from "react-router-dom";
 import { millionApi } from "@/api/million.api";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useRegister } from "@/hooks/auth";
 import { Spinner } from "@/icons/Spinner";
 import { useState } from "react";
 import { toast } from "sonner";
 
-// --- Tipos para el formulario ---
 interface RegisterFormData {
   name: string;
   last_name: string;
@@ -19,6 +18,7 @@ interface RegisterFormData {
   username: string;
   password: string;
   confirm_password: string;
+  document: string;
 }
 
 declare global {
@@ -43,47 +43,7 @@ export const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: (params: RegisterFormData) => {
-      return millionApi
-        .post("/auth/register", {
-          username: params.username,
-          password: params.password,
-          name: params.name,
-          last_name: params.last_name,
-          email: params.email,
-        })
-        .then((res) => {
-          console.log(res);
-          toast.success("User Registered Successfully");
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
-        })
-        .catch((err) => {
-          if (err.status == 400) {
-            err.response.data.message.errors.map((error: any) =>
-              toast.error(error.message)
-            );
-          } else {
-            toast.error("Sorry, an error has occurred");
-          }
-          console.log(err);
-        });
-    },
-    onSuccess: () => {
-      toast.success("User Registered Successfully");
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    },
-    onError: (error: any) => {
-      const messages = error?.response?.data?.messages || [
-        "Ha ocurrido un error inesperado.",
-      ];
-      messages.forEach((message: string) => toast.error(message));
-    },
-  });
+  const { isPending, mutate } = useRegister();
 
   const handleGoogleSignUp = () => {
     if (!window.google) {
@@ -100,26 +60,16 @@ export const Register = () => {
             toast.error("No Google credential received");
             return;
           }
-          const response = await millionApi.post("/auth/googleAuth", {
+          await millionApi.post("/auth/googleAuth", {
             credential,
+          }).then(({ data }) => {
+            const { token, expiresAt } = data.data.token;
+            if (token && expiresAt) {
+              loginAction(token, expiresAt);
+              toast.success("¡Welcome!");
+              navigate("/");
+            }
           });
-          const { token } = response.data.data; // { type, token, expiresAt }
-          if (token?.token) {
-            const accessToken = token.token;
-            const expiresAt = token.expiresAt || token.expires_at;
-
-            // 1) guardar en Zustand (persist)
-            // loginAction(accessToken, expiresAt);
-            useUserStore.getState().login(accessToken, expiresAt);
-
-            // 2) fijar header para siguientes requests
-            millionApi.defaults.headers.common[
-              "Authorization"
-            ] = `Bearer ${accessToken}`;
-
-            // 3) redirigir
-            navigate("/");
-          }
         } catch (e: any) {
           console.error(e);
           toast.error(e?.response?.data?.message || "Google auth failed");

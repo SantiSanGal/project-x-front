@@ -219,7 +219,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
     };
 
     const handlePintar = (data: any) => {
-      console.log("handlePintar", data);
       refetchPintar();
     };
 
@@ -335,7 +334,6 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       }
       if (newSector !== null && newSector !== sector) {
         setSector(newSector);
-        console.log("Nuevo sector asignado:", newSector);
       }
     }
 
