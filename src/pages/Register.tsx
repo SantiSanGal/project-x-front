@@ -370,7 +370,7 @@ export const Register = () => {
           </form>
 
           {/* --- Separador y Login Social (Idéntico al Login) --- */}
-          <div className="relative mt-6">
+          {/* <div className="relative mt-6">
             <div
               className="absolute inset-0 flex items-center"
               aria-hidden="true"
@@ -382,9 +382,9 @@ export const Register = () => {
                 Or sign up with
               </span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <button
               onClick={handleGoogleSignUp}
               className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-stone-200 bg-stone-800 border border-stone-700 rounded-md shadow-sm hover:bg-stone-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500"
@@ -392,7 +392,7 @@ export const Register = () => {
               <GoogleIcon />
               <span className="ml-3">Google</span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

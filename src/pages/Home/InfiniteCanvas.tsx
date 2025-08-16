@@ -1,11 +1,11 @@
 import { getCanvasPixeles, getPixelesOcupados } from "@/core/actions/canvas";
 import { GRID_SIZE, VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "@/constants";
 import { PixelSelector } from "./select-pixels-modal-content";
-import { GrupoPixelesDetail } from "./grupo-pixeles-detail";
+// import { GrupoPixelesDetail } from "./grupo-pixeles-detail";
 import { WaitAlertModal } from "./wait-alert-modal";
 import { useQuery } from "@tanstack/react-query";
 import { SocketContext } from "@/store";
-import { Modal } from "@/components";
+// import { Modal } from "@/components";
 import { toast } from "sonner";
 import React, {
   useCallback,
@@ -28,8 +28,8 @@ interface PintarData {
 //TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link
 
 const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
-  const [ocupadoSeleccionado, setOcupadoSeleccionado] = useState();
-  const [openDetailModal, setOpenDetailModal] = useState(false);
+  // const [ocupadoSeleccionado, setOcupadoSeleccionado] = useState();
+  // const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const [codeReferShow, setCodeReferShow] = useState("");
   const [pagoparToken, setPagoparToken] = useState("");
@@ -431,8 +431,8 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
           gridYStart >= occupied.coordenada_y_inicio &&
           gridYStart <= occupied.coordenada_y_fin
         ) {
-          setOpenDetailModal(true);
-          setOcupadoSeleccionado(occupied);
+          // setOpenDetailModal(true);
+          // setOcupadoSeleccionado(occupied);
           permitir = false;
           break;
         }
@@ -488,13 +488,13 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
 
       {/* TODO: Hacer modal para que obtenga los datos del grupo ocupado, pixeles individuales y se pueda ver el detalle o reportar */}
       {/* {ocupadoSeleccionado && ( */}
-      <Modal
+      {/* <Modal
         openModal={openDetailModal}
         setOpenModal={setOpenDetailModal}
         className="w-[648px] h-[639px] bg-white"
       >
         <GrupoPixelesDetail />
-      </Modal>
+      </Modal> */}
       {/* )} */}
 
       <canvas

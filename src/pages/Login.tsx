@@ -36,7 +36,6 @@ export const Login = () => {
     onSuccess: (data) => {
       const { token, expires_at } = data.data.token;
       if (token && expires_at) {
-        console.log("log token", token);
         loginAction(token, expires_at);
         toast.success("¡Welcome!");
         navigate("/");
@@ -204,7 +203,7 @@ export const Login = () => {
             </form>
 
             {/* --- Separador y Login Social --- */}
-            <div className="relative mt-6">
+            {/* <div className="relative mt-6">
               <div
                 className="absolute inset-0 flex items-center"
                 aria-hidden="true"
@@ -219,8 +218,8 @@ export const Login = () => {
             </div>
 
             <div className="mt-6">
-              <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => {}} />
-            </div>
+              <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => { }} />
+            </div> */}
           </div>
         </div>
       </div>
