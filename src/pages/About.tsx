@@ -70,6 +70,7 @@ function LanguageSwitch({
 }
 
 /* ---------- Copy (ES/EN) ---------- */
+/* ---------- Copy (ES/EN) ---------- */
 const COPY: Record<Lang, any> = {
   es: {
     headerTitle: "Sobre el Proyecto",
@@ -81,7 +82,7 @@ const COPY: Record<Lang, any> = {
     p2:
       "Me llamo Santiago, tengo 23 años, soy de Paraguay y junto con mi hermano, soy uno de los pilares que hoy mantienen a nuestra familia de cinco. Aun así, sé que no estoy en mi peak: apenas estoy empezando en mis veintes, con ganas, proyectos y mucho por aprender. Pero siento que el tiempo apremia: la luz de mi mamá se está apagando de a poco y cada día que pasa siento que se hace tarde para darle lo que se merece.",
     p3:
-      "Este proyecto nace de ese deseo claro y sencillo: comprarle a mi mamá la casa que siempre quiso. No busco fama ni reconocimiento; lo que quiero es devolverle, aunque sea en parte, todo lo que ella nos dio. Si lo logramos, no sólo cambiaremos una vida, cambiaremos el rumbo de una familia.",
+      "Este proyecto nace de ese deseo claro y sencillo: comprarle a mi mamá la casa que siempre quiso, llevar a mi papá a su primer Mundial y ayudar a mis hermanos a terminar la universidad. No busco fama ni reconocimiento; lo que quiero es devolverles, aunque sea en parte, todo lo que ellos nos dieron. Si lo logramos, no sólo cambiaremos una vida, cambiaremos el rumbo de una familia.",
     motto: "No busco fama ni reconocimiento; solo quiero que mi familia sea feliz y segura.",
     closing:
       "Si decidís sumarte, estás ayudando a que un sueño real y concreto se haga realidad. Gracias por creer en esto y en quienes luchan día a día para salir adelante.",
@@ -109,7 +110,7 @@ const COPY: Record<Lang, any> = {
     p2:
       "My name is Santiago, I'm 23, from Paraguay. Together with my brother, I'm one of the pillars supporting our family of five. I know I'm not at my peak yet—I'm just getting started in my twenties with energy, projects and a lot to learn. But time feels urgent: my mom’s light is fading a little, and with each day I feel it’s getting late to give her what she deserves.",
     p3:
-      "This project comes from a simple, clear wish: to buy my mom the house she always wanted. I’m not seeking fame or recognition; I just want to give back, even a little, of what she gave us. If we manage it, we won’t just change one life—we’ll change the course of a family.",
+      "This project comes from a simple, clear wish: to buy my mom the house she always wanted, take my dad to his first World Cup, and help my siblings finish university. I’m not seeking fame or recognition; I just want to give back, even a little, of what they gave us. If we manage it, we won’t just change one life—we’ll change the course of a family.",
     motto:
       "I’m not seeking fame or recognition; I only want my family to be safe and happy.",
     closing:
