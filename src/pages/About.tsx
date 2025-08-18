@@ -3,7 +3,8 @@ import { ScrollArea } from "@/components";
 import { Link } from "react-router-dom";
 
 /* ---------- UI helpers ---------- */
-const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
+const cx = (...c: (string | false | null | undefined)[]) =>
+  c.filter(Boolean).join(" ");
 
 const ArrowLeft = (props: any) => (
   <svg
@@ -69,33 +70,29 @@ function LanguageSwitch({
   );
 }
 
-/* ---------- Copy (ES/EN) ---------- */
-/* ---------- Copy (ES/EN) ---------- */
 const COPY: Record<Lang, any> = {
   es: {
     headerTitle: "Sobre el Proyecto",
     back: "Volver al lienzo",
     beginning: "El Comienzo",
     mainTitle: "Sobre Tatakae Pixel y por qué lo hago",
-    p1:
-      "Mi mamá siempre fue —y es— el motor de nuestra familia. Dejó de lado sus propios proyectos para que mis hermanos y yo tuviéramos oportunidades: trabajó, sostuvo el hogar y lo hizo todo con una sonrisa. Durante más de 30 años ha vivido pagando alquiler; su casa propia es un sueño que nunca pudo concretar.",
-    p2:
-      "Me llamo Santiago, tengo 23 años, soy de Paraguay y junto con mi hermano, soy uno de los pilares que hoy mantienen a nuestra familia de cinco. Aun así, sé que no estoy en mi peak: apenas estoy empezando en mis veintes, con ganas, proyectos y mucho por aprender. Pero siento que el tiempo apremia: la luz de mi mamá se está apagando de a poco y cada día que pasa siento que se hace tarde para darle lo que se merece.",
-    p3:
-      "Este proyecto nace de ese deseo claro y sencillo: comprarle a mi mamá la casa que siempre quiso, llevar a mi papá a su primer Mundial y ayudar a mis hermanos a terminar la universidad. No busco fama ni reconocimiento; lo que quiero es devolverles, aunque sea en parte, todo lo que ellos nos dieron. Si lo logramos, no sólo cambiaremos una vida, cambiaremos el rumbo de una familia.",
-    motto: "No busco fama ni reconocimiento; solo quiero que mi familia sea feliz y segura.",
+    p1: "Mi mamá siempre fue —y es— el motor de nuestra familia. Dejó de lado sus propios proyectos para que mis hermanos y yo tuviéramos oportunidades: trabajó, sostuvo el hogar y lo hizo todo con una sonrisa. Durante más de 30 años ha vivido pagando alquiler; su casa propia es un sueño que nunca pudo concretar.",
+    p2: "Me llamo Santiago, tengo 23 años y soy de Paraguay. Junto a mi hermano, soy uno de los pilares que hoy sostienen a nuestra familia de cinco. Sé que estoy al inicio de mi camino, con mucha energía y ganas de crecer, pero siento la urgencia de actuar ahora. Quiero que mi mamá disfrute de la tranquilidad que tanto merece, y no quiero esperar a que el tiempo decida por mí.",
+    p3: "Este proyecto nace de metas familiares concretas: quiero darle a mi mamá la seguridad de la casa que siempre anheló, regalarle a mi papá la experiencia de su primer Mundial y darles a mis hermanos el impulso que necesitan para terminar sus estudios. No busco hacerme famoso, solo quiero devolverles, con hechos, un poco de todo lo que ellos nos dieron.",
+    motto:
+      "Mi única meta es ver a mi familia segura y feliz. Cada píxel ayuda a construir ese futuro.",
     closing:
       "Si decidís sumarte, estás ayudando a que un sueño real y concreto se haga realidad. Gracias por creer en esto y en quienes luchan día a día para salir adelante.",
     imageAlt: "Ilustración: persona joven trabajando en su laptop",
-    howTitle: "Cómo funciona",
-    s1t: "1. Doná y participá",
-    s1d: "Doná $1 por pixel. Podés elegir un bloque de 10×10 (100 pixeles) y dejar un mensaje o enlace.",
-    s2t: "2. Sorteo Final",
-    s2d: "El Sorteo Final se activa cuando el canvas esté completo al 100% (1.000.000 de píxeles, 1000×1000). El premio será de $50,000, sorteado entre todas las compras válidas. Si el canvas no llega al 100%, el sorteo no se realiza.",
-    s3t: "3. Códigos de referido",
-    s3d: "Cada compra genera un código único. Si alguien usa tu código, ambos ganan una oportunidad extra en el sorteo.",
-    s4t: "4. Estado de los píxeles",
-    s4d: "Por “ocupado” entendemos pago aprobado y píxel asignado. Si retiramos contenido por moderación/DMCA, el píxel sigue contando (mostramos un marcador). Si una compra se cancela o hay contracargo, ese píxel vuelve a quedar disponible y el canvas deja de estar completo hasta que otra persona lo ocupe.",
+    howTitle: "Cómo puedes ser parte",
+    s1t: "1. Elige tu espacio",
+    s1d: "Por cada $1 USD, obtienes un píxel en nuestro lienzo digital. Puedes comprar un bloque (ej. 10x10) para dejar tu marca.",
+    s2t: "2. Deja tu mensaje",
+    s2d: "Junto con tu imagen o color, puedes añadir un mensaje o un enlace. Tu espacio quedará visible de forma permanente en el lienzo.",
+    s3t: "3. Sé parte de la historia",
+    s3d: "Cada píxel comprado nos acerca a las metas de nuestra familia. Estás contribuyendo directamente a un sueño real y tangible.",
+    s4t: "4. Sigue nuestro progreso",
+    s4d: "Mantendremos a todos actualizados sobre el avance de nuestras metas. Tu contribución tiene un impacto directo y queremos que lo veas.",
     payWarnTitle: "Aviso importante sobre pagos",
     payWarnBody:
       "Al redirigirte a la pasarela de pago la moneda aparecerá en Guaraní (PYG) en lugar de USD. La conversión será correcta y tu donación procesada normalmente.",
@@ -105,26 +102,24 @@ const COPY: Record<Lang, any> = {
     back: "Back to the canvas",
     beginning: "The Beginning",
     mainTitle: "About Tatakae Pixel and why I'm doing this",
-    p1:
-      "My mom has always been the engine of our family. She put her own projects on hold so my siblings and I could have opportunities: she worked, kept the home running, and did it all with a smile. For over 30 years she has lived paying rent; owning a home has remained a dream.",
-    p2:
-      "My name is Santiago, I'm 23, from Paraguay. Together with my brother, I'm one of the pillars supporting our family of five. I know I'm not at my peak yet—I'm just getting started in my twenties with energy, projects and a lot to learn. But time feels urgent: my mom’s light is fading a little, and with each day I feel it’s getting late to give her what she deserves.",
-    p3:
-      "This project comes from a simple, clear wish: to buy my mom the house she always wanted, take my dad to his first World Cup, and help my siblings finish university. I’m not seeking fame or recognition; I just want to give back, even a little, of what they gave us. If we manage it, we won’t just change one life—we’ll change the course of a family.",
+    p1: "My mom has always been the engine of our family. She put her own projects on hold so my siblings and I could have opportunities: she worked, kept the home running, and did it all with a smile. For over 30 years she has lived paying rent; owning a home has remained a dream.",
+    p2: "My name is Santiago, I'm 23, from Paraguay. Together with my brother, I'm one of the pillars supporting our family of five. I know I'm at the beginning of my journey, with plenty of energy and a drive to grow, but I feel an urgency to act now. I want my mom to enjoy the peace she so deserves, and I don't want to wait for time to make that decision for me.",
+    p3: "This project was born from concrete family goals: to give my mom the security of the home she always dreamed of, to gift my dad the experience of his first World Cup, and to give my siblings the boost they need to finish their studies. I'm not looking for fame; I just want to give back to them, with actions, a little of everything they gave us.",
     motto:
-      "I’m not seeking fame or recognition; I only want my family to be safe and happy.",
+      "My only goal is to see my family safe and happy. Every pixel helps build that future.",
     closing:
       "If you decide to join in, you’ll be helping a real, concrete dream come true. Thank you for believing in this and in those who fight every day to move forward.",
     imageAlt: "Illustration: young person working on a laptop",
-    howTitle: "How it works",
-    s1t: "1) Donate & participate",
-    s1d: "Donate $1 per pixel. You can choose a 10×10 block (100 pixels) and leave a message or link.",
-    s2t: "2) Final Raffle",
-    s2d: "The Final Raffle activates when the canvas is 100% complete (1,000,000 pixels, 1000×1000). The prize will be $50,000, raffled among all valid purchases. If the canvas doesn’t reach 100%, the raffle won’t run.",
-    s3t: "3) Referral codes",
-    s3d: "Each purchase generates a unique code. If someone uses your code, both of you get an extra entry in the raffle.",
-    s4t: "4) Pixel status",
-    s4d: "By “occupied” we mean payment approved and pixel assigned. If content is removed for moderation/DMCA, the pixel still counts (we’ll show a placeholder). If a purchase is canceled or charged back, that pixel becomes available again and the canvas is no longer complete until someone else occupies it.",
+    howTitle: "How you can be part of it",
+    s1t: "1. Choose your space",
+    s1d: "For every $1 USD, you get one pixel on our digital canvas. You can buy a block (e.g., 10x10) to make your mark.",
+    s2t: "2. Leave your message",
+    s2d: "Along with your image or color, you can add a message or a link. Your space will remain permanently visible on the canvas.",
+    s3t: "3. Be part of the story",
+    s3d: "Every pixel purchased brings us closer to our family's goals. You are contributing directly to a real, tangible dream.",
+    s4t: "4. Follow our progress",
+    s4d: "We will keep everyone updated on the progress toward our goals. Your contribution has a direct impact, and we want you to see it.",
+    payWarnTitle: "Important payment note",
     payWarnBody:
       "When redirected to the payment gateway, the currency will appear in Paraguayan guaraní (PYG) instead of USD. The conversion is correct and your donation will be processed normally.",
   },
@@ -150,7 +145,9 @@ export const About = () => {
       <header className="flex-shrink-0 border-b border-stone-200">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <h1 className="text-lg font-bold text-stone-800">{t.headerTitle}</h1>
+            <h1 className="text-lg font-bold text-stone-800">
+              {t.headerTitle}
+            </h1>
 
             <div className="flex items-center gap-3">
               <LanguageSwitch value={lang} onChange={setLang} />
@@ -183,7 +180,9 @@ export const About = () => {
               <p className="mt-4 text-lg leading-8 text-stone-600">{t.p2}</p>
               <p className="mt-4 text-lg leading-8 text-stone-600">{t.p3}</p>
 
-              <p className="mt-6 text-xl font-semibold italic text-lime-700">{t.motto}</p>
+              <p className="mt-6 text-xl font-semibold italic text-lime-700">
+                {t.motto}
+              </p>
 
               <p className="mt-6 text-base text-stone-600">{t.closing}</p>
             </div>
@@ -246,7 +245,9 @@ export const About = () => {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800">{t.payWarnTitle}</h3>
+                  <h3 className="text-sm font-medium text-yellow-800">
+                    {t.payWarnTitle}
+                  </h3>
                   <div className="mt-2 text-sm text-yellow-700">
                     <p>{t.payWarnBody}</p>
                   </div>

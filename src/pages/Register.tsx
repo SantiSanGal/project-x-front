@@ -10,6 +10,7 @@ import { useRegister } from "@/hooks/auth";
 import { Spinner } from "@/icons/Spinner";
 import { useState } from "react";
 import { toast } from "sonner";
+import LavaPixels from "@/components/LavaPixel";
 
 interface RegisterFormData {
   name: string;
@@ -60,16 +61,18 @@ export const Register = () => {
             toast.error("No Google credential received");
             return;
           }
-          await millionApi.post("/auth/googleAuth", {
-            credential,
-          }).then(({ data }) => {
-            const { token, expiresAt } = data.data.token;
-            if (token && expiresAt) {
-              loginAction(token, expiresAt);
-              toast.success("¡Welcome!");
-              navigate("/");
-            }
-          });
+          await millionApi
+            .post("/auth/googleAuth", {
+              credential,
+            })
+            .then(({ data }) => {
+              const { token, expiresAt } = data.data.token;
+              if (token && expiresAt) {
+                loginAction(token, expiresAt);
+                toast.success("¡Welcome!");
+                navigate("/");
+              }
+            });
         } catch (e: any) {
           console.error(e);
           toast.error(e?.response?.data?.message || "Google auth failed");
@@ -88,12 +91,25 @@ export const Register = () => {
 
   return (
     <div className="flex w-full min-h-screen font-sans text-stone-100">
-      {/* ----------------------------- Panel Izquierdo (Idéntico al Login) ---------------------------- */}
-      <div className="hidden md:flex md:w-1/2 lg:w-5/12 flex-col justify-between p-12 bg-gradient-to-tr from-stone-900 via-lime-900 to-stone-900">
-        <div>
+      <div
+        className="relative hidden md:flex md:w-1/2 lg:w-5/12 flex-col justify-between p-12
+                bg-gradient-to-tr from-stone-900 via-lime-900 to-stone-900 overflow-hidden"
+      >
+        {/* efecto (debajo del contenido, sobre el gradiente) */}
+        <LavaPixels
+          className="absolute inset-0 z-0"
+          // green="#65a30d" // usa tu tono
+          green="#4d7c0f" // usa tu tono
+          alpha={0.9} // cuán “negros”/intensos se ven
+          speed={56} // velocidad de la forma (no de los píxeles)
+        />
+
+        {/* contenido por encima */}
+        <div className="relative z-10">
           <h1 className="text-3xl font-bold text-white">Tatakae Pixel</h1>
         </div>
-        <div>
+
+        <div className="relative z-10">
           <h2 className="text-4xl font-bold leading-tight text-white">
             A love letter for Mom.
           </h2>

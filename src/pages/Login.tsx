@@ -86,7 +86,8 @@ export const Login = () => {
           {/* efecto (debajo del contenido, sobre el gradiente) */}
           <LavaPixels
             className="absolute inset-0 z-0"
-            green="#65a30d" // usa tu tono
+            // green="#65a30d" // usa tu tono
+            green="#4d7c0f" // usa tu tono
             alpha={0.9} // cuán “negros”/intensos se ven
             speed={56} // velocidad de la forma (no de los píxeles)
           />
