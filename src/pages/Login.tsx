@@ -14,6 +14,7 @@ import {
   CredentialResponse,
   GoogleLogin,
 } from "@react-oauth/google";
+import LavaPixels from "@/components/LavaPixel";
 
 interface LoginFormData {
   username: string;
@@ -53,42 +54,54 @@ export const Login = () => {
     mutate(data);
   };
 
-  const handleGoogleSuccess = async (cred: CredentialResponse) => {
-    const credential = cred?.credential;
-    if (!credential) return toast.error("No Google credential received");
+  // const handleGoogleSuccess = async (cred: CredentialResponse) => {
+  //   const credential = cred?.credential;
+  //   if (!credential) return toast.error("No Google credential received");
 
-    const { data } = await millionApi.post("/auth/googleAuth", { credential });
-    const { token } = data.data;
-    if (token?.token) {
-      const accessToken = token.token;
-      const expiresAt = token.expiresAt || token.expires_at;
-      useUserStore.getState().login(accessToken, expiresAt);
-      millionApi.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${accessToken}`;
-      toast.success("Welcome!");
-      navigate("/");
-    }
-  };
+  //   const { data } = await millionApi.post("/auth/googleAuth", { credential });
+  //   const { token } = data.data;
+  //   if (token?.token) {
+  //     const accessToken = token.token;
+  //     const expiresAt = token.expiresAt || token.expires_at;
+  //     useUserStore.getState().login(accessToken, expiresAt);
+  //     millionApi.defaults.headers.common[
+  //       "Authorization"
+  //     ] = `Bearer ${accessToken}`;
+  //     toast.success("Welcome!");
+  //     navigate("/");
+  //   }
+  // };
 
   const client_id = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   return (
     <GoogleOAuthProvider clientId={client_id}>
       <div className="flex w-full min-h-screen font-sans text-stone-100">
-        {/* ----------------------------- Panel Izquierdo ---------------------------- */}
-        <div className="hidden md:flex md:w-1/2 lg:w-5/12 flex-col justify-between p-12 bg-gradient-to-tr from-stone-900 via-lime-900 to-stone-900">
-          <div>
+        {/* /* ----------------------------- Panel Izquierdo
+        ---------------------------- */}
+        <div
+          className="relative hidden md:flex md:w-1/2 lg:w-5/12 flex-col justify-between p-12
+                bg-gradient-to-tr from-stone-900 via-lime-900 to-stone-900 overflow-hidden"
+        >
+          {/* efecto (debajo del contenido, sobre el gradiente) */}
+          <LavaPixels
+            className="absolute inset-0 z-0"
+            green="#65a30d" // usa tu tono
+            alpha={0.9} // cuán “negros”/intensos se ven
+            speed={56} // velocidad de la forma (no de los píxeles)
+          />
+
+          {/* contenido por encima */}
+          <div className="relative z-10">
             <h1 className="text-3xl font-bold text-white">Tatakae Pixel</h1>
           </div>
-          <div>
+
+          <div className="relative z-10">
             <h2 className="text-4xl font-bold leading-tight text-white">
               A love letter for Mom.
             </h2>
-            {/* <p className="mt-4 text-stone-300">Una carta de amor para mamá.</p> */}
           </div>
         </div>
-
         {/* ------------------------------ Panel derecho ----------------------------- */}
         <div className="flex items-center justify-center w-full p-8 bg-stone-900 md:w-1/2 lg:w-7/12">
           <div className="w-full max-w-md">
