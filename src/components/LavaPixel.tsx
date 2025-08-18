@@ -59,19 +59,19 @@ export default function LavaPixels({
     const ctx = canvas.getContext("2d", { alpha: true })!;
 
     // ===== PRESET CALM =====
-    let PIXEL_SIZE = 3.6;
-    let CELL_GAP = 0;
-    let FLOW_SPEED = 28 * speed; // ↓ más lento
-    const JITTER = 0.25; // ↓ menos ruido
-    const FADE_SPEED = 3.8; // ↓ fundidos más largos
-    const MIN_LIFE = 1.2,
-      MAX_LIFE = 2.4; // ↑ vidas más largas
-    const FILL_SWELL = 0.12; // ↓ oleada lenta
-    const FILL_MIN = 0.12,
-      FILL_MAX = 0.22; // ↓ amplitud
-    const CENTER_PULL = 12; // atrae al centro de la celda (px/s^2)
-    const FRICTION = 0.9; // fricción por frame (a 60fps)
-    const SPAWN_TRIES = 40;
+    let PIXEL_SIZE = 3;
+    let CELL_GAP = 3;
+    let FLOW_SPEED = 14 * speed; // ↓ más lento
+    const JITTER = 0; // ↓ menos ruido
+    const FADE_SPEED = 5; // ↓ fundidos más largos
+    const MIN_LIFE = 10,
+      MAX_LIFE = 10; // ↑ vidas más largas
+    const FILL_SWELL = 1; // ↓ oleada lenta
+    const FILL_MIN = 1,
+      FILL_MAX = 1; // ↓ amplitud
+    const CENTER_PULL = 6; // atrae al centro de la celda (px/s^2)
+    const FRICTION = 1; // fricción por frame (a 60fps)
+    const SPAWN_TRIES = 150;
 
     // ========================
     let width = 0,
@@ -110,7 +110,7 @@ export default function LavaPixels({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const scale = Math.sqrt((width * height) / (960 * 420));
-      PIXEL_SIZE = Math.max(2.8, 3.6 * scale);
+      PIXEL_SIZE = Math.max(3, 3 * scale);
       CELL_GAP = 0 * scale;
       cell = PIXEL_SIZE + CELL_GAP;
       half = cell * 0.5;
