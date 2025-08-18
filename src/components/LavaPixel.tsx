@@ -47,7 +47,7 @@ function flowDir(x: number, y: number, t: number) {
 export default function LavaPixels({
   green = "#65a30d",
   alpha = 0.9,
-  speed = 1.0,
+  speed = 1,
   className,
 }: LavaPixelsProps) {
   const ref = useRef<HTMLCanvasElement | null>(null);
@@ -60,15 +60,15 @@ export default function LavaPixels({
 
     // ===== PRESET CALM =====
     let PIXEL_SIZE = 3;
-    let CELL_GAP = 3;
-    let FLOW_SPEED = 14 * speed; // ↓ más lento
-    const JITTER = 0; // ↓ menos ruido
+    let CELL_GAP = 10;
+    let FLOW_SPEED = 1 * speed; // ↓ más lento
+    const JITTER = 10; // ↓ menos ruido
     const FADE_SPEED = 5; // ↓ fundidos más largos
     const MIN_LIFE = 10,
       MAX_LIFE = 10; // ↑ vidas más largas
     const FILL_SWELL = 1; // ↓ oleada lenta
     const FILL_MIN = 1,
-      FILL_MAX = 1; // ↓ amplitud
+      FILL_MAX = 10; // ↓ amplitud
     const CENTER_PULL = 6; // atrae al centro de la celda (px/s^2)
     const FRICTION = 1; // fricción por frame (a 60fps)
     const SPAWN_TRIES = 150;
