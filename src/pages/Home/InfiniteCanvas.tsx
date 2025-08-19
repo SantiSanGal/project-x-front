@@ -19,11 +19,11 @@ interface InfiniteCanvasProps {
   isLogged: boolean;
 }
 
-interface PintarData {
-  coordenada_x: number;
-  coordenada_y: number;
-  color: string;
-}
+// interface PintarData {
+//   coordenada_x: number;
+//   coordenada_y: number;
+//   color: string;
+// }
 
 //TODO: hacer que si el grupo ya está ocupado muestre un modal con el grupo con los colores y que tenga las opciones de reportar o visitar link
 
@@ -218,7 +218,7 @@ const InfiniteCanvas = ({ isLogged }: InfiniteCanvasProps) => {
       refetchOcupados();
     };
 
-    const handlePintar = (data: any) => {
+    const handlePintar = () => {
       refetchPintar();
     };
 

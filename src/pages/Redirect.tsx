@@ -11,8 +11,7 @@ export const Redirect = () => {
 
   // console.log('hashPedido', hashPedido);
 
-
-  const { data, isPending } = useQuery({
+  const query = useQuery({
     queryKey: ["consulta-estado-pago"],
     queryFn: async () => {
       const respuesta = await getEstadoPago(isLogged, hashPedido!);
@@ -26,7 +25,7 @@ export const Redirect = () => {
   return (
     <div className="w-screen h-screen bg-stone-950 flex items-center justify-center mt-0">
       <div className="flex flex-col max-h-40 max-w-80  w-full h-full p-4">
-        {isPending ? (
+        {query.isPending ? (
           <div className="flex gap-2 items-center">
             <h1 className="text-white">Checking payment</h1>
             <Loader className="size-8 text-white animate-spin" />

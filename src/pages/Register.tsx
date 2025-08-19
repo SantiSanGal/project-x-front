@@ -1,15 +1,15 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { EyeClosedIcon } from "@/icons/EyeCloseIcon";
-import { useUserStore } from "@/store/loginStore";
+// import { useUserStore } from "@/store/loginStore";
 import { EyeOpenIcon } from "@/icons/EyeOpenIcon";
-import { GoogleIcon } from "@/icons/GoogleIcon";
+// import { GoogleIcon } from "@/icons/GoogleIcon";
 import { useNavigate } from "react-router-dom";
-import { millionApi } from "@/api/million.api";
+// import { millionApi } from "@/api/million.api";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRegister } from "@/hooks/auth";
 import { Spinner } from "@/icons/Spinner";
 import { useState } from "react";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import LavaPixels from "@/components/LavaPixel";
 
 interface RegisterFormData {
@@ -29,12 +29,12 @@ declare global {
 }
 
 export const Register = () => {
-  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
+  // const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
   const RECATCHA = import.meta.env.VITE_GOOGLE_RECATCHA as string;
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const loginAction = useUserStore((state) => state.login);
+  // const loginAction = useUserStore((state) => state.login);
   const navigate = useNavigate();
 
   const {
@@ -46,44 +46,44 @@ export const Register = () => {
 
   const { isPending, mutate } = useRegister();
 
-  const handleGoogleSignUp = () => {
-    if (!window.google) {
-      toast.error("Google SDK not loaded");
-      return;
-    }
+  // const handleGoogleSignUp = () => {
+  //   if (!window.google) {
+  //     toast.error("Google SDK not loaded");
+  //     return;
+  //   }
 
-    window.google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: async (resp: any) => {
-        try {
-          const credential = resp?.credential;
-          if (!credential) {
-            toast.error("No Google credential received");
-            return;
-          }
-          await millionApi
-            .post("/auth/googleAuth", {
-              credential,
-            })
-            .then(({ data }) => {
-              const { token, expiresAt } = data.data.token;
-              if (token && expiresAt) {
-                loginAction(token, expiresAt);
-                toast.success("¡Welcome!");
-                navigate("/");
-              }
-            });
-        } catch (e: any) {
-          console.error(e);
-          toast.error(e?.response?.data?.message || "Google auth failed");
-        }
-      },
-      ux_mode: "popup", // <-- evita redirecciones y reduce conflictos COOP
-      itp_support: true, // <-- útil en Safari
-    });
+  //   window.google.accounts.id.initialize({
+  //     client_id: GOOGLE_CLIENT_ID,
+  //     callback: async (resp: any) => {
+  //       try {
+  //         const credential = resp?.credential;
+  //         if (!credential) {
+  //           toast.error("No Google credential received");
+  //           return;
+  //         }
+  //         await millionApi
+  //           .post("/auth/googleAuth", {
+  //             credential,
+  //           })
+  //           .then(({ data }) => {
+  //             const { token, expiresAt } = data.data.token;
+  //             if (token && expiresAt) {
+  //               loginAction(token, expiresAt);
+  //               toast.success("¡Welcome!");
+  //               navigate("/");
+  //             }
+  //           });
+  //       } catch (e: any) {
+  //         console.error(e);
+  //         toast.error(e?.response?.data?.message || "Google auth failed");
+  //       }
+  //     },
+  //     ux_mode: "popup", // <-- evita redirecciones y reduce conflictos COOP
+  //     itp_support: true, // <-- útil en Safari
+  //   });
 
-    window.google.accounts.id.prompt();
-  };
+  //   window.google.accounts.id.prompt();
+  // };
 
   const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
     mutate(data);

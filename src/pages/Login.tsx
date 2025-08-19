@@ -5,14 +5,13 @@ import { useUserStore } from "@/store/loginStore";
 import { EyeOpenIcon } from "@/icons/EyeOpenIcon";
 import { postLogin } from "@/core/actions/auth";
 import { useNavigate } from "react-router-dom";
-import { millionApi } from "@/api/million.api";
 import { Spinner } from "@/components";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
   GoogleOAuthProvider,
-  CredentialResponse,
-  GoogleLogin,
+  // CredentialResponse,
+  // GoogleLogin,
 } from "@react-oauth/google";
 import LavaPixels from "@/components/LavaPixel";
 
