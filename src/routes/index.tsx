@@ -1,40 +1,46 @@
-import { createBrowserRouter } from 'react-router-dom';
-import { PageMain } from '../pages/PageMain';
-import { PageLogin } from '../pages/PageLogin';
-import { PageRegister } from '../pages/PageRegister';
-import { PageAbout } from '../pages/PageAbout';
-// import { PagePurchases } from '../pages/PagePurchases';
-import { PageAccount } from '../pages/PageAccount';
-import { PageResult } from '../pages/PageResult';
-import { CustomRoute } from './Customs/CustomRoute';
+import { createBrowserRouter } from "react-router-dom";
+import App from "@/App";
+import {
+  About,
+  Login,
+  Redirect,
+  Register,
+  ErrorPage,
+  Purchases,
+  PoliciesPrivacy,
+} from "@/pages";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        element: <CustomRoute element={<PageMain />} />,
-    },
-    {
-        path: '/login',
-        element: <PageLogin />,
-    },
-    {
-        path: '/register',
-        element: <PageRegister />,
-    },
-    // {
-    //     path: '/purchases',
-    //     element: <CustomRoute element={<PagePurchases />} />,
-    // },
-    {
-        path: '/about',
-        element: <CustomRoute element={<PageAbout />} />,
-    },
-    {
-        path: '/account',
-        element: <CustomRoute element={<PageAccount />} />,
-    },
-    {
-        path: '/result',
-        element: <CustomRoute element={<PageResult />} />,
-    },
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "register",
+    element: <Register />,
+  },
+  {
+    path: "purchases",
+    element: <Purchases />,
+  },
+  {
+    path: "about",
+    element: <About />,
+  },
+  {
+    path: "/redirect/:hash",
+    element: <Redirect />,
+  },
+  {
+    path: "/policies",
+    element: <PoliciesPrivacy />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
 ]);
