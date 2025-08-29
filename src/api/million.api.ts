@@ -1,8 +1,10 @@
 import axios, { InternalAxiosRequestConfig, AxiosHeaders } from "axios";
 import { useUserStore } from "@/store/loginStore";
 
+const url_back = import.meta.env.VITE_URL_BACK;
+
 export const millionApi = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: url_back,
 });
 
 // Interceptor de request

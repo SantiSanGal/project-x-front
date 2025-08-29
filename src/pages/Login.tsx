@@ -181,8 +181,8 @@ export const Login = () => {
                 )}
               </div>
 
-              {/* --- Opciones de Formulario --- */}
-              <div className="flex items-center justify-between text-sm">
+              {/* --- TODO: Hacer que esto funcione --- */}
+              {/* <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -197,11 +197,10 @@ export const Login = () => {
                     Remember me
                   </label>
                 </div>
-                {/* TODO: Hacer que esto funcione */}
                 <div className="font-medium text-lime-500 hover:text-lime-400 cursor-pointer">
                   Forgot your password?
                 </div>
-              </div>
+              </div> */}
 
               {/* --- Botón de Envío --- */}
               <div>
