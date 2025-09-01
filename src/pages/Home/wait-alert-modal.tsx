@@ -16,7 +16,7 @@ interface WaitAlertModalProps {
 export const WaitAlertModal = ({
   openModal,
   pagoparToken,
-  codeReferShow,
+  // codeReferShow,
   setOpenModal,
 }: WaitAlertModalProps) => {
   return (

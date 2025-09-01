@@ -58,7 +58,7 @@ export const PixelSelector = ({
 }: CombinedPixelSelectorProps) => {
   // Estado para elegir el modo
   const [selected, setSelected] = useState(Options[0]);
-  const [referCode, setReferCode] = useState("");
+  // const [referCode, setReferCode] = useState("");
   const [link, setLink] = useState("");
 
   // -------- MODO MANUAL (10×10) --------
@@ -291,7 +291,7 @@ export const PixelSelector = ({
         coordenada_y_fin: coors.y + (BLOCK_SIDE - 1), // +9
       },
       pixeles,
-      refer_code: referCode,
+      // refer_code: referCode,
     };
 
     mutate(grupo_pixeles_params as unknown as GrupoPixeles);
