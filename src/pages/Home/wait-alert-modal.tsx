@@ -25,13 +25,13 @@ export const WaitAlertModal = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Let's go to checkout</AlertDialogTitle>
           <AlertDialogDescription className="flex flex-col">
-            <p>
+            {/* <p>
               By sending this code to someone else, both of you will earn an
               extra point for the upcoming raffle!
             </p>
             <div className="h-14 my-4 m-auto border border-1 w-52 border-slate-300 rounded-md p-2 flex items-center justify-center">
               <h2 className="font-bold text-2xl">{codeReferShow}</h2>
-            </div>
+            </div> */}
             <p>
               This window will close automatically when the payment is
               confirmed.

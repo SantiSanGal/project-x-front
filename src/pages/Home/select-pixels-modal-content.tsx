@@ -429,7 +429,7 @@ export const PixelSelector = ({
                 className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
               />
             </div>
-            <div className="flex flex-col w-full items-center justify-start">
+            {/* <div className="flex flex-col w-full items-center justify-start">
               <label>Enter a referral code to earn 1 extra point</label>
               <input
                 type="text"
@@ -438,7 +438,7 @@ export const PixelSelector = ({
                 onChange={(e) => setReferCode(e.target.value)}
                 className="p-1 border-2 w-4/6 border-slate-200 rounded-lg"
               />
-            </div>
+            </div> */}
           </div>
 
           <DialogFooter className="p-4">
