@@ -5,12 +5,12 @@ import { EyeOpenIcon } from "@/icons/EyeOpenIcon";
 // import { GoogleIcon } from "@/icons/GoogleIcon";
 import { useNavigate } from "react-router-dom";
 // import { millionApi } from "@/api/million.api";
-import ReCAPTCHA from "react-google-recaptcha";
+import LavaPixels from "@/components/LavaPixel";
+// import ReCAPTCHA from "react-google-recaptcha";
 import { useRegister } from "@/hooks/auth";
 import { Spinner } from "@/icons/Spinner";
 import { useState } from "react";
 // import { toast } from "sonner";
-import LavaPixels from "@/components/LavaPixel";
 
 interface RegisterFormData {
   name: string;
@@ -30,9 +30,9 @@ declare global {
 
 export const Register = () => {
   // const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
-  const RECATCHA = import.meta.env.VITE_GOOGLE_RECATCHA as string;
+  // const RECATCHA = import.meta.env.VITE_GOOGLE_RECATCHA as string;
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  // const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   // const loginAction = useUserStore((state) => state.login);
   const navigate = useNavigate();
@@ -365,19 +365,20 @@ export const Register = () => {
             </div>
 
             {/* --- ReCAPTCHA --- */}
-            <div className="flex justify-center pt-2">
+            {/* <div className="flex justify-center pt-2">
               <ReCAPTCHA
                 sitekey={RECATCHA}
                 onChange={(val) => setCaptchaValue(val)}
                 theme="dark"
               />
-            </div>
+            </div> */}
 
             {/* --- Botón de Envío --- */}
             <div>
               <button
                 type="submit"
-                disabled={!captchaValue || isPending}
+                // disabled={!captchaValue || isPending}
+                disabled={isPending}
                 className="flex justify-center w-full px-4 py-3 text-sm font-semibold text-white bg-lime-600 border border-transparent rounded-md shadow-sm hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isPending ? <Spinner /> : "Create Account"}
