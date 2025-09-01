@@ -69,6 +69,7 @@ export function useSocket({
     });
 
     s.on("connect", () => {
+      console.log("connect");
       setOnline(true);
       setError(null);
       setConnectedAt(Date.now());
@@ -76,11 +77,13 @@ export function useSocket({
     });
 
     s.on("disconnect", (reason) => {
+      console.log("disconnect");
       setOnline(false);
       if (debug) console.log("[socket] disconnected:", reason);
     });
 
     s.on("connect_error", (err: any) => {
+      console.log("connect_error", err);
       setOnline(false);
       setError(err?.message ?? String(err));
       if (debug) console.error("[socket] connect_error:", err);
