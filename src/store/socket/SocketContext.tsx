@@ -1,35 +1,51 @@
-import { useUserStore } from "@/store/loginStore";
-import { createContext, useEffect } from "react";
-import { useSocket } from "@/hooks/useSocket";
+// src/store/socket/SocketContext.tsx
+import React, { createContext, useMemo } from "react";
 import { Socket } from "socket.io-client";
+import { useUserStore } from "@/store/loginStore";
+import { useSocket } from "@/hooks/useSocket";
 
-interface SocketContextProps {
+type SocketContextProps = {
   socket: Socket | null;
   online: boolean;
-}
+  reconnect: () => void;
+  disconnect: () => void;
+  emitAck: <Req = any, Res = any>(
+    event: string,
+    data?: Req,
+    timeoutMs?: number
+  ) => Promise<Res>;
+};
 
 export const SocketContext = createContext<SocketContextProps>({
   socket: null,
   online: false,
+  reconnect: () => {},
+  disconnect: () => {},
+  emitAck: async () => {
+    throw new Error("Socket no inicializado");
+  },
 });
 
-export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const { isLogged } = useUserStore();
+export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { isLogged, accessToken } = useUserStore(); // <-- ajusta a tu store
 
-  // Solo conecta si el usuario está logueado.
-  // Puedes modificar useSocket para que si recibe una URL vacía o nula, no intente conectar.
-  const { socket, online } = useSocket(isLogged ? "http://localhost:3333" : "");
+  const { socket, online, reconnect, disconnect, emitAck } = useSocket({
+    enabled: isLogged,
+    token: accessToken ?? null,
+    // url: import.meta.env.VITE_SOCKET_URL,  // opcional, el hook ya lo toma por defecto
+    withCredentials: true,
+    // transports: ["websocket"], // descomenta si quieres forzar WS
+    debug: import.meta.env.DEV,
+  });
 
-  // Si el usuario cierra sesión, desconecta el socket.
-  useEffect(() => {
-    if (!isLogged && socket) {
-      socket.disconnect();
-    }
-  }, [isLogged, socket]);
+  const value = useMemo<SocketContextProps>(
+    () => ({ socket, online, reconnect, disconnect, emitAck }),
+    [socket, online, reconnect, disconnect, emitAck]
+  );
 
   return (
-    <SocketContext.Provider value={{ socket, online }}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
 };
