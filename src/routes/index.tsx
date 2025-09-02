@@ -6,7 +6,6 @@ import {
   Redirect,
   Register,
   ErrorPage,
-  Purchases,
   PoliciesPrivacy,
 } from "@/pages";
 
@@ -22,10 +21,6 @@ export const router = createBrowserRouter([
   {
     path: "register",
     element: <Register />,
-  },
-  {
-    path: "purchases",
-    element: <Purchases />,
   },
   {
     path: "about",

@@ -57,15 +57,6 @@ export const ProfilePicture = () => {
             <Brush />
             Canvas
           </DropdownMenuItem>
-          {isLogged && (
-            <DropdownMenuItem
-              className="cursor-pointer hover:bg-stone-800 text-white text-base"
-              onClick={() => navigate("/purchases")}
-            >
-              <ShoppingBasket />
-              Purchases
-            </DropdownMenuItem>
-          )}
           <DropdownMenuItem
             className="cursor-pointer hover:bg-stone-800 text-white text-base"
             onClick={() => navigate("/about")}
