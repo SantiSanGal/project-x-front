@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components";
-import { Brush, Info, Loader, LogIn, ShoppingBasket } from "lucide-react";
+import { Brush, Info, Loader, LogIn } from "lucide-react";
 import { postLogout } from "@/core/actions/auth";
 import { useUserStore } from "@/store";
 
