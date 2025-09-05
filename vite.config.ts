@@ -1,9 +1,27 @@
 import react from "@vitejs/plugin-react-swc";
+import sitemap from 'vite-plugin-sitemap'
 import { defineConfig } from "vite";
 import path from "path";
 
+const routes = [
+  "/",
+  "login",
+  "register",
+  "about",
+  "/redirect/:hash",
+  "/policies",
+  "*"
+];
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    sitemap({
+      hostname: 'https://tatakaepixel.com',
+      dynamicRoutes: routes,
+      changefreq: 'weekly',
+      priority: 0.8
+    })],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
